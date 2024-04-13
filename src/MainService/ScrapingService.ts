@@ -1,15 +1,8 @@
-import config_pourdebon from "@/controller/scraping-services/Services/Config/pourdebon/config.js";
-import { doServicePourdebon } from "@/controller/scraping-services/Services/src/pourdebon/PourdebonService.js";
 
 //TODO 
 /*
  const _scrapingService  :t_ScrapingServices = {
     //#ADD NEW SERVICE HERE
-    [config_pourdebon.serviceName]: {
-        [str_doService]: doServicePourdebon,
-        [str_config] : config_pourdebon ,
-        [str_routes] : ConfigPourdebonRoutes.df 
-    }
 } as const 
 
  //TODO : add configRoutes 

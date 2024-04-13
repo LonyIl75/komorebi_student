@@ -38,7 +38,3 @@ export const _getMongoClusterKOBUrl = ():string => process.env.MONGO_CLUSTER_KOB
 export const _getMongoClusterKOBSuffix = ():string => process.env.MONGO_URL_KOB_SUFFIX || _getMongoSuffix(); 
 
 //#ADD NEW SERVICE HERE
-
-export const  _getPourdebon22DatabaseName =  ():string => process.env.DATABASE_MONGO_82184298600027;
-export const _getPourdebonEmail = ():string => process.env.POURDEBON_EMAIL;
-export const _getPourdebonPassword = ():string => process.env.POURDEBON_PASSWORD;

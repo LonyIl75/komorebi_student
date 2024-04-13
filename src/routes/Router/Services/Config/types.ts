@@ -1,12 +1,9 @@
-import { serviceName_pourdebon } from "@/controller/scraping-services/Services/Config/pourdebon/config.js";
 import { t_getReq, t_getRes, cst_ReqAndResType, getReq, getRes } from "../../../scraping-services/class/utils/Data/ReqResRoute.js";
 import { t_serviceName_MainService, getUnionRouteOfServiceFromServiceName ,getPropsFromServiceName_ServiceRoutes} from "@/controller/scraping-services/Services/Config/types.js";
-import { t_json_ReqResType_pourdebon } from "./pourdebon/ConfigReqRes.js";
 import { getPairedElementValue } from "@shared/type.js";
 
 export type t_json_main_service_ReqRes ={
     //#ADD NEW SERVICE HERE
-    [serviceName_pourdebon] : t_json_ReqResType_pourdebon
 }
 
     

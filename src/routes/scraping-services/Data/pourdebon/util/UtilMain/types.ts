@@ -1,1 +1,0 @@
-export const pourdebon_imgImage_selectors =[`img[class*="image"]`]
