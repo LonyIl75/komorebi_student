@@ -1,0 +1,42 @@
+# Logs
+logs/*
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+
+package-lock.json
+
+node_modules/*
+dist/*
+dist-database/*
+database-dir/*
+db/*
+dist-ssr/*
+*.local
+Cookies/*
+http-cert/*
+test/private_test/*
+test/ressource/*
+src/python/__pycache__/*
+
+# Editor directories and files
+.vscode/*
+.dependencygraph/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.toml
+#Env variable
+.env 
+
+
+
