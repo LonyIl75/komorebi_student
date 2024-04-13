@@ -129,26 +129,3 @@ Args[0] extends _validateServiceName ?
 Args[1] extends _validateRemoteAddress<Args[0]> ? Args[2] extends _validateRoute<Args[0]> ?
  Apply<T_Fn,Args> extends infer A ? A extends _validateJsonReqRes<Args[0],Args[2]> ? A : never : never
  : never : never : never
-
-
-type fgds = _C_RA<FnValidateRouteAndAddress,["pourdebon","https://www.pourdebon.com", readonly ["login","_","legumes","bouchers"]]>
-type fdsxfds =  _validateServJson<string, `http://www.${string}.${string}` | `https://www.${string}.${string}`, _validateRoute<string>>
-
-type fdsfd = _C_ServJson<FnValidateServJson, _fnValidateServiceName<t_args_validateServiceName & ["pourdebon"]> & ["pourdebon","https://www.pourdebon.com", readonly ["login","_","legumes","bouchers"]]>
-type vfcxvcx = _fnValidateServJson<t_param_args & _fnValidateServiceName<t_args_validateServiceName & ["pourdebon"]> & ["pourdebon","https://www.pourdebon.com", readonly ["login","_","legumes","bouchers"]]>
-
-type fdsfds = vfcxvcx extends fdsfd ? true : false
-
-//' is not assignable to type '_fnValidateServJson<t_param_args &
-
-/*
-type A_ffdsfvd = {
-    [x: string]: Promise<AService<any, `http://www.${string}.${string}` | `https://www.${string}.${string}`, _validateRoute<string>, string, `http://www.${string}.${string}/${string}` | `https://www.${string}.${string}/${string}`, t_service_functions<any, string, _validateRoute<string>>>>;
-}
-
-type T_ffdsfvd =  {
-    login: Promise<AService<any, "https://www.pourdebon.com", _validateRoute<string> & readonly ["login", "_", "legumes", "bouchers"], "login", `https://www.pourdebon.com/${string}`, t_service_functions<any, "login", _validateRoute<string> & readonly ["login", "_", "legumes", "bouchers"]>>>;
-    _: Promise<AService<any, "https://www.pourdebon.com", _validateRoute<string> & readonly ["login", "_", "legumes", "bouchers"], "_", `https://www.pourdebon.com/${string}`, t_service_functions<any, "_", _validateRoute<string> & readonly ["login", "_", "legumes", "bouchers"]>>>;
-    legumes: Promise<AService<any, "https://www.pourdebon.com", _validateRoute<string> & readonly ["login", "_", "legumes", "bouchers"], "legumes", `https://www.pourdebon.com/${string}`, t_service_functions<any, "legumes", _validateRoute<string> & readonly ["login", "_", "legumes", "bouchers"]>>>;
-    bouchers: Promise<AService<any, "https://www.pourdebon.com", _validateRoute<string> & readonly ["login", "_", "legumes", "bouchers"], "bouchers", `https://www.pourdebon.com/${string}`, t_service_functions<any, "bouchers", _validateRoute<string> & readonly ["login", "_", "legumes", "bouchers"]>>>;
-}*/
