@@ -6,16 +6,18 @@ import { concatNameModuleAndDebug } from "./str_debug.js";
 const name_module :string = "m_primitives"
 
 
-import { _notFoundIdx } from "./type.js";
+import { _notFoundIdx, isEqual, t_notFoundIdx } from "./type.js";
 
 export type nullOrUndefined = null | undefined;
 
+export type t__isNullOrUndefined <T> = isEqual<T,null> | isEqual<T,undefined>
 export function _isNullOrUndefined<T>(value: T ) : value is nullOrUndefined {
     return value === null || value === undefined;
 }
 
 export const str_function = "function" as const
 
+export type t__isFunction<T> = isEqual<T,Function>
 export const _isFunction = (val: any): val is Function => {
     return typeof val === 'function';
 }
@@ -23,15 +25,15 @@ export const _isFunction = (val: any): val is Function => {
 /*export const js_isFunction = (varToCheck) => {
     return varToCheck && {}.toString.call(varToCheck) === "[object Function]"
 }*/
-
+export type t__isObject<T> = isEqual<T,Object>
 export const _isObject = (val: any): val is Object => {
     return typeof val === 'object';
 }
-
+export type t__isArray<T> = isEqual<T,Array<any>>
 export const _isArray = (val: any): val is Array<any> => {
     return Array.isArray(val);
 }
-
+export type t_emptyCond<T> = (...args:any[])=>true
 export function emptyCond(...args) {
     return true
 }
@@ -39,23 +41,29 @@ export function emptyCond(...args) {
 export const noReturnValue : undefined = undefined
 export type t_noReturnValue = typeof noReturnValue
 
+export type t_isRetFunctionisNothing = isEqual<t_noReturnValue,t_noReturnValue>
 export function isRetFunctionisNothing (res : any) : res is t_noReturnValue {
     return res === noReturnValue
 }
 
 export const  _undefined=  ():nullOrUndefined  => { return void 0; };
+export type t__undefined = ReturnType<typeof _undefined>
 
 export const  _notFound = ():nullOrUndefined  => { return _undefined() ; };
+export type t__notFound = ReturnType<typeof _notFound>
 
-export const  is_notFound= (element:any) : element is ReturnType<typeof _notFound> => {
+
+export type t_is_notFound<T> = isEqual<T,t__notFound>
+export const  is_notFound= (element:any) : element is t__notFound => {
     return element === _notFound();
 };
 
+export type t_isNotFoundIdx<T> = isEqual<T,t_notFoundIdx>
+export const isNotFoundIdx = <T extends number>(idx:T) => (idx ===  _notFoundIdx()) as t_isNotFoundIdx<T>
 
-export const isNotFoundIdx = (idx:number):boolean => idx ==  _notFoundIdx()
 
-
-export const  m_isNil = (element:any) :boolean => {
+export type t_m_isNil<T> = T extends null ? | T extends t__undefined ? true : false : false
+export const  m_isNil = <T>(element:T) :boolean => {
     return element == null || element == _undefined();
 }; 
 

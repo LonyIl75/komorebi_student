@@ -1,12 +1,13 @@
 import { join_underscore_lowercase } from '@shared/m_string.js';
 import { joinFilePath } from '@shared/m_file.js';
 
-import { convertStrToRegexStr, t_strRegex } from '@shared/m_regex.js';
+import { convertStrToRegexStr } from '@shared/m_regex.js';
 import {t_enum_level_0, t_repertory_category, t_repertory_category_database, t_repertory_category_scrapingService} from './enum_path.js';
 
 import * as otherPath from './otherPath.js';
 import * as srcPath from './srcPath.js';
 import * as testPath from './testPath.js';
+import { t_strRegex } from '@shared/_regexp.js';
 
 
 

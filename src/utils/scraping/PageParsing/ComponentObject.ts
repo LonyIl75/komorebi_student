@@ -13,7 +13,6 @@ import { t_arr_component,  t_getChildTypeFromArrComponent, t_getClassNameTypeFro
 import {_Enumerate, arrToUnion,reshapeObject, t_function } from "@shared/type.js";
 import {_notFoundIdx} from "@shared/type.js";
 import { EmptyInit, haveSerializer, haveSerializerAndEmptyInit, } from '@shared/m_json.js';
-import { t_strRegex } from '@shared/m_regex.js';
 import { MapRegexToIdPath } from '@shared/m_regexMapping.js';
 import { FrameAddScriptTagOptions } from 'puppeteer';
 import { ExposeObject, t_exposeObject } from '../PageEvaluate/ExposeObject.js';
@@ -24,6 +23,7 @@ import { t_str_type } from './Schema/Component/types.js';
 import { FunctionalWrapperJsonComponent } from './Schema/FunctionalWrapperJsonComponents/FunctionalWrapperJsonComponents.js';
 import { t_union_IComponent } from './Schema/FunctionalWrapperJsonComponents/JsonComponents/JsonComponents.js';
 import { _IJsonComponents } from './Schema/FunctionalWrapperJsonComponents/_JsonComponents/_JsonComponents.js';
+import { t_strRegex } from '@shared/_regexp.js';
 
 
 export type t_ScrapingComponent_any = ScrapingComponent<t_strRegex, string, readonly [t_rootClassName,...readonly string[]],  any, t_arr_component<string>, _IJsonComponents<string>>

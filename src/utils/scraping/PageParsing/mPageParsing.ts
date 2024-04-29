@@ -12,10 +12,10 @@ import {mPage} from "../PageEvaluate/mPage.js";
 import {  t_ParsingTree } from "./TreeParsing.js";
 import { arrToUnion } from "@shared/type.js";
 import { t_arr_component, t_getClassNameTypeFromArrComponent, t_rootClassName } from "./types.js";
-import { t_strRegex } from '@shared/m_regex.js';
 import { IJsonWithScrapingComponents } from './ComponentObject.js';
 import { IJsonComponents } from './Schema/FunctionalWrapperJsonComponents/JsonComponents/JsonComponents.js';
 import { _IJsonComponents } from './Schema/FunctionalWrapperJsonComponents/_JsonComponents/_JsonComponents.js';
+import { t_strRegex } from '@shared/_regexp.js';
 
 
 

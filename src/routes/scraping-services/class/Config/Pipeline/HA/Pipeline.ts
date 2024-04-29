@@ -1,7 +1,7 @@
 import { IJson, IVoid, isEmptyJson, isNotEmptyJson } from "@shared/m_object.js"
 import { t_rules_base, PipelineBuilder  as _PipelineBuilder} from "@shared/m_pipeline.js"
 import { _isNullOrUndefined, t_noReturnValue } from "@shared/m_primitives.js"
-import { convertStrToRegexStr, t_regex_array, t_strRegex } from "@shared/m_regex.js"
+import { convertStrToRegexStr} from "@shared/m_regex.js"
 import { NestedArray, arrToUnion, arr_url_attributeName, getIndexOfElement, joinCharKeyJson, reshapeObject, t_arr_url_attributeName, t_join_underscore, t_notFoundIdx } from "@shared/type.js"
 import { ReqAndResType } from "../../../utils/Data/ReqResRoute.js"
 import { AServiceRequest } from "../../../utils/Data/ServiceRoute.js"
@@ -18,18 +18,19 @@ import { MapRegexToIdPath, pagination_field, t_pagination_field } from "@shared/
 import { t_agreg_path, unjoin_pathRoutes } from "@shared/routePath.js"
 import { NodeComponentValue, str_attributes } from "@/utils/scraping/PageParsing/Tree/NodeComponent.js"
 import { f_clicking } from "@/utils/scraping/primitives/human_actions.js"
-import { arrayOnlyIndices, convertToArray } from "@shared/m_array.js"
+import { arrayOnlyIndices, convertToArray, isStrictArray } from "@shared/m_array.js"
 import { t_df_arr_fct_name, str_getNextPage, t_str_getNextPage, str_transformAfterGetNextPage, str_nextPage, str_transformAfterNextPage, str_getLocalFunction, str_getServiceFunction, str_save_serviceFunction, str_transformAfterGetServiceFunction, getUrlToScrap } from "./types.js"
 import { createSubJsonFromArrRegex, deepCloneJson, getSubsetKeysFromArrRegex } from "@shared/m_json.js"
 import { getRootPropFromResValue, getRootPropFromValue, isGetValue, str_json_value, t_resValue } from "@/utils/scraping/PageParsing/Tree/TreeComponent.js"
-import { regexOrStrToBeginAndEndOfLine } from "@shared/m_regex_prefixAndSuffix.js"
+import { embedBeginAndEndOfLineStrOrRegex } from "@shared/m_regex_prefixAndSuffix.js"
 import { t_req_any, t_res_any } from "@/controller/scraping-services/class/constraints.js"
+import { t_strRegex } from "@shared/_regexp.js"
 
 //TODO-IMP refactor
 
 export type t_ha_res = Promise<(IJson<"url"|"date"|string>)>
 
-export const nextCategories = ["url","click","scroll"] as const
+export const nextCategories =["url","click","scroll"] as const
 export type t_nextCategory = typeof nextCategories[number]
 
 export type t_json_nextPage = {
@@ -165,8 +166,9 @@ implements t_IAHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
                 await mpage.goto(url_toScrap.slice(0,url_toScrap.length-2))
                 await time.timer(3000);
                 await mpage.goto(url_toScrap)
+                mpage.cur_url = url_toScrap
             }
-            mpage.cur_url = url_toScrap
+            
 
             //if(!this.isLoaded)
                 await page.mouse.move(0, 0);
@@ -195,17 +197,20 @@ implements t_IAHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
     }
 
 }
-type _t_nextPaginsationJson =IJson<t_arr_url_attributeName[number],string>
+type _t_nextPaginationJson =IJson<t_arr_url_attributeName[number],string>
 
 
 export type t_nextJson_selectedPagination<isBase extends boolean = false> =  string 
 
-export type t_nextJson_nextPagination<isBase extends boolean = false> = 
-    isBase extends true ? 
-        joinCharKeyJson<t_pagination_field[0],t_join_underscore , _t_nextPaginsationJson> & {[k in t_pagination_field[0]] : string }
-    : joinCharKeyJson<t_pagination_field[0],t_join_underscore , _t_nextPaginsationJson> & {[k in t_pagination_field[0]] : `${number}` }
+export type t_nextJson_nextPagination<isBase extends boolean = false,isEmbedded extends boolean = boolean,isGetValue extends boolean = boolean > =
+t_resValue<t_pagination_field[0],isGetValue,(isBase extends true ?  string : `${number}`) > extends infer R ?
+boolean extends isEmbedded ? {[k in t_pagination_field[0]] :R} | R : isEmbedded extends true ? {[k in t_pagination_field[0]] :R} : R 
+: never
 
-export type t_nextJson<isBase extends boolean = false> = {[k in t_pagination_field[0]] :t_nextJson_nextPagination<isBase>[] } & {[k in t_pagination_field[1]] :t_nextJson_selectedPagination<isBase>}
+   
+export type t_nextJson<isBase extends boolean = false,isSingleNext extends boolean = boolean , isGetValue extends boolean = boolean > = 
+(boolean extends isSingleNext ? [t_nextJson_nextPagination<isBase,false, isGetValue>] | t_nextJson_nextPagination<isBase,true, isGetValue>[] : isSingleNext extends true ? [t_nextJson_nextPagination<isBase,false, isGetValue>] : t_nextJson_nextPagination<isBase,true, isGetValue>[] ) extends infer R ? 
+{[k in t_pagination_field[0]] : R } & {[k in t_pagination_field[1]] :t_nextJson_selectedPagination<isBase>} : never 
 
 
 export abstract class AHA_Service<Req extends t_req_any , Res extends t_res_any,UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
@@ -224,35 +229,60 @@ extends  AHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,un
         abstract nextPage : (getIndexOfElement<t_str_getNextPage,[...arr_HA_df_fct_name,...arr_restFct]> extends t_notFoundIdx ? undefined : (( req:Req , res : Res  ) => Promise<t_json_nextPage>))
         abstract transformAfterNextPage :  (getIndexOfElement<t_str_getNextPage,[...arr_HA_df_fct_name,...arr_restFct]> extends t_notFoundIdx ? undefined : ((req:Req , res : Res, json:Awaited<Promise<t_json_nextPage>> ) => ReqAndResType<Req, Res>))
 
-        static _nextsJson (json :t_nextJson<true>) {
-            const selected_pagination = json[pagination_field[1]]
-            const limit = parseInt(getRootPropFromValue(pagination_field[1],json as any ))//TODO 
-            const nextPagination = json[pagination_field[0]]
-            let nextPagination_values = nextPagination.filter((element)=>{
-                const prop = pagination_field[0]
-                if(element.hasOwnProperty(prop)){
-                    const json_value = getRootPropFromValue(prop,element)
-                    return /^\d+$/.test(json_value) &&  parseInt(json_value) > limit
-                }
-                return false 
-            })
-            nextPagination_values = nextPagination_values.sort(function(a:t_nextJson_nextPagination<true>, b :t_nextJson_nextPagination<true>) {
-                const a_val = parseInt(getRootPropFromValue(pagination_field[0],a))
-                const b_val = parseInt(getRootPropFromValue(pagination_field[0],b))
-                return a_val - b_val
-            });
+        static _nextsJson (_json :t_nextJson<true>) {
+            const selected_pagination = _json[pagination_field[1]]
+            const nextPagination = _json[pagination_field[0]]
 
-            return {[pagination_field[0]]:nextPagination_values, [pagination_field[1]]:selected_pagination} as t_nextJson<false>
+            let _nextPagination_values = nextPagination
+            if(_nextPagination_values.length > 1){
+                let nextPagination_values = _nextPagination_values as t_nextJson<true,false>["NextPagination"]
+                const json = _json as t_nextJson<true,false>
+                const limit = parseInt(getRootPropFromValue(pagination_field[1],json as any ))//TODO 
+                
+                nextPagination_values = nextPagination_values.filter((element)=>{
+                    const prop = pagination_field[0]
+                    if(element.hasOwnProperty(prop)){
+                        const json_value = getRootPropFromValue(prop,element)
+                        return /^\d+$/.test(json_value) &&  parseInt(json_value) > limit
+                    }
+                    return false 
+                })
+                nextPagination_values = nextPagination_values.sort(function(a:t_nextJson_nextPagination<true,true>, b :t_nextJson_nextPagination<true,true>) {
+                    const a_val = parseInt(getRootPropFromValue(pagination_field[0],a))
+                    const b_val = parseInt(getRootPropFromValue(pagination_field[0],b))
+                    return a_val - b_val
+                });
+                _nextPagination_values = nextPagination_values
+            }else {
+                let nextPagination_values = _nextPagination_values as t_nextJson<true,true>["NextPagination"]
+                _nextPagination_values =[{[pagination_field[0]] :nextPagination_values[0]}]
+                _nextPagination_values = nextPagination_values
+            }
+
+            return {[pagination_field[0]]:_nextPagination_values, [pagination_field[1]]:selected_pagination} as t_nextJson<false>
 
 
         }
 
         static _bodyNextsJson(json:IJson,nextPaginationKey : string , selectedPaginationKey : string){
+            let _nextPagination = {} as any   
+                            
+            if(isStrictArray(json[nextPaginationKey])){                                                             
+                _nextPagination = json[nextPaginationKey] as t_nextJson_nextPagination<true>[]
+            }else {
+                //IMP : regex is \S+ to include href,aria-label, etc AND custom attribute wich can be any string 
+                //type doesnt reflect this aspect , typing is just a taste of what the object should be and not a strict typing
+                const _obj = createSubJsonFromArrRegex(json,[new RegExp(NodeComponentValue.getNameFieldOfJsonStoredValue(pagination_field[0]+"(?:","\\S+)?"))])
+                _nextPagination = [_obj as t_nextJson_nextPagination<true>]
+            }                                                                                                       
+            
             return AHA_Service._nextsJson(
                 {
-                    ...deepCloneJson({NextPagination:convertToArray(json[nextPaginationKey]) as t_nextJson_nextPagination<true>[] }) 
-                    , ...deepCloneJson({SelectedPagination:(json[selectedPaginationKey] as t_nextJson_selectedPagination<true>)})
-                })["NextPagination"]
+                    ...deepCloneJson({[pagination_field[0]]:_nextPagination//TODO: as t_nextJson_nextPagination<true>[] 
+
+                    }) 
+                    , ...deepCloneJson({[pagination_field[1]]:(json[pagination_field[1]] as t_nextJson_selectedPagination<true>)})
+                })[pagination_field[0]]
         }
         static async _getNextPage < TNextPagination extends unionClassNameType , BaseElement extends unionClassNameType,  UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
         ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>>(nextPageId :TNextPagination , 
@@ -267,7 +297,7 @@ extends  AHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,un
             type t_6 =  {[k in keyof T ]: T[k]}
 
             let mpage = await getBrowsers().then((brwsrsP:BrowsersPool)=>brwsrsP.getMPageFromTargetIdx(param.browserId,param.targetId))
-            const url_toScrap = param.url
+            const url_toScrap = param.url_toScrap || param.url
 
             const scrapingComponent  = mpage.getScrapingComponent()
             const mapPathPatternToId : MapRegexToIdPath<UnionRegex, UnionIdPath,ArrUnionClassNameType,unionClassNameType> = scrapingComponent.getMapPathPatternToId()
@@ -319,7 +349,7 @@ extends  AHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,un
             let  res_nextPagenextPage :t_json_nextPage= {} as any 
             
             const keys_attribute_url = arr_url_attributeName.map((url_attributeName)=>NodeComponentValue.getNameFieldOfJsonStoredValue(pagination_field[0],url_attributeName))
-            const regex_keys_attribute_url = keys_attribute_url.map((key_attribute_url)=>{return new RegExp(regexOrStrToBeginAndEndOfLine<true>(convertStrToRegexStr(key_attribute_url)))})
+            const regex_keys_attribute_url = keys_attribute_url.map((key_attribute_url)=>{return new RegExp(embedBeginAndEndOfLineStrOrRegex(convertStrToRegexStr(key_attribute_url),true))})
             
             for (const _nodeComponentValue of nexts){
                 const nodeComponentValue = _nodeComponentValue[pagination_field[0]]
@@ -333,13 +363,13 @@ extends  AHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,un
                         url = urls[i]
                         success_goto = await mpage.goto(url).then(()=>true).catch(()=>false)
                     }
-                    if(!success_goto) throw new Error(`No url found for ${nodeComponentValue.description}`)
-
-                    const url_toScrap = url
-                    res_nextPagenextPage = {nexts:[],nextCategory :nextCategories[0],url,url_toScrap} //A FAIRE : nexts:nexts.pop()
-                    break
+                    if(success_goto) {//throw new Error(`No url found for ${nodeComponentValue.description}`)
+                        const url_toScrap = url
+                        res_nextPagenextPage = {nexts:[],nextCategory :nextCategories[0],url,url_toScrap} //A FAIRE : nexts:nexts.pop()
+                        break
+                    }
                 }   
-                else if(nodeComponentValue.description.length>0 && nodeComponentValue.description[0].length>0){
+                if(nodeComponentValue.description.length>0 && nodeComponentValue.description[0].length>0){
                     const elements :t_ElementHN[] = await NodeComponentValue.getElmOfNodeComponentValue(nodeComponentValue,page)
                     if(elements.length>0){
                         const url = mpage.cur_url
@@ -347,9 +377,6 @@ extends  AHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,un
                         const url_toScrap = getUrlToScrap(url,param.result)
                         res_nextPagenextPage = {nexts:[],nextCategory :nextCategories[1],url,url_toScrap}//A FAIRE : nexts:nexts.pop()
                         break
-                    }
-                    else {
-                        throw new Error(`No elements found for ${nodeComponentValue.description}`)
                     }
                 }
 

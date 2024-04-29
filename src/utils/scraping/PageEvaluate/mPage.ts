@@ -13,7 +13,7 @@ import { ExposeObject, t_exposeObject } from "./ExposeObject.js";
 import type { IJson } from "@shared/m_object.js";
 import {ExposeObjectOrFunction} from "./ExposeObjectOrFunction.js";
 import path from "path";
-import { convertStrToRegexStr, embedBeginLineRegexStr, getRegexG, t_strRegex } from "@shared/m_regex.js";
+import { convertStrToRegexStr,  getRegexG } from "@shared/m_regex.js";
 import {RemoveDebug} from "@shared/str_debug.js";
 import { fileURLToPath } from "url";
 import { getFilenameWithoutExtension, joinFilePath, mreadFile, pathToJoinCharFileName, toFilePath } from "@shared/m_file.js";
@@ -25,6 +25,8 @@ import { ScrapingComponent, IJsonWithScrapingComponents } from '../PageParsing/C
 import { IJsonComponents } from '../PageParsing/Schema/FunctionalWrapperJsonComponents/JsonComponents/JsonComponents.js';
 import { _IJsonComponents } from '../PageParsing/Schema/FunctionalWrapperJsonComponents/_JsonComponents/_JsonComponents.js';
 import { removeCommentRegex, import_str_regex, getExportedFunctionNameRegex, getExportedClassNameRegex, getVariableNameRegex, getNameOfExportedSet } from '@shared/m_regex_comment.js';
+import { t_strRegex } from '@shared/_regexp.js';
+import { embedBeginOfLineStrOrRegex } from '@shared/m_regex_prefixAndSuffix.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -525,7 +527,7 @@ T extends _IJsonComponents<unionClassNameType>,
 
         do {
             m = getRegexG( import_str_regex ).exec( str_src);
-            let IsIgnoredImport = m? getRegexG(embedBeginLineRegexStr(RemoveDebug.getIgnoreImportRegex("mPage-not-imported"))).exec(str_src.substring(m[0].length)):m ; 
+            let IsIgnoredImport = m? getRegexG(embedBeginOfLineStrOrRegex(RemoveDebug.getIgnoreImportRegex("mPage-not-imported"),true)).exec(str_src.substring(m[0].length)):m ; 
             if (m && !IsIgnoredImport) {
                 let group = m[1]?m[1]:m[2];
                 //console.log("getCleanDebugCodeAndImportedFiles | group", group , m );

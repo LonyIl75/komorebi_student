@@ -128,10 +128,15 @@ export class Selector implements ISelector<t_HTMLTagg>{
         return new Selector([new SelectorProp(new PropertyAndOperator(prop,value,op),fct_mod)],tagg)
     }
 
-    static cst_multPropAndTagg(prop : t_property,values : string[] , tagg : t_HTMLTagg = Selector.df.tagg, op : t_operator = PropertyAndOperator.df.op , fct_mod ?: t_fct_modSelectorProp ){
-        return new Selector(
-            values.map((value)=>new SelectorProp(new PropertyAndOperator(prop,value,op),fct_mod))
-        ,tagg)
+    static cst_multPropAndTagg(prop : t_property,values : string[] , tagg : t_HTMLTagg = Selector.df.tagg, op : t_operator = PropertyAndOperator.df.op , fct_mods ?: t_fct_modSelectorProp[] ){
+        let selector_props = []
+        let last_fct_mod = fct_mods?.length ? fct_mods[0] : SelectorProp.df_fct_mod
+        for (let i = 0; i < values.length; i++) {
+            const fct_mod = fct_mods?.length ? fct_mods.length > i ? fct_mods[i] : last_fct_mod : SelectorProp.df_fct_mod
+            selector_props.push(new SelectorProp(new PropertyAndOperator(prop,values[i],op),fct_mod))
+        }
+        
+        return new Selector(selector_props,tagg)
     }
 
     setTagg(tagg : t_HTMLTagg){

@@ -92,7 +92,7 @@ export interface  IDatabaseMetaDB<T extends t_DatabaseMeta_type=t_DatabaseMeta_t
 interface _IFDatabaseMeta extends IDatabaseMeta{}
 interface _IFDatabaseMetaDB<T extends t_DatabaseMeta_type> extends IDatabaseMetaDB<T>{}
 const arr_databaseMeta_type = ["MongoDB","SQLite","Prisma"] as const
-export const isDatabaseMeta_type = (x:string): x is t_databaseMeta_type => arr_databaseMeta_type.includes(x as t_databaseMeta_type)
+export const isDatabaseMeta_type = (x:any): x is t_databaseMeta_type => arr_databaseMeta_type.includes(x as t_databaseMeta_type)
 export type t_arr_databaseMeta_type = typeof arr_databaseMeta_type
 export type t_databaseMeta_type = t_arr_databaseMeta_type[number]
 
@@ -708,7 +708,8 @@ export class DatabaseLocalAndRemote<T extends string=string> implements t_Databa
     }
   
     async connect(){
-        await Promise.all([this.getLocalDatabase().connect(),this.getRemoteDatabase().connect()])
+        await Promise.resolve()
+        //await Promise.all([this.getLocalDatabase().connect(),this.getRemoteDatabase().connect()])
     }
 
     setPrismaUrl = (url_remote:string,url_local : string ) => {

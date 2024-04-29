@@ -13,6 +13,11 @@ export const join_urlAndQuery = <R extends string , U extends string = string >(
   return [url,queryParam].join(char_join_pathRoutes)  as  t_JoinChar_urlAndQuery<readonly[R,U] >
 }
 
+export const split_urlAndQuery = <T extends ReturnType<typeof join_urlAndQuery<R,U>> , R extends string = string , U extends string = string >(url:T ):[R,U]   => 
+    { 
+      return url.split(char_join_pathRoutes)  as  [R,U]
+    }
+
 
 export const char_join_queryParam = "&";
 export type t_char_join_queryParam = typeof char_join_queryParam

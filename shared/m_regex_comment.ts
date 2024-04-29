@@ -1,4 +1,5 @@
-import { getRegexGM, getUnionNonMatchingGroups,  embedNonCampturingGroupStrRegex, end_line_js} from "./m_regex.js";
+import { getRegexGM, end_line_js} from "./m_regex.js";
+import { getUnionNonMatchingGroups, embedNonCapturingGroupStrOrRegex } from "./m_regex_prefixAndSuffix.js";
 
 export const import_str_regex = `\\s*import\\s*(?!type\\b)(?:(?:(?:[\\w\\s,]*?)?(?:\\{\\s*(?:[\\w\\s,]*?)\\s*\\}\\s*))|(?:(?:\\{\\s*(?:[\\w\\s,]*?)\\s*\\})?(?:[*,\\w\\s]*?))|(?:\\*\\s+as\\s+[\\w]*?\\s*))from\\s+(?:(?:"([^']*?)")|(?:'([^']*?)'))${end_line_js}`;
 
@@ -73,7 +74,7 @@ export function getFunctionNameRegex(_str:string){
 }
 
 export function getExportedFunctionNameRegex(_str:string){
-  let res=getRegexGM(`${embedNonCampturingGroupStrRegex(function_export_name_str_regex)}|${embedNonCampturingGroupStrRegex(arrowFunction_export_name_str_regex)}`).exec(_str)
+  let res=getRegexGM(`${embedNonCapturingGroupStrOrRegex(function_export_name_str_regex,true)}|${embedNonCapturingGroupStrOrRegex(arrowFunction_export_name_str_regex,true)}`).exec(_str)
   return res? res[1] : undefined;
 }
 

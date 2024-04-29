@@ -9,7 +9,7 @@ import { t_union_tld_df } from "./union.js";
 import { t_char_join_reqAssign } from "./types.js";
 // Validate url with the following regex :
 /*
-https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b\/([-a-zA-Z0-9%_\.~]+\/?)+(\?[-a-zA-Z0-9%_\.~]+=[-a-zA-Z0-9%_\.~]+\&?)*
+(https?):\/\/((?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b)(?:\/([-a-zA-Z0-9%_\.~]+\/?)+)?(?:\?((?:[-a-zA-Z0-9%_\.~]+=[-a-zA-Z0-9%_\.~]+\&?)+))?
 */
 
 //longest TLD == "XN--VERMGENSBERATUNG-PWB"["length"] == 24 => 25 is the max length of TLD

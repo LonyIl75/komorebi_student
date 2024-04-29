@@ -4,8 +4,9 @@ import { getBaseFileName } from "./m_file.js";
 
 export const nameFile = "str_debug"//TODO = getBaseFileName(__filename)
 
-import { embedBeginAndEndLineRegexStr, embedGroupStrRegex, end_line_js, getRegexG, getRegexGM, getUnionStrRegex, isAssignationRegex, match_balanced_parantheses_str_regex } from "./m_regex.js";
+import { end_line_js, getRegexG, getRegexGM, isAssignationRegex, match_balanced_parantheses_str_regex } from "./m_regex.js";
 import { deb_commentary } from "./m_regex_comment.js";
+import { getGroupUnionStrRegex, embedCapturingGroupStrOrRegex, embedBeginAndEndOfLineStrOrRegex } from "./m_regex_prefixAndSuffix.js";
 import { join_underscore, majFirstChar } from "./m_string.js";
 import { Page } from "puppeteer";
 
@@ -21,15 +22,15 @@ export class RemoveDebug{
     static getDebugFunctionRegex(ignored_function){
         const debug_functions = Object.keys(m_debug).filter((_str)=>!Object.keys(m_debug.helpers).concat(Object.keys(m_debug.assignation)).includes(_str))
         const all_debug = ignored_function.concat(debug_functions)
-        let all_debugFunction_regex = getUnionStrRegex(all_debug)
-        let function_debug_regex = embedGroupStrRegex(all_debugFunction_regex + match_balanced_parantheses_str_regex+end_line_js);
+        let all_debugFunction_regex = getGroupUnionStrRegex(all_debug)
+        let function_debug_regex = embedCapturingGroupStrOrRegex(all_debugFunction_regex + match_balanced_parantheses_str_regex+end_line_js,true);
         return function_debug_regex
     }
 
     static getDebugVariablesRegex(ignored_variable){
         const debug_variables = Object.keys(m_debug.assignation)
         const all_debug = ignored_variable.concat(debug_variables)
-        let all_debugVariable_regex = getUnionStrRegex(all_debug)
+        let all_debugVariable_regex = getGroupUnionStrRegex(all_debug)
         let variable_debug_regex = isAssignationRegex + all_debugVariable_regex + '\\([^;]*?;\\s*' ;
         return variable_debug_regex
     }
@@ -44,7 +45,7 @@ export class RemoveDebug{
     }
 
     removeDebugFunctions(str_src:string) :[string,RegExpExecArray|null]{
-        let m= getRegexGM(embedBeginAndEndLineRegexStr("(.+)")).exec( str_src);//notPatternLookahead(".*import")+// .*?; MAYBE A FAIRE 
+        let m= getRegexGM(embedBeginAndEndOfLineStrOrRegex("(.+)",true)).exec( str_src);//notPatternLookahead(".*import")+// .*?; MAYBE A FAIRE 
         let word =""
         if(m){
              word= m[1] 

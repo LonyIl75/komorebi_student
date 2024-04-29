@@ -16,9 +16,9 @@ import { fileURLToPath } from "url";
 import { IJsonWithScrapingComponents } from "../PageParsing/ComponentObject.js";
 import { arrToUnion } from "@shared/type.js";
 import { t_arr_component, t_getChildTypeFromArrComponent, t_getClassNameTypeFromArrComponent, t_rootClassName } from "../PageParsing/types.js";
-import { t_strRegex } from '@shared/m_regex.js';
 import { IJsonComponents } from '../PageParsing/Schema/FunctionalWrapperJsonComponents/JsonComponents/JsonComponents.js';
 import { _IJsonComponents } from '../PageParsing/Schema/FunctionalWrapperJsonComponents/_JsonComponents/_JsonComponents.js';
+import { t_strRegex } from '@shared/_regexp.js';
 
 
 

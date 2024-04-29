@@ -7,7 +7,7 @@ import { concatNameModuleAndDebug } from "./str_debug.js";
 const name_module :string = "m_array"
 
 
-import { NestedArray, t_booleanFunction,t_getLastElementArr} from "./type.js"
+import { NestedArray, filterNotNullOrUndefinedArr, t_JoinChar, t_booleanFunction,t_getLastElementArr} from "./type.js"
 import { _isNullOrUndefined } from "./m_primitives.js";
 
 export const compareArray  = ( array1:any[] , array2 :any[]) => { return array1.length === array2.length && array1.every((value, index) => value === array2[index]) } 
@@ -23,6 +23,10 @@ export function isEmptyArray(arr:any[]) {
     return arr.length == 0
 }
 
+export const isArray = (arg :any) => Array.isArray(arg)
+
+export const isStrictArray = (arg :any) => Array.isArray(arg) && !isNullArray(arg)
+
 export const convertToArray = <T>(arg :T | T[]) => {
     return Array.isArray(arg) ? arg : [arg]
 }
@@ -33,9 +37,9 @@ export const arrayToString = (arr :NestedArray<any> , separator :string = ",") =
 }
 
 //A FAIRE : typing
-export const joinArray_with_char = <T extends any[], JoinChar extends string = "">(paramArr:T, paramChar :JoinChar = "" as JoinChar) => {
-    let _paramArr = paramArr.filter((elm) => elm)
-    return _paramArr.join(paramChar)
+export const joinArray_with_char = <T extends readonly string [], JoinChar extends string = "">(paramArr:T, paramChar :JoinChar = "" as JoinChar) => {
+    let _paramArr  = paramArr.filter((elm) => elm) as filterNotNullOrUndefinedArr<T>
+    return _paramArr.join(paramChar) as t_JoinChar <typeof _paramArr,JoinChar>
 }
 
 export const permutator = (inputArr) => {

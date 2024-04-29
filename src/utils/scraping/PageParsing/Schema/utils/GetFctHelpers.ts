@@ -40,7 +40,8 @@ interface IGetFctHelpers <U extends string , UEnum extends t_strEnumFctHelpers ,
     hasDirectChild : (e:string)=>t_fct_modSelectorProp
     not : (e:string)=>t_fct_modSelectorProp
 
-    arr_selector : (arr_selectors : readonly Selector[][],fct_str :(str_selector:string)=>string) => readonly string[][]
+    arr_selector : <T extends (readonly Selector[]) | (readonly string[]) >(arr_selectors :  T ,fct_str :(str_selector:string)=>string ) => string[]
+    arrArr_selector : <T extends (readonly Selector[])[] | (readonly string[])[] >(arr_selectors :  T ,fct_str :(str_selector:string)=>string ) =>  readonly string[][]
     arr_selector_join(arrArr_selectors : readonly selectorEmbedInStrDebEnd [],fct_join ?:(arr_str:readonly string[])=>string) : string 
     arr_selector_join_arr(arrArr_selectors : readonly (readonly selectorEmbedInStrDebEnd[])[],fct_join ?:(arr_str:readonly string[])=>string ) : readonly string[]
     arr_selector_join_arrArr : (arr_selectors : readonly( readonly (readonly selectorEmbedInStrDebEnd[])[])[],fct_join?:(arr_str:readonly string[])=>string) =>  readonly (readonly string[]) []
@@ -104,16 +105,24 @@ export class GetFctHelpers<U extends string  , UEnum extends t_strEnumFctHelpers
         )
         )
     }
+    arr_selector <T extends (readonly Selector[])> (arr_selectors : T ,fct_str :(str_selector:string)=>string ) : string[]
+    arr_selector <T extends (readonly string[])>  (arr_selectors : T ,fct_str :(str_selector:string)=>string ) :  string[]
+    arr_selector (arr_selectors :  (readonly Selector[]) | (readonly string[]) ,fct_str :(str_selector:string)=>string ) : string[] {
+        return arr_selectors.map(
+            (e)=>fct_str( e.toString() )
+        )
 
-    arr_selector (arr_selectors : readonly Selector[][],fct_str :(str_selector:string)=>string) : readonly string[][]{
-            return (arr_selectors.map(
-                (es)=>{
-                    return es.map(
-                        (e)=>fct_str(e.toString())
-                    )
-                })
-            )
+    }
+
+    arrArr_selector <T extends (readonly Selector[])[]> (arr_selectors : T ,fct_str :(str_selector:string)=>string ) :  readonly string[][]
+    arrArr_selector <T extends readonly (readonly string[])[]>  (arr_selectors : T ,fct_str :(str_selector:string)=>string ) :  readonly string[][] 
+    arrArr_selector (arr_selectors :  (readonly Selector[])[] | (readonly string[])[] ,fct_str :(str_selector:string)=>string ) :  readonly string[][] {
+            return  arr_selectors.map(
+                (es)=>this.arr_selector(es,fct_str)
+                )
+
         }
+    
 
 
     val_selector <T extends U > (className : T , prop: string = classProp, op: t_operator = containOp , fct_mod?: t_fct_modSelectorProp, tagg?: t_HTMLTagg  ) : Selector  {

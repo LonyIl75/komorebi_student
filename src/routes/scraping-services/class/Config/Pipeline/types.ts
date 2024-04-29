@@ -1,11 +1,11 @@
 import { IJson, IVoid } from "@shared/m_object.js"
 import { t_rules_base } from "@shared/m_pipeline.js"
 import { t_noReturnValue } from "@shared/m_primitives.js"
-import { t_regex_array } from "@shared/m_regex.js"
 import { t_function, PopUnion, inArray } from "@shared/type.js"
 import { ReqAndResType } from "../../utils/Data/ReqResRoute.js"
 import { PipelineBuilder as _PipelineBuilder } from "@shared/m_pipeline.js"
 import { t_req_any, t_res_any } from "@/controller/scraping-services/class/constraints.js"
+import { t_regex_array } from "@shared/_regexp.js"
 
 export const str_save = "save" as const
 export type t_str_save = typeof str_save

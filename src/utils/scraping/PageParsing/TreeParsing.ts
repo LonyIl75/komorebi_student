@@ -29,7 +29,7 @@ import { colorIfBool } from '../primitives/misc.js';
 import { str_type } from './Schema/Component/types.js';
 import { embedding_selector_scope } from './Schema/utils/misc.js';
 import { MapRegexToIdPath } from '@shared/m_regexMapping.js';
-import { t_strRegex } from '@shared/m_regex.js';
+import { t_strRegex } from '@shared/_regexp.js';
 import { noneChildType } from './TypeChilds/types.js';
 import { ChildAttributeTypeValue } from './Schema/_Component/ChildAttributeType/ChildAttributeTypeValue.js';
 import { str_value, str_value_init } from './Schema/_Component/ValTextContent/types.js';

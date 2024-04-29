@@ -2,7 +2,9 @@ import path from "path";
 import fs from "fs";
 import { IJson ,getEmptyJson} from "./m_object.js";
 import { printError } from "./m_function.js";
-import { convertStrToRegexStr } from "./m_regex.js";
+import { convertStrToRegexStr, t_convertStrToRegexStr } from "./m_regex.js";
+import MRegExp from "./_regexp.js";
+import { t_alphabetMaj, t_strApplyReplaceIfExtends } from "./type.js";
 
 const extensionJs = "js" as const
 
@@ -29,27 +31,32 @@ export const getBaseFileName = (full_filename :string  , withExtension : boolean
 export const getDirectoryPathFromFilePath = (full_filename :string ):string => {
     return path.dirname(full_filename);
 }
- 
-export const removeExtension = (full_filename :string ):string => {
-    return full_filename.replace(/\.[^/.]+$/, "")
+
+type _t_removeExtension<T extends string, Acc extends string =""> = T extends `${infer A}.${infer R}` ? A extends string ? _t_removeExtension<R,`${Acc}.${A}`> : never : Acc
+type t_removeExtension<T extends string> = T extends `${infer A}.${infer R}` ? _t_removeExtension<R,A> : T
+export const removeExtension = < T extends string >(full_filename :T ) => {
+    return full_filename.replace(/\.[^/.]+$/, "") as t_removeExtension<T>
 }
 
-export function removeDrive(filePath) {
-    const regex_drive = new RegExp(`^[a-zA-Z]:${convertStrToRegexStr(path.sep)}`,"g")
+export type t_removeDrive < T extends string > = T extends `${t_alphabetMaj}:${typeof path.sep}${infer R}` ? R : T
+export function removeDrive<T extends string>(filePath:T) {
+    const regex_drive = new MRegExp(`^[a-zA-Z]:${convertStrToRegexStr(path.sep)}`,"g")
     const match = filePath.match(regex_drive) 
+    let res 
     if (match) {
-        return filePath.substring(match[0].length);
+        res = filePath.substring(match[0].length);
     } else {
-        return filePath;
+        res = filePath;
     }
+    return res as t_removeDrive<T>
 }
 
-//A FAIRE : typing 
-export function pathToJoinCharFileName(filePath , joinChar ='.') {
-    let f_path = removeDrive(filePath);
-    f_path = removeExtension(f_path);
-    f_path = f_path.replace(new RegExp(convertStrToRegexStr(path.sep),"g"),joinChar)
-    return f_path;
+
+export type t_pathToJoinCharFileName <T extends string, JoinChar extends string ="." > = t_removeExtension<t_removeDrive<T>> extends infer R ? 
+R extends string ? t_strApplyReplaceIfExtends <R ,typeof path.sep , JoinChar> : never : never 
+export function pathToJoinCharFileName<T extends string, JoinChar extends string ="." >(filePath : T , joinChar : JoinChar ="." as any ) {
+    const  f_path = removeExtension(removeDrive(filePath));
+    return f_path.replace(new MRegExp(convertStrToRegexStr(path.sep),"g"),joinChar) as t_pathToJoinCharFileName<T,JoinChar>
 }
 
 const prefix_file = "file:" as const
@@ -72,6 +79,7 @@ export const isValidPathSyntax = (_path :string ):boolean => {
     return pathRegex.test(_path);
 }
 
+//A FAIRE: typing all function below 
 export  const getInvalid_File_Read = ()=> null 
 export const isInvalid_File_Read = (data : t_strFile ):boolean => data === getInvalid_File_Read() ? true : false
 

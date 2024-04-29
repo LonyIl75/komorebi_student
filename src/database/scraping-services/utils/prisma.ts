@@ -13,12 +13,13 @@ import { getPathServiceSchemaPrisma, getPathServiceClientPrisma } from '@/config
 import { concatExtension, joinFilePath, concatExtensionJs, mreadFile, mwriteFile, isFileExist, ifFileExistRetReadData, mwriteFileExtra } from '@shared/m_file.js';
 import { deepCloneJson, filterJsonByArrProps } from '@shared/m_json.js';
 import { t_noFieldName, noFieldName } from '@shared/m_primitives.js';
-import { convertStrToRegexStr, embedGroupStrRegex, embedNonCampturingGroupStrRegex, embedOptionalGroupStrRegex, getRegexGM, notSpaceStrRegex, spaceStrRegexWithoutLineBreak, str_beginOfLine_regex, str_endOfLine_regex } from '@shared/m_regex.js';
+import { convertStrToRegexStr, getRegexGM, notSpaceStrRegex, spaceStrRegexWithoutLineBreak, str_beginOfLine_regex, str_endOfLine_regex } from '@shared/m_regex.js';
 import { majFirstChar, join_dot, join_underscore, majAllStr, join_hyphen } from '@shared/m_string.js';
 import { t_indexable_key, t_JoinChar_hyphen, Substring, t_JoinChar_underscore, t_JoinChar } from '@shared/type.js';
 import { isDatabaseMeta_type, providerDbToType, t_DatabaseMeta_type } from '@shared/m_database.js';
 import { convertToArray, permutator } from '@shared/m_array.js';
 import { rFact } from '@shared/m_math.js';
+import { embedCapturingGroupStrOrRegex, embedNonCapturingGroupStrOrRegex, embedOptCapturingGroupStrOrRegex } from '@shared/m_regex_prefixAndSuffix.js';
 
 const extensionPrisma =  "prisma" as const
 export const concatExtensionPrisma = <T extends string  > (str:T) => concatExtension(str,extensionPrisma)
@@ -134,9 +135,9 @@ namespace jsonReplace {
     return `env("${_placeHolderGetRegex<_SN,K2,V>(_serviceName,_key_2,_value_1)}")`  as `env(${ReturnType<typeof _placeHolderGetRegex<_SN,K2,V>>})`
    }
 
-   export const placeHolderGetRegex = <V extends string , B extends boolean = true ,_T extends (B extends true ? string : RegExp)  = (B extends true ? string : RegExp), S extends string =  _T extends string ? _T : string   > (_value_1 : V , param_regexOrStr: _T, isStr : B= true as B) => {
+   export const placeHolderGetRegex = <V extends string , B extends boolean ,_T extends (B extends true ? string : RegExp) , S extends string =  _T extends string ? _T : string   > (_value_1 : V , param_regexOrStr: _T, isStr : B) => {
         const arr_to_join =[_value_1,"=",""] as const 
-        const tmp_regex = embedGroupStrRegex(arr_to_join.map((elm)=>convertStrToRegexStr(elm)).join("\\s*")) as unknown as t_JoinChar<typeof arr_to_join,"\\s*">
+        const tmp_regex = embedCapturingGroupStrOrRegex(arr_to_join.map((elm)=>convertStrToRegexStr(elm)).join("\\s*"),true) as unknown as t_JoinChar<typeof arr_to_join,"\\s*">
         return tmp_regex + (isStr ? convertStrToRegexStr(param_regexOrStr as string ) : (param_regexOrStr as RegExp).source) as unknown as `${typeof tmp_regex}${S}`
     }
 }   
@@ -157,7 +158,7 @@ function jsonReplaceTojsonRegex < SN extends string , TK1 extends t_arr_key_1[nu
                     let cur_value : V = value as V
                     let multKey = jsonReplace.joinKey1Key2<TK1 , TK2>(cur_key_1,cur_key_2) 
                     let _strEnv = jsonReplace.envPlaceHolderGetRegex<SN,ReturnType<typeof jsonReplace.joinKey1Key2<TK1,TK2>>,V>(serviceName,multKey,cur_value)
-                    tmp_json[key_2][join_hyphen("regex",cur_value)]= jsonReplace.placeHolderGetRegex<V,true,typeof _strEnv>(cur_value,_strEnv)
+                    tmp_json[key_2][join_hyphen("regex",cur_value)]= jsonReplace.placeHolderGetRegex<V,true,typeof _strEnv>(cur_value,_strEnv,true)
                 }
 
             }
@@ -220,12 +221,12 @@ const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb
 
     const _fct_map = (char_join : string , fct_map : (arg:string)=>string = convertStrToRegexStr ) =>  (arr_str:string[])=>arr_str.map(fct_map).join(char_join)
     const fct_map_join = (arr_arr_str:string[][],char_join : string  ,fct_map ?: (arg:string)=>string ) => arr_arr_str.map(_fct_map(char_join,fct_map))
-    const fct_map_join_join = (arr_arr_str:string[][],char_join : string ,fct_map ?: (arg:string)=>string ,fct_embed : (_str:string)=>string = embedNonCampturingGroupStrRegex ) => fct_map_join(arr_arr_str,char_join,fct_map).map(fct_embed).join("|")
+    const fct_map_join_join = (arr_arr_str:string[][],char_join : string ,fct_map ?: (arg:string)=>string ,fct_embed : (_str:string)=>string = (_str:string)=>embedNonCapturingGroupStrOrRegex(_str,true) ) => fct_map_join(arr_arr_str,char_join,fct_map).map(fct_embed).join("|")
 
     const getRegexAnnotations = (annotations:readonly string[], optIndices : number[]= [])=>{
         const grouped_annotations = annotations.map((_annotation,idx)=>{
             const annotation =convertStrToRegexStr(_annotation) 
-            return optIndices.includes(idx) ? embedOptionalGroupStrRegex(annotation) :embedGroupStrRegex(annotation) })
+            return optIndices.includes(idx) ? embedOptCapturingGroupStrOrRegex(annotation,true) :embedCapturingGroupStrOrRegex(annotation,true) })
         return fct_map_join_join(permutator(grouped_annotations),reqSpaceoptWordSpace,(str)=>str)
     }
 
@@ -277,10 +278,10 @@ const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb
                     //match : `^${optSpace}` (begin)
                     str_beginOfLine_regex + optSpace +
                     //match : "id String"
-                    [idField_name.mongodb,idField_type.mongodb].map(embedGroupStrRegex).join(reqSpace)
+                    [idField_name.mongodb,idField_type.mongodb].map((_str:string)=>embedCapturingGroupStrOrRegex(_str,true)).join(reqSpace)
                     +reqSpaceoptWordSpace+
                     //match : "@id @db.ObjectId"
-                    embedNonCampturingGroupStrRegex(getRegexAnnotations(idField_annotations.mongodb) )
+                    embedNonCapturingGroupStrOrRegex(getRegexAnnotations(idField_annotations.mongodb),true )
                     //match : rest of the line 
                     +optSpaceWordSpace +str_endOfLine_regex
                 const matched = content.match(new RegExp(regex_,"sm"))

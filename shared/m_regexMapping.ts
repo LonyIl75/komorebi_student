@@ -1,7 +1,9 @@
+import { t_matching_pattern_regex_closing, t_pattern_class_regex_closing, t_count_regex, t_begin_ismatching_pattern_regex, t_matching_patternLook_opening, t_maching_patternGroup_regex, t_pattern_class_regex_opening, t_strRegex, t_regex_base_char, ju_escapeRegex } from "./_regexp.js"
 import { countArray } from "./m_json.js"
 import { IJson } from "./m_object.js"
 import { is_notFound, nullOrUndefined, val_null_nullOrUndefined } from "./m_primitives.js"
-import { convertStrToRegexStr, embedGroupStrRegex, embedNonCampturingGroupStrRegex, embedOptionalGroupStrRegex, ju_escapeRegex, t_begin_ismatching_pattern_regex, t_count_regex, t_maching_patternGroup_regex, t_matching_patternLook_opening, t_matching_pattern_regex_closing, t_pattern_class_regex_closing, t_pattern_class_regex_opening, t_regex_base_char, t_strRegex } from "./m_regex.js"
+import { convertStrToRegexStr} from "./m_regex.js"
+import { embedCapturingGroupStrOrRegex, embedNonCapturingGroupStrOrRegex, embedOptCapturingGroupStrOrRegex } from "./m_regex_prefixAndSuffix.js"
 import { char_join_pathRoutes, createAddressBis, t_agreg_path, t_char_join_pathRoutes } from "./routePath.js"
 import { Enumerate, IsUnion, PopUnion, _Enumerate, _countAndRemoveElmInElms, arrArrFromArrAndArr, arrToUnion, countAndRemoveElmInElms, getIndexOfElement, t_getLastElementArr, jsonObjectToArrKey, removeFirstArray, repeat, t_JoinChar_pipe, t_indexable_key } from "./type.js"
 
@@ -25,7 +27,7 @@ type _t_ret_embedVar2 <T extends readonly string[] ,S extends string ="" ,acc ex
 type t_join_regexOptGroup < T extends readonly string[]> = 
     T extends readonly [infer A,...infer R] ? 
         A extends string ? R extends readonly string[] ? 
-            `${ReturnType<typeof embedOptionalGroupStrRegex<A>>}${t_join_regexOptGroup<R>}`
+            `${ReturnType<typeof embedOptCapturingGroupStrOrRegex<true,A>>}${t_join_regexOptGroup<R>}`
         : never : never
     : ""
 
@@ -33,7 +35,7 @@ type t_input_ret_embedVar2< T extends string = string> =readonly[...readonly T[]
 
 type t_repeatGroupParanthesis< Elm extends string , ArrN extends readonly any[] , Str extends string = Elm> = 
      ArrN extends readonly [any,...infer R ] ?  R extends readonly any[] ?
-    t_repeatGroupParanthesis<Elm , R , ReturnType<typeof embedGroupStrRegex<Str>>> : never: Str
+    t_repeatGroupParanthesis<Elm , R , ReturnType<typeof embedCapturingGroupStrOrRegex<true,Str>>> : never: Str
 
     
 type _t_embedVarGroupParanthesis_ <  ArrKey extends readonly string[] , J extends {[k in ArrKey[number] ] :any[]} > =
@@ -47,7 +49,7 @@ type _t_embedVarGroupParanthesis_ <  ArrKey extends readonly string[] , J extend
     
 
 type _t_embedVarGroupParanthesis<  ArrKey extends readonly string[] , J extends {[k in ArrKey[number] ] :any[]} > =
-    _t_embedVarGroupParanthesis_<ArrKey, J> extends infer A ? A extends readonly string[] ? `${ReturnType<typeof embedNonCampturingGroupStrRegex<t_JoinChar_pipe<A>>>}?` : never: never
+    _t_embedVarGroupParanthesis_<ArrKey, J> extends infer A ? A extends readonly string[] ? `${ReturnType<typeof embedNonCapturingGroupStrOrRegex<true,t_JoinChar_pipe<A>>>}?` : never: never
 
 type t_embedVarGroupParanthesis< T extends t_getLastElementArr<t_input_ret_embedVar2>> = 
     {[ k in T[number] ] : _countAndRemoveElmInElms<T,k>[1] } extends infer JsonCounter ? 
@@ -218,7 +220,7 @@ export class MapRegexToIdPath< UnionRegex extends t_strRegex , UnionIdPath exten
             let _str = ""
             if( json_counter.hasOwnProperty(e) && json_counter[e] > 0){
                 _str = embed(e)
-                for(let i =0 ; i < json_counter[e] ; i++) _str = embedGroupStrRegex(_str)
+                for(let i =0 ; i < json_counter[e] ; i++) _str = embedCapturingGroupStrOrRegex(_str,true)
                 delete json_counter[e] 
                
             }

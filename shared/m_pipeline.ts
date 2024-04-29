@@ -10,8 +10,9 @@ import { IJson, IVoid, applyFctToObjectEntries, applyFctToObjectValues, getEmpty
 import { enumPromiseExecutionToFunction, enum_promise_execution } from "./m_promise.js";
 import { XOR, arrArrAdd, arrToUnion, endIdx, getFirstElementArr, t_getLastElementArr, getSubArray, jsonObjectToArr, param_jsonAsForEach, t_booleanFunction, t_function, t_functionPromise, t_functionSetter } from "./type.js";
 import { isRetFunctionisNothing } from "./m_primitives.js";
-import { str_beginOfLine_regex, t_regex_array } from "./m_regex.js";
+import { str_beginOfLine_regex} from "./m_regex.js";
 import { getLastElementArr } from "./m_array.js";
+import { t_regex_array } from "./_regexp.js";
 
 export type t_OInterArr_pipeline = readonly (readonly any[])[]
 

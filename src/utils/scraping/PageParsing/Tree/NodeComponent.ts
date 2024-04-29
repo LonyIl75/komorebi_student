@@ -26,8 +26,9 @@ import { ChildAttributeTypeValue } from '../Schema/_Component/ChildAttributeType
 import { isNilValue } from '../Schema/_Component/types.js';
 import { Component, IComponent } from '../Schema/Component/Component.js';
 import { str_joinChar_group, str_value, str_value_init, str_value_validation_strRegex } from '../Schema/_Component/ValTextContent/types.js';
-import { getRegexGS, getRegexGM, isEmptyStrRegex, t_strRegex } from '@shared/m_regex.js';
+import { getRegexGS, getRegexGM, isEmptyStrRegex } from '@shared/m_regex.js';
 import { getMatchAndPosFromRegexMatchingInterval } from '@shared/m_regex_matchObject.js';
+import { t_strRegex } from '@shared/_regexp.js';
 
 export const str_attributes = "attributes"
 
@@ -70,7 +71,7 @@ export class NodeComponentValue extends haveSerializerAndEmptyInit<NodeComponent
         return join_underscore(_idPath ,key)
     }
 
-    static jsonValueToJsonStoredValue = <idPath extends string >
+    static jsonValueToJsonStoredValue = <idPath extends string ,t_value_idPath = string >
       (trad_path : idPath, _jsonValue : t_NodeComponentValue_getJsonValue) => {
        const _obj  = {} as any
         for (const entry of Object.entries(_jsonValue)) {
@@ -78,7 +79,7 @@ export class NodeComponentValue extends haveSerializerAndEmptyInit<NodeComponent
           if(key === noFieldName) _obj[trad_path] = value
           else _obj[NodeComponentValue.getNameFieldOfJsonStoredValue(trad_path ,key)] = value
          }
-         return _obj as joinCharKeyJson<idPath,t_join_underscore , _t_NodeComponentValue_getJsonValue> & json_ExactlyOne<{[k in idPath]:string}>
+         return _obj as joinCharKeyJson<idPath,t_join_underscore , _t_NodeComponentValue_getJsonValue> & json_ExactlyOne<{[k in idPath]:t_value_idPath}>
       }
 
 

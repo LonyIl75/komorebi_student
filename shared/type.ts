@@ -92,6 +92,10 @@ export type arraySingleOfEachUnion <T > = IsUnion<T> extends true
 ?  [PopUnion<T>] | arraySingleOfEachUnion<Exclude<T, PopUnion<T>>>
 : [T];
 
+export type arrToSet <T extends readonly any[] , curUnion = never > =
+T extends readonly [infer A , ... infer subArr] ?
+ A extends curUnion ? arrToSet<subArr,curUnion> : [A,...arrToSet<subArr,curUnion|A>]
+: []
 
 export type getIndexOfElement<Elm,Arr extends readonly any[]> = 
   Arr extends readonly [...infer A , infer T]? 
@@ -295,6 +299,9 @@ interface FnGetElementNumberI<I extends number > extends Fn {
 
 type _fngetElementNumberI <T,I extends number > =T extends  readonly [...readonly any[]] ? Readonly<getElementNumberI<I,T>> : never
 
+export type t_functionFn< F extends Fn > = F["args"] extends readonly any[] ? t_function<F["return"],F["args"]> : t_function<F["return"]> 
+
+
 export type t_function<R = any , P extends readonly any[] = readonly any[]> = (...args:P)=> R
 export type t_functionPromise < R = any , P extends readonly any[] = readonly any[]> = t_function<Promise<R>,P>
 export type t_functionVoid < P extends readonly any[] = readonly any[]> = t_function<void,P>
@@ -347,6 +354,9 @@ export type jsonType < A extends readonly t_indexable_key[] > = {[key in A[0] ]:
 export type findInJson <arr_keys extends readonly t_indexable_key[] , _json extends jsonType<arr_keys> , propName extends arr_keys[number] 
 , propValue extends any , toSearch extends arr_keys[0] =arr_keys[0], cur_key = IsUnion<toSearch> extends true ?PopUnion<toSearch> : toSearch > =
 cur_key extends keyof  _json ? _json[cur_key][propName] extends propValue ? _json[cur_key] : findInJson < arr_keys ,_json , propName , propValue , Exclude<toSearch,PopUnion<toSearch>>> : never
+
+export type upsertInSimpleJson <_json extends {readonly [k in t_indexable_key]:any} , propName extends t_indexable_key , replaceValue extends any > =
+{[key in keyof _json]: key extends propName ? replaceValue : _json[key]}
 
 
 interface FnArrToUnion extends Fn {
@@ -624,8 +634,12 @@ export type majCuttingRetArr<T extends string , Buff extends string =""> =
   : majCuttingRetArr<Rest,`${Buff}${A}`>
   :[Buff]
 
-export type joinMaj_to_joinHyphen <T extends string > =
-T extends `${infer A}${infer Rest}` ? t_JoinChar_hyphen<majCuttingRetArr<T>> : ""
+
+export type joinMaj_to_joinChar <T extends string , joinChar extends string> =
+T extends `${infer A}${infer Rest}` ?t_JoinChar<majCuttingRetArr<T>,joinChar>: ""
+
+export type joinMaj_to_joinHyphen <T extends string > = joinMaj_to_joinChar<T,t_join_hyphen> 
+
 
 export type t_strEnum = string
 export type t_enum = {[key in t_strEnum]:t_strEnum}
@@ -712,13 +726,29 @@ export type boolArrIntersec < arr_bool extends readonly boolean[] > = arr_bool e
 export type joinArr < Arr1 extends readonly any[] , Arr2 extends readonly any[]  > = [...Arr1,...Arr2]
 
 
-export type t_Args < V , Idx extends number > = {value:V , idx:Idx}
-export type getValueFromArgs < Args extends t_Args<any,any> > = Args['value']
-export type getIdxFromArgs < Args extends t_Args<any,any> > = Args['idx']
+export type t_Args < V , Idx extends number > = [V,Idx]//{value:V , idx:Idx}
+export type getValueFromArgs < Args extends t_Args<any,any> > = Args[0]//Args['value']
+export type getIdxFromArgs < Args extends t_Args<any,any> > = Args[1] //['idx']
 
 
 export type ApplyFnToArr <funct extends Fn , Arr extends readonly any[] , Acc extends any[]= []  > = 
 Arr extends readonly [infer _ ,... infer R] ? R extends readonly any[] ? [Apply<funct, t_Args<Arr[0],Acc['length']> > , ...ApplyFnToArr<funct,R,[never , ...Acc]>] :[Apply<funct, t_Args<Arr[0],Acc['length']>>]:[]
+
+
+
+export type filterNotNullOrUndefinedArr <  Arr extends readonly any[] , Acc extends any[]= []> =
+Arr extends readonly [infer A , ... infer R] ? 
+  A extends null|undefined ? filterNotNullOrUndefinedArr<R,Acc> : filterNotNullOrUndefinedArr<R,[...Acc,A]>
+: Acc
+
+
+export type getPropFromArrOfObject < Arr extends readonly  {[k in t_indexable_key]:any}[] , propName extends t_indexable_key  , df_value = undefined > =
+Arr extends readonly [infer A , ... infer R] ? A extends {[k in t_indexable_key]:any} ? R extends readonly  {[k in t_indexable_key]:any}[] ? 
+
+(A extends {[k in propName] : any} ?  A[propName] :df_value ) extends infer V ? 
+V extends undefined ? getPropFromArrOfObject<R,propName> : [V,...getPropFromArrOfObject<R,propName,df_value>]
+: never
+: never : never : []
 
 
 interface IdentityFn extends Fn {
@@ -781,6 +811,22 @@ export type stringToArray<
   ? stringToArray<R, [...Acc, B]> : Acc;
 
 export type stringLengthInferiorTo<S extends string , N extends number> = isInArrayIdx<N, stringToArray<S>>;
+
+
+
+export type t_strApplyFnIfExtends <T extends string , US extends string , _Fn extends Fn<[string],string>> = 
+T extends `${infer _R}${US}${infer R}` ? 
+  T extends `${_R}${infer A}${R}` ?
+    Apply<_Fn,[A]>  extends infer A? 
+  A extends string ? `${_R}${A}${t_strApplyFnIfExtends<R,US,_Fn>}`:A
+  :never :never  
+:T
+interface FnStrReplace<S extends string> extends Fn<[string],string> {
+  return: _fnStrReplace<Args<this>,S>
+}
+type _fnStrReplace < Args extends [string] , S extends string  > =   S
+
+export type t_strApplyReplaceIfExtends <T extends string , US extends string, S extends string > =  t_strApplyFnIfExtends <T,US,FnStrReplace<S>>
 
 
 export type t_getSubStrNotMatchUnionFromStr <S extends string , US extends string > =  

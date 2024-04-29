@@ -1,4 +1,4 @@
-import { t_strRegex } from "@shared/m_regex.js"
+
 import { MapRegexToIdPath, t_arrPathToPathId } from "@shared/m_regexMapping.js"
 import { t_agreg_path } from "@shared/routePath.js"
 import { arrToUnion} from "@shared/type.js"
@@ -7,6 +7,7 @@ import { _isNullOrUndefined } from "@shared/m_primitives.js"
 import { IJson, entryGetKey, entryGetValue, isEmptyJson, isNotEmptyJson, isObject } from "@shared/m_object.js"
 import { deepCloneJson, getSubsetJsonFromPredicate } from "@shared/m_json.js"
 import { isNoneCompClassName, t_noneCompClassName } from "../TypeChilds/types.js"
+import { t_strRegex } from "@shared/_regexp.js"
 
 
 //TODO-IMP REFACTOR 
@@ -22,14 +23,14 @@ type t_str_json_value = typeof str_json_value
 export const isGetValue = (jsonValue : IJson<any>) => jsonValue.hasOwnProperty(str_json_value)
 
 
-export const getRootPropFromResValue = <TProp extends string > (prop : TProp , json : t_resValue<TProp>)=> {
+export const getRootPropFromResValue = <TProp extends string,isGetValue extends boolean = boolean > (prop : TProp , json : {[k in TProp]:t_resValue<TProp,isGetValue>})=> {
   const elm = json[prop]
   return isGetValue(elm) ? elm[str_json_value][prop] : elm 
 }
 
-export const getRootPropFromValue = <TProp extends string > (prop : TProp , json_or_value : t_resValue<TProp>|String)=> {
+export const getRootPropFromValue = <TProp extends string ,isGetValue extends boolean = boolean > (prop : TProp , json_or_value : {[k in TProp]:t_resValue<TProp,isGetValue>}|string)=> {
   if(!isObject(json_or_value)) return json_or_value
-  return getRootPropFromResValue<TProp>(prop,json_or_value as t_resValue<TProp> )
+  return getRootPropFromResValue<TProp>(prop,json_or_value as {[k in TProp]:t_resValue<TProp,false>} )
 }
 
 
@@ -48,10 +49,10 @@ const isDefinedVal =<unionPathId extends string ,ArrUnionClassNameType extends r
   return isDefinedValFromNotIsGetValue<unionPathId,ArrUnionClassNameType,T>(val ,idPath)
 }
 
-type jpp <TP extends string >= ReturnType<typeof NodeComponentValue.jsonValueToJsonStoredValue<TP>> 
+type t_jsonValueToJsonStoredValue <TP extends string,t_value_Key = string >= ReturnType<typeof NodeComponentValue.jsonValueToJsonStoredValue<TP,t_value_Key>> 
 
-export type t_resValue <TP extends string ,t_isGetValue extends boolean = false,
-_t_resValue extends jpp<TP> = jpp<TP>
+export type t_resValue <Key extends string ,t_isGetValue extends boolean = boolean,t_value_Key = string ,
+_t_resValue extends t_jsonValueToJsonStoredValue<Key,t_value_Key> = t_jsonValueToJsonStoredValue<Key,t_value_Key>
  >  =  
 boolean extends t_isGetValue ? (NodeComponentValue & {[str_json_value] :_t_resValue}) | _t_resValue :
 t_isGetValue extends true ? NodeComponentValue & {[str_json_value] :_t_resValue} :_t_resValue
@@ -195,7 +196,7 @@ export default class mTree<unionPathId extends string ,ArrUnionClassNameType ext
         for (const id of id_childs) {
           arr_res.push(this.getJsonValue(trad_map,{cur_node : this.nodes[id],cur_idx : cur_idxPath.regex_idx,cur_trad_paths:[trad_paths[0]]},var_isGetValue))// cur_idxPath[2] : current id regex
         }
-        //cur_node.className == "LegumesProductDetails"
+        //cur_node.className == "BooksProductDetails"
         arr_res = arr_res.filter((res)=>res!==null)
 
         const fct_onlyOne =  <_isOne extends true = true ,_TChild extends t_res<_isOne>["res_childs"] =t_res<_isOne>["res_childs"] > (arr_res :t_arr_res ,acc : _TChild, ... args:[{_path:t__path,trad_path:t_trad_path,}] ) => {

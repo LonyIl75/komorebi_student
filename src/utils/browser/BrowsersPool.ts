@@ -18,7 +18,6 @@ import { Pipeline, t_OInterArr_pipeline, t_pipeline_env_var, t_str_noneOp, t_uni
 import { join_hyphen, join_underscore } from '@shared/m_string.js';
 import { mPage, t_mPage } from '../scraping/PageEvaluate/mPage.js';
 import {  JsonWithScrapingComponents, t_JsonWithScrapingComponent } from '../scraping/PageParsing/ComponentObject.js';
-import { t_strRegex } from '@shared/m_regex.js';
 import { t_arr_component, t_getChildTypeFromArrComponent, t_getClassNameTypeFromArrComponent, t_rootClassName } from '../scraping/PageParsing/types.js';
 import { ExposeFunction } from '../scraping/PageEvaluate/ExposeFunction.js';
 import { joinFilePath } from '@shared/m_file.js';
@@ -27,6 +26,7 @@ import { _buildParsingTree, base_getParsingTree } from '../scraping/PageParsing/
 import { arrayFilterIndices } from '@shared/m_array.js';
 import { IJsonComponents } from '../scraping/PageParsing/Schema/FunctionalWrapperJsonComponents/JsonComponents/JsonComponents.js';
 import { _IJsonComponents } from '../scraping/PageParsing/Schema/FunctionalWrapperJsonComponents/_JsonComponents/_JsonComponents.js';
+import { t_strRegex } from '@shared/_regexp.js';
 
 
 export type t_clientId = string 

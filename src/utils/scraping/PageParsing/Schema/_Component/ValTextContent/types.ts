@@ -1,4 +1,6 @@
-import { t_strRegex, embedBeginAndEndLineRegexStr, embedGroupStrRegex } from "@shared/m_regex.js"
+
+import { t_strRegex } from "@shared/_regexp.js"
+import { embedBeginAndEndOfLineStrOrRegex, embedCapturingGroupStrOrRegex } from "@shared/m_regex_prefixAndSuffix.js"
 import { str_validation_strRegex, str_init, emptyStr, isStrEmpty } from "@shared/m_string.js"
 
 export const str_value = "value" as const 
@@ -8,7 +10,7 @@ export const str_value_validation_strRegex = `${str_value}_${str_validation_strR
 export type t_str_value_validation_strRegex = typeof str_value_validation_strRegex
 export type t_value_validation_strRegex = t_strRegex
 
-export const df_value_validation_strRegex = embedBeginAndEndLineRegexStr(embedGroupStrRegex("[\\S\\s]*"))
+export const df_value_validation_strRegex = embedBeginAndEndOfLineStrOrRegex(embedCapturingGroupStrOrRegex("[\\S\\s]*",true),true)
 export type t_df_value_validation_strRegex = typeof df_value_validation_strRegex
 
 export const str_joinChar_group = "joinChar_group" as const
