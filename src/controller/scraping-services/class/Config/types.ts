@@ -37,12 +37,14 @@ export type getRemoteAddressIdHomeRouteFromArr<T extends t_arrRouteIdAndRemoteAd
 
 /*
 export  type getPatternArrRouteIdAndRemoteAddress< idRoutes extends readonly string[] , R extends string  > = 
-readonly string[] extends idRoutes? (readonly [idRoutes[number], Exclude<ReturnType<typeof createAddress< [R]>>,"">|R ])[]:
+ string[] extends idRoutes? (readonly [idRoutes[number], Exclude<ReturnType<typeof createAddress< [R]>>,"">|R ])[]:
 UnionToArray<idRoutes[number]> extends infer idRoutes? idRoutes extends readonly string[] ? _getPatternArrRouteIdAndRemoteAddress<idRoutes,R> : never : never
 */
 
 export  type getPatternArrRouteIdAndRemoteAddress< idRoutes extends readonly string[] , R extends string  > = 
-readonly string[] extends idRoutes? (readonly [idRoutes[number], Exclude<ReturnType<typeof createAddress< [R]>>,"">|R ])[]:
+string[] extends idRoutes?  
+[idRoutes[number], Exclude<ReturnType<typeof createAddress< [R]>>,"">|R ] extends infer T? 
+readonly string[] extends idRoutes ? readonly T[] : T[] :never :
 _getPatternArrRouteIdAndRemoteAddress<FixTuple<idRoutes>,R>
 
 type _getPatternArrRouteIdAndRemoteAddress< idRoutes extends readonly string[] , R extends string  > = 
