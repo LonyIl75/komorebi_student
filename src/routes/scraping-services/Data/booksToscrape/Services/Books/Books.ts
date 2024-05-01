@@ -1,8 +1,8 @@
 
-import { getChildArr, rootClassName, t_getLeaf } from "@/utils/scraping/PageParsing/types.js";
+import { buildArrClassNameType, getChildArr, rootClassName, t_getLeaf } from "@/utils/scraping/PageParsing/types.js";
 import { MapRegexToIdPath, pagination_field, t_mapRegexToIdPathFromArrArr } from "@shared/m_regexMapping.js";
 import { arrToUnion, ApplyGetElementNumberIArrArr, addSuffix, removePrefix } from "@shared/type.js";
-import { booksToscrape_books_rootClassName, booksToscrape_books_mainOfComponents } from "./types.js";
+import { booksToscrape_books_rootClassName, booksToscrape_books_mainOfComponents, str_Books } from "./types.js";
 import { ScrapingComponent, getTypesFromImportedComponentAndFct } from "@/utils/scraping/PageParsing/ComponentObject.js";
 import { Component } from "@/utils/scraping/PageParsing/Schema/Component/Component.js";
 import {FunctionalWrapperJsonComponentConfig, IFunctionalWrapperJsonComponent}from "@/utils/scraping/PageParsing/Schema/FunctionalWrapperJsonComponents/IFunctionalWrapperJsonComponents.js";
@@ -21,12 +21,14 @@ import { str_value_init } from "@/utils/scraping/PageParsing/Schema/_Component/V
 import { strRegexPrice, strRegexPricePerUnit, strRegexQuantity } from "@shared/m_regex_product.js";
 import { embedCapturingGroupStrOrRegex, getUnionNonMatchingGroups } from "@shared/m_regex_prefixAndSuffix.js";
 
-const arr_classNameType_booksToscrape_books = [
-    rootClassName,booksToscrape_books_rootClassName,"BooksContainerGrid","BooksGrid",
-    "BooksContainerPagination","BooksPagination","BooksSelectedPagination","BooksNextPagination",
-    "BooksItem","BooksType","BooksImage","BooksPriceBox","BooksPrice","BooksStock"
+
+const _arr_classNameType_booksToscrape_books = [
+    rootClassName,"ContainerGrid","Grid",
+    "ContainerPagination","Pagination","SelectedPagination","NextPagination",
+    "Item","Type","Image","PriceBox","Price","Stock"
 ] as const  
 
+export const arr_classNameType_booksToscrape_books = buildArrClassNameType(str_Books,_arr_classNameType_booksToscrape_books)
 export type t_arr_classNameType_booksToscrape_books = typeof arr_classNameType_booksToscrape_books
 
 export type t_union_classNameType_booksToscrape_books = arrToUnion<t_arr_classNameType_booksToscrape_books>
@@ -236,7 +238,7 @@ export type t_configJson_booksToscrape_books = typeof configJson_booksToscrape_b
 export const json_booksToscrape_books  = fjson_booksToscrape_books["toJson"]()
 export type t_json_booksToscrape_books = typeof json_booksToscrape_books
 
-export const id_field = "BooksType"
+export const id_field = `${str_Books}Type` as const 
 const required_field = [] as const 
 const optional_field = ["BooksImage","BooksPrice","BooksStock"] as const
 

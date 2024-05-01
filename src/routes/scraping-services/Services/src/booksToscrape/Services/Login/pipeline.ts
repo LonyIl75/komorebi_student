@@ -2,6 +2,8 @@ import { df_map_pipeline, df_pipeline_categories, df_pipeline_rules, t_df_pipeli
 import HA_BooksToscrapeServiceLogin from "./human-actions.js";
 import { embed_lib_retReqRes } from "@/routes/scraping-services/class/utils/HAService.js";
 import { PipelineBuilder, t_pipeline_rules_base } from "@/routes/scraping-services/class/Config/Pipeline/types.js";
+import { createJsonFromEntries } from "@shared/m_object.js";
+import { t_getLibPipeline } from "@/routes/scraping-services/class/Config/Pipeline/HA/Pipeline.js";
 
 const arr_category = [...df_pipeline_categories] as const 
 type t_category = typeof arr_category[number]
@@ -9,11 +11,8 @@ type t_category = typeof arr_category[number]
 const arr_fct_name = [...HA_BooksToscrapeServiceLogin.namesOfPipelineFunction()] as const
 type t_fct_name = typeof arr_fct_name[number]
 
-const _lib_pipeline = {
-    [arr_fct_name[0]] : HA_BooksToscrapeServiceLogin[arr_fct_name[0]].bind(HA_BooksToscrapeServiceLogin),
-    [arr_fct_name[1]] : HA_BooksToscrapeServiceLogin[arr_fct_name[1]].bind(HA_BooksToscrapeServiceLogin),
-    [arr_fct_name[2]] : HA_BooksToscrapeServiceLogin[arr_fct_name[2]].bind(HA_BooksToscrapeServiceLogin)
-} as const 
+
+const _lib_pipeline = createJsonFromEntries(arr_fct_name.map((name)=>[name,HA_BooksToscrapeServiceLogin[name].bind(HA_BooksToscrapeServiceLogin)])) as  t_getLibPipeline<typeof HA_BooksToscrapeServiceLogin,typeof arr_fct_name>
 type _t_lib_pipeline = typeof _lib_pipeline
 
 const map_pipeline = {

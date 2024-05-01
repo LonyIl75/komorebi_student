@@ -61,6 +61,7 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
 
     privacy : ServiceRequestHeaderBase.enum_privacy
     url : string  
+    routeName : string
     client_id : t_clientId
     is_streaming : boolean 
     url_toScrap ?:string
@@ -70,6 +71,7 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
     isStreaming : boolean
 
     static df = {
+        routeName:null,//TODO incorrect routeName
         client_id : df_client_id,
         url :"",
         url_toScrap : undefined,
@@ -77,8 +79,9 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
         //privacy //TODO ?  
         is_streaming: false 
     }
-    constructor(client_id : t_clientId =  ServiceRequestHeaderBase.df.client_id , url : string = ServiceRequestHeaderBase.df.url,url_toScrap:string = undefined , privacy:ServiceRequestHeaderBase.enum_privacy = ServiceRequestHeaderBase.getDefault(),is_streaming :boolean = ServiceRequestHeaderBase.df.is_streaming,needUpdate :ReturnType<typeof hours.getTimeNow> = ServiceRequestHeaderBase.df.needUpdate) {
+    constructor(routeName : string = ServiceRequestHeaderBase.df.routeName, client_id : t_clientId =  ServiceRequestHeaderBase.df.client_id , url : string = ServiceRequestHeaderBase.df.url,url_toScrap:string = undefined , privacy:ServiceRequestHeaderBase.enum_privacy = ServiceRequestHeaderBase.getDefault(),is_streaming :boolean = ServiceRequestHeaderBase.df.is_streaming,needUpdate :ReturnType<typeof hours.getTimeNow> = ServiceRequestHeaderBase.df.needUpdate) {
         super({toJson:ServiceRequestHeaderBase.toJson , fromJson:ServiceRequestHeaderBase.fromJson});
+        this.routeName = routeName
         this.privacy = privacy
         this.url = url
         this.client_id = client_id
@@ -110,11 +113,11 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
 
     static toJson = (obj:ServiceRequestHeaderBase)  =>
     {
-        return {client_id :obj.client_id ,url : obj.url,url_toScrap :obj.url_toScrap,privacy:obj.privacy ,isStreaming : obj.isStreaming, needUpdate : obj.needUpdate} as const 
+        return {routeName: obj.routeName,client_id :obj.client_id ,url : obj.url,url_toScrap :obj.url_toScrap,privacy:obj.privacy ,isStreaming : obj.isStreaming, needUpdate : obj.needUpdate} as const 
     }
 
     static fromJson = (json: IJson) : ServiceRequestHeaderBase => {
-        return new ServiceRequestHeaderBase(json.client_id ,json.url,json.url_toScrap,json.privacy,json.isStreaming,json.needUpdate)
+        return new ServiceRequestHeaderBase(json.routeName ,json.client_id ,json.url,json.url_toScrap,json.privacy,json.isStreaming,json.needUpdate)
     }
 
     setIsPrivate(){

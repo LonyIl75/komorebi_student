@@ -6,12 +6,17 @@ import { Selector, classProp, containOp } from "@/utils/scraping/PageParsing/Sch
 import { t_rootClassName, rootClassName, getRootType } from "@/utils/scraping/PageParsing/types.js"
 import { enum_booksToscrape_style, getBooksToscrapeHelpers } from "../../util/helpers.js"
 import { StrChildType, empty_ids } from "@/utils/scraping/PageParsing/TypeChilds/types.js"
+import { idRoutes_booksToscrape } from "@/controller/scraping-services/Services/Config/booksToscrape/config.js"
+import { majFirstChar } from "@shared/m_string.js"
 
+export const str_books = idRoutes_booksToscrape[2] 
+export type t_str_books = typeof str_books
 
+export const str_Books = majFirstChar(str_books)
 
-export const booksToscrape_books_rootClassName :"BooksPage" = "BooksPage"
+export const booksToscrape_books_rootClassName = `${str_Books}Page` as const
 export type t_booksToscrape_books_rootClassName = typeof booksToscrape_books_rootClassName
-export const rootBooksBooksToscrapeChildType :StrChildType.t_childType<t_booksToscrape_books_rootClassName> = "books-page"
+export const rootBooksBooksToscrapeChildType = StrChildType.compClassnameToChildType(booksToscrape_books_rootClassName)
 
 
 type t_base_union =  t_booksToscrape_books_rootClassName

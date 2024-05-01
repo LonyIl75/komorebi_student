@@ -2,9 +2,10 @@
 _FnEmbeds extends readonly [infer F1,...infer FR] ? F1 extends t_union_FnEmbeds ? FR extends readonly t_union_FnEmbeds[] ?
 [t_functionFn<F1>,...t_TFctEmbedsFromFnEmbeds<FR>] : never : never : []*/
 
+
 import { t_strRegex } from "./_regexp.js"
 import { deepCloneJson } from "./m_json.js"
-import { IJson, t_s_getProp, s_getProp, t_isEmptyJson, t_jsonAddIfNotExist, isEmptyJson, setProp, jsonAddIfNotExist } from "./m_object.js"
+import { IJson, t_s_getProp, s_getProp, t_isEmptyJson, t_jsonAddIfNotExist, isEmptyJson, setProp, jsonAddIfNotExist, isObject } from "./m_object.js"
 import { _isFunction } from "./m_primitives.js"
 import { df_name_embeddingPAS, t_union_name, t_fnStrOrRegexEmbed, getFctEmbedEmbeddingPAS, t_df_name_embeddingPAS } from "./m_regex_prefixAndSuffix.js"
 import { isEqual, arrToSet, t_indexable_key, Apply, upsertInSimpleJson, makeOptional } from "./type.js"
@@ -33,12 +34,12 @@ const df_t_merge_dfTe = {
   
   
   
-  type t_isComposite <T extends _te<string> > = T extends _te<string,false> ? false  : T  extends _te<string,true> ? isEqual<[...T["arr_keys"]],arrToSet<T["arr_keys"]>> : false 
-  const isComposite = <T extends _te<string> >(t:T):t_isComposite<T> => (t.hasOwnProperty("arr_keys") && t["arr_keys"].length === new Set(t["arr_keys"]).size ) as t_isComposite<T> 
+  type t_isComposite <T extends _te<string> > = T extends _te<string,false> ? false  : T  extends _te<string,true> ? isEqual<[...T["regex"]["arr_keys"]],arrToSet<T["regex"]["arr_keys"]>> : false 
+  const isComposite = <T extends _te<string> >(t:T):t_isComposite<T> => (isObject(t["regex"]) && t["regex"]["arr_keys"].length === new Set(t["regex"]["arr_keys"]).size ) as t_isComposite<T> 
   
   type t_isValidComposite <T extends _te<string> > = T  extends _te<string,true> ? t_isComposite<T> extends true ? 
-    T extends _Composite<T["arr_keys"]> ? 
-    t_isValidCompositeRegexp<T["arr_keys"],T["regex"]["value"]>
+    T extends _Composite<T["regex"]["name"],T["regex"]["arr_keys"]> ? 
+    t_isValidCompositeRegexp<T["regex"]["arr_keys"],T["regex"]["value"]>
     : false: false: true
   
   type t_isValidCompositeRegexp<ArrKey extends readonly string [] , T extends t_ICompositeRegexp<ArrKey> > = 
@@ -50,17 +51,18 @@ const df_t_merge_dfTe = {
     : VR extends [] ? true : false
   : false : false : false : false : false : true
   
-  
+  type t_getNameTe <T extends _te<string>> = T extends _te<string,false> ? T["name"] : T extends _te<string,true> ? T["regex"]["name"]:never//T extends _te<infer A> ? A : never
+  const getNameTe = <T extends _te<string>>(val:T) => isComposite(val) ? (val as _te<string,true>)["regex"].name : (val as _te<string,false>).name 
   const isValidComposite = <T extends _te<string> >(_t:T) =>{
     let res : boolean = isComposite(_t) 
     if(res){
       const t = _t as _Composite
-      let arrKeys = t["arr_keys"]
+      let arrKeys = t["regex"]["arr_keys"]
       for(let idx = 0 ; res && idx < t["regex"].value.length ; idx++){
         const val = t["regex"].value[idx]
-        res = arrKeys.includes(val.name)
+        res = arrKeys.includes(getNameTe(val))
         if(res) {
-          arrKeys = arrKeys.filter((el)=>el !== val.name)
+          arrKeys = arrKeys.filter((el)=>el !== getNameTe(val))
           if(isComposite(val)) res = isValidComposite(val)
         }
       }
@@ -71,18 +73,18 @@ const df_t_merge_dfTe = {
   
   
   
-  type _CompositeRegexp<ArrK extends readonly string[] = any ,_Value extends t_ICompositeRegexp<ArrK>=t_ICompositeRegexp<ArrK>  ,df extends t_df_merge = t_df_merge > = CompositeRegexp<ArrK,_Value,df>
+  type _CompositeRegexp<N extends string = string , ArrK extends readonly string[] = any ,_Value extends t_ICompositeRegexp<ArrK>=t_ICompositeRegexp<ArrK>  ,df extends t_df_merge = t_df_merge > = CompositeRegexp<N,ArrK,_Value,df>
   
-  export type _Composite <ArrK extends readonly string[] =  any ,_Value extends t_ICompositeRegexp<ArrK>=t_ICompositeRegexp<ArrK>  ,df extends t_df_merge = t_df_merge > =
-  {readonly regex:CompositeRegexp<ArrK,_Value,df> ,readonly arr_keys:ArrK }  & _t_df_composite 
+  export type _Composite <N extends string = string , ArrK extends readonly string[] =  any ,_Value extends t_ICompositeRegexp<ArrK>=t_ICompositeRegexp<ArrK>  ,df extends t_df_merge = t_df_merge > =
+  {readonly regex:CompositeRegexp<N,ArrK,_Value,df> }  & _t_df_composite 
   
   
   export type _te<K extends string , isComposite extends boolean = boolean > = 
-  (boolean extends isComposite ? _Composite | ({readonly regex:t_strRegex } & _t_df_nonComposite)
+  (boolean extends isComposite ? _Composite<K> | ({readonly regex:t_strRegex } & _t_df_nonComposite)
    :  isComposite extends true ? 
-   _Composite 
-  :{readonly regex:t_strRegex } & _t_df_nonComposite ) extends infer A ? 
-  A & t_df_common & { readonly name : K , readonly operator?: string }:never
+   _Composite<K>
+  :{readonly regex:t_strRegex,readonly name : string  } & _t_df_nonComposite ) extends infer A ? 
+  A & t_df_common & {  readonly operator?: string }:never
   
   type t_getPropIfExistElseDf <nameProp extends t_indexable_key ,  T, T_df extends t_df_nonComposite , nameProp_df extends keyof T_df = undefined >= t_s_getProp<T,nameProp,t_s_getProp<T_df,nameProp_df extends undefined ? nameProp : nameProp_df ,never>>
   const getPropIfExistElseDf = <nameProp extends t_indexable_key ,  T , T_df extends t_df_nonComposite , nameProp_df extends keyof T_df = undefined>(_nameProp:nameProp, t:T,df:T_df,_nameProp_df?:nameProp_df):t_getPropIfExistElseDf<nameProp,T,T_df,nameProp_df>=>{
@@ -137,8 +139,8 @@ const df_t_merge_dfTe = {
             t_isEmptyJson<TFctEmbeds> extends true ? S : t_getAndApplyFctGroupEmbed<S,TFctEmbeds,T_df >:
             never : never :
       T extends _te<string,true> ? 
-      T extends _Composite<T["arr_keys"]> ?
-      t_st_buildGroupRegexp<T["arr_keys"],T["regex"],T_df,t_isEmptyJson<T["fctEmbeds"]> extends false ? t_jsonAddIfNotExist<T["fctEmbeds"] ,TFctEmbeds["childs"]> : TFctEmbeds["childs"] > extends infer Test ? Test extends string ? 
+      T extends _Composite<T["regex"]["name"],T["regex"]["arr_keys"]> ?
+      t_st_buildGroupRegexp<T["regex"]["name"],T["regex"]["arr_keys"],T["regex"],T_df,t_isEmptyJson<T["fctEmbeds"]> extends false ? t_jsonAddIfNotExist<T["fctEmbeds"] ,TFctEmbeds["childs"]> : TFctEmbeds["childs"] > extends infer Test ? Test extends string ? 
         Test extends "" ? "":`${t_getAndApplyFctGroupEmbed<Test,TFctEmbeds,T_df>}${t_getOperator<T>}`//TODO why without Test extends "" ? "": it doesnt work and need for exemple T_df =  T_df & {df_fct : t_embedNonCampturingGroupStrRegex}
         :never :never 
       : never 
@@ -166,7 +168,7 @@ const df_t_merge_dfTe = {
   
   
   
-  export type t_st_buildGroupRegexp<K extends readonly string[] , Composite extends _CompositeRegexp<K> , T_df extends t_df_merge ,TFctEmbeds extends makeOptional<IJson<K[number],fdsfdcv>> =makeOptional<IJson<K[number],fdsfdcv>>> =
+  export type t_st_buildGroupRegexp<N extends string , K extends readonly string[] , Composite extends _CompositeRegexp<N,K> , T_df extends t_df_merge ,TFctEmbeds extends makeOptional<IJson<K[number],fdsfdcv>> =makeOptional<IJson<K[number],fdsfdcv>>> =
   _t_st_buildGroupRegexp<K,Composite["value"],T_df,TFctEmbeds>
   
   
@@ -188,19 +190,22 @@ const df_t_merge_dfTe = {
   isEqual<[...ArrK],arrToSet<ArrK>> extends true ? 
   _t_ICompositeRegexp<ArrK>: never
   
-  export class ICompositeRegexp<ArrK extends readonly string[] , _Value extends t_ICompositeRegexp<ArrK>=t_ICompositeRegexp<ArrK> ,T_df extends t_df_merge = t_df_t_merge_dfTe > {
+  export class ICompositeRegexp<N extends string ,ArrK extends readonly string[] , _Value extends t_ICompositeRegexp<ArrK>=t_ICompositeRegexp<ArrK> ,T_df extends t_df_merge = t_df_t_merge_dfTe > {
+    name : N 
     value : _Value
     df : T_df
     arr_keys : ArrK
   }
   
-  export class CompositeRegexp<ArrK extends readonly string[] , _Value extends t_ICompositeRegexp<ArrK>=t_ICompositeRegexp<ArrK> ,T_df extends t_df_merge = t_df_t_merge_dfTe > implements ICompositeRegexp<ArrK,_Value,T_df> {
+  export class CompositeRegexp<N extends string , ArrK extends readonly string[] , _Value extends t_ICompositeRegexp<ArrK>=t_ICompositeRegexp<ArrK> ,T_df extends t_df_merge = t_df_t_merge_dfTe > implements ICompositeRegexp<N,ArrK,_Value,T_df> {
+    name : N 
     value : _Value
     df : T_df
     arr_keys : ArrK
   
   
-    constructor(_compositeRegexp : _Value,arr_keys : ArrK ,   _df_fctEmbed : T_df = df_t_merge_dfTe as any){
+    constructor(name : N , _compositeRegexp : _Value,arr_keys : ArrK ,   _df_fctEmbed : T_df = df_t_merge_dfTe as any){
+      this.name = name
       this.value = _compositeRegexp
       this.arr_keys = arr_keys
       this.df = _df_fctEmbed
@@ -239,17 +244,6 @@ const df_t_merge_dfTe = {
           return `${joinChar}${res}` as t_joinRegexGroup<t_val,T_df,T>
   
       }
-      
-          /*
-        type _t_st_buildGroupRegexp<K extends readonly string[] , _Value extends t_ICompositeRegexp<K> , T_df extends t_df_merge ,TFctEmbeds extends makeOptional<IJson<K[number],fdsfdcv>> = makeOptional<IJson<K[number],fdsfdcv>>> =
-        K extends readonly [infer A,...infer BR] ? A extends string ? BR extends readonly string[] ?
-        _Value extends readonly [infer V1,...infer VR] ? V1 extends _te<A> ? 
-        (TFctEmbeds[A] extends fdsfdcv ? t_joinRegexGroup<V1,T_df,TFctEmbeds[A]> : t_joinRegexGroup<V1,T_df> ) extends infer _S ? _S extends string ?
-        VR extends t_ICompositeRegexp<BR> ?
-        `${_S}${_t_st_buildGroupRegexp<BR,VR,T_df,TFctEmbeds>}`
-        : _S : never: never
-      : never : never : never : never : "" 
-    */
       for ( let idx = 0 ; idx < this.value.length ; idx++) {
         const _value = this.value[idx]
         const _name = this.arr_keys[idx]
@@ -260,9 +254,10 @@ const df_t_merge_dfTe = {
       return str as  string[] extends ArrK ? string : _t_st_buildGroupRegexp<ArrK,_Value,T_df ,_TFctEmbeds>
     }
   
-    static st_buildGroupRegexp < ArrK extends readonly string[] , _Value extends t_ICompositeRegexp<ArrK> ,T_df extends t_df_merge = t_df_t_merge_dfTe ,_TFctEmbeds extends makeOptional<IJson<ArrK[number],fdsfdcv>> = undefined >(_this: CompositeRegexp<ArrK,_Value,T_df>,_fct_embeds ?:_TFctEmbeds){
+    static st_buildGroupRegexp < N extends string , ArrK extends readonly string[] , _Value extends t_ICompositeRegexp<ArrK> ,T_df extends t_df_merge = t_df_t_merge_dfTe ,_TFctEmbeds extends makeOptional<IJson<ArrK[number],fdsfdcv>> = undefined >(_this: CompositeRegexp<N,ArrK,_Value,T_df>,_fct_embeds ?:_TFctEmbeds){
       return _this.buildGroupRegexp(_fct_embeds)
     }
+
   
   
   
@@ -270,7 +265,7 @@ const df_t_merge_dfTe = {
   
   type _t_CompositeRegexp_getJsonFctEmbeds < V extends t_ICompositeRegexp<readonly string[]>  > =
    V extends readonly [infer A,...infer B] ? A extends _te<string> ?
-  {[k in A["name"]]:({_?:t_union_name} & (A extends _te<string,true> ? {childs?:t_CompositeRegexp_getJsonFctEmbeds<A["regex"]>}  : {}) )} extends infer Res ? 
+  {[k in t_getNameTe<A>]:({_?:t_union_name} & (A extends _te<string,true> ? {childs?:t_CompositeRegexp_getJsonFctEmbeds<A["regex"]>}  : {}) )} extends infer Res ? 
    B extends t_ICompositeRegexp<readonly string[]> ? Res & _t_CompositeRegexp_getJsonFctEmbeds<B> : Res : never : never : {}
   
   export type t_CompositeRegexp_getJsonFctEmbeds < C extends _Composite["regex"]  > = _t_CompositeRegexp_getJsonFctEmbeds<C["value"]>

@@ -43,8 +43,7 @@ UnionToArray<idRoutes[number]> extends infer idRoutes? idRoutes extends readonly
 
 export  type getPatternArrRouteIdAndRemoteAddress< idRoutes extends readonly string[] , R extends string  > = 
 string[] extends idRoutes?  
-[idRoutes[number], Exclude<ReturnType<typeof createAddress< [R]>>,"">|R ] extends infer T? 
-readonly string[] extends idRoutes ? readonly T[] : T[] :never :
+    (readonly [idRoutes[number], Exclude<ReturnType<typeof createAddress< [R]>>,"">|R ])[] :
 _getPatternArrRouteIdAndRemoteAddress<FixTuple<idRoutes>,R>
 
 type _getPatternArrRouteIdAndRemoteAddress< idRoutes extends readonly string[] , R extends string  > = 

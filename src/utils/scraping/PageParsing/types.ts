@@ -1,11 +1,13 @@
 
 import { ExposeFunction } from "../PageEvaluate/ExposeFunction.js"
-import { UnionToArray, arrToUnion, getElementNumberI, t_JoinChar_underscore } from "@shared/type.js"
+import { UnionToArray, arrToUnion, getElementNumberI, insArray, isEqual, removePrefix, t_JoinChar_underscore, t_joinCapitalize } from "@shared/type.js"
 import { arrID_to_selector, node_to_arrID, node_to_selector } from "./utils.js"
 import { t_expsAndScript } from "../PageEvaluate/todo.js"
 import { joinFilePath } from "@shared/m_file.js"
 import { getPathPageParsing } from "@/config/pathFolder/srcPath.js"
 import { noneCompClassName, isNoneCompClassName, StrChildType } from "./TypeChilds/types.js"
+import { joinCapitalize, majFirstChar } from "@shared/m_string.js"
+import { t_ArrClassNameType } from "@shared/m_regexMapping.js"
 
 
 /*
@@ -20,7 +22,7 @@ export type t_invalidClassName = typeof invalidClassName
 export const isInvalidClassName = (classname : any ) : classname is t_invalidClassName => isNoneCompClassName(classname)
 
 export const rootClassName :"Page" = "Page"
-export const getRootType :StrChildType.t_childType<typeof rootClassName> = "page"
+export const getRootType =  StrChildType.compClassnameToChildType(rootClassName)
 export type t_rootClassName = typeof rootClassName
 
 
@@ -43,6 +45,28 @@ export type t_component_any =  t_component<string,string>
 
 export const getRootComponent = <T extends string > (childRoot: T) : readonly [t_rootClassName, readonly [T]] => [rootClassName , [childRoot]] as const
 export type isComponentEmptyChilds < A extends t_component_any> = A[idx_componentChildType] extends t_component_empty_childs ? true : false 
+
+export type t_concatRouteNameClassName<N extends string , C extends string  > =  t_joinCapitalize<[N,C]>
+export const concatRouteNameClassName = <N extends string , C extends string >(routeName:N,className:C) :t_concatRouteNameClassName<N,C> => joinCapitalize(routeName,className)
+
+export type t_removeConcatRouteNameClassName<N extends string , S extends string  > =  removePrefix<t_concatRouteNameClassName<N,"">,S>
+
+type _t_builtArrClassNameType <N extends string , ArrClassNameType extends readonly string[]> =
+ArrClassNameType extends readonly [infer A , ...infer R] ? A extends string ? R extends readonly string[] ? 
+[t_concatRouteNameClassName<N,A>,..._t_builtArrClassNameType<N,R>] : never : never : []
+
+export type t_builtArrClassNameType <N extends string , ArrClassNameType extends readonly string[]> = 
+isEqual<ArrClassNameType,t_ArrClassNameType<ArrClassNameType>> extends true ? 
+[t_rootClassName,..._t_builtArrClassNameType<N,ArrClassNameType>] : never
+
+export const buildArrClassNameType = <N extends string , ArrClassNameType extends readonly string[]>(name:N,_arrClassNameType:ArrClassNameType)=>
+{
+  let res : any[]= [rootClassName]  
+  for ( const _classNameType of _arrClassNameType){
+    res.push(concatRouteNameClassName(name,_classNameType))
+   }
+   return res as t_builtArrClassNameType<N,ArrClassNameType>
+}
 
 export type t_arr_component <componentClassNameType extends string , t_childs extends string = componentClassNameType > = readonly t_component<componentClassNameType,t_childs>[]
 

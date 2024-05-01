@@ -62,33 +62,33 @@ export class RemoveDebug{
 
 }
 
-export const getNameModule = (serviceName:string , page_name:string, category?: string ) : string => {
-    let _res = category==undefined ? [serviceName,page_name] : [serviceName,category,page_name]
+export const getNameModule = <SN extends string , PN extends string , C extends string = undefined >(serviceName:SN , page_name:PN, category?: C )  => {
+    let _res = (category==undefined ? [serviceName,page_name] : [serviceName,category,page_name]) as C extends undefined ? [SN,PN] : [SN,C,PN]
     return m_debug.debug_join(_res)
 }
 
 
-export const concatNameModuleAndDebug = (name_module:string , name_debug:string) : string => {
+export const concatNameModuleAndDebug = <S1 extends string , S2 extends string > (name_module:S1 , name_debug:S2)  => {
     return m_debug.debug_join([name_module,name_debug])
 }
 
-export const getNameDebugAllNameModule = (name_module:string  ) : string => {
+export const getNameDebugAllNameModule = <S1 extends string >(name_module:S1  )  => {
     return concatNameModuleAndDebug(name_module,"a")
 }
 
-export const join_screenshot = (...args: string[]) => join_underscore(...args);
+export const join_screenshot = <T extends readonly string[]> (...args: T) => join_underscore(...args);
 
 export const take_screenshot = async (page:Page, path:string,num:number) => {
     await page.screenshot({ path: join_screenshot(num.toString() , path ) });
 }
 
-export const getTestName = (_str:string)=> {
-    return "test" + majFirstChar(_str)
+export const getTestName = <T extends string>(_str:T)=> {
+    return `test${majFirstChar(_str)}` as const
 }
 
-export const getNameHumanActions = (_str:string)=> {
-    return "humanActions" + majFirstChar(_str)
+export const getNameHumanActions = <T extends string>(_str:T)=> {
+    return `humanActions${majFirstChar(_str)}` as const
 }
-export const str_idRouteAndRemoteAddresss = "routes"
+export const str_idRouteAndRemoteAddresss = "routes" as const 
 
-export const str_connection ="connection"
+export const str_connection ="connection" as const

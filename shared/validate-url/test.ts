@@ -6,7 +6,7 @@ import type t_isUrl from "./_types.js";
 type t_test_head = _types.t_rest_head_http_https<"https://www.youtube.com/watch?v=jIqA5sg5gZM"> extends "www.youtube.com/watch?v=jIqA5sg5gZM" ? true : false 
 
 //TEST : WWWs
-type t_test_wwws = _types.t_rest_wwwsDomain<"www.youtube.com/watch?v=jIqA5sg5gZM"> extends "youtube.com/watch?v=jIqA5sg5gZM" ? true : false 
+type t_test_wwws = _types.t_rest_subdomain<"www.youtube.com/watch?v=jIqA5sg5gZM"> extends "youtube.com/watch?v=jIqA5sg5gZM" ? true : false 
 
 //TEST : TLD
 type t_test_tld = _types.t_rest_strAndTld<"youtube.com/watch?v=jIqA5sg5gZM"> extends "watch?v=jIqA5sg5gZM" ? true : false

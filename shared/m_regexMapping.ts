@@ -5,7 +5,7 @@ import { is_notFound, nullOrUndefined, val_null_nullOrUndefined } from "./m_prim
 import { convertStrToRegexStr} from "./m_regex.js"
 import { embedCapturingGroupStrOrRegex, embedNonCapturingGroupStrOrRegex, embedOptCapturingGroupStrOrRegex } from "./m_regex_prefixAndSuffix.js"
 import { char_join_pathRoutes, createAddressBis, t_agreg_path, t_char_join_pathRoutes } from "./routePath.js"
-import { Enumerate, IsUnion, PopUnion, _Enumerate, _countAndRemoveElmInElms, arrArrFromArrAndArr, arrToUnion, countAndRemoveElmInElms, getIndexOfElement, t_getLastElementArr, jsonObjectToArrKey, removeFirstArray, repeat, t_JoinChar_pipe, t_indexable_key } from "./type.js"
+import { Enumerate, IsUnion, PopUnion, _Enumerate, _countAndRemoveElmInElms, arrArrFromArrAndArr, arrToUnion, countAndRemoveElmInElms, getIndexOfElement, t_getLastElementArr, jsonObjectToArrKey, removeFirstArray, repeat, t_JoinChar_pipe, t_indexable_key, insArray } from "./type.js"
 
 
 
@@ -176,7 +176,6 @@ type t_UMapRegexToIdPath< UnionRegex extends t_strRegex , UnionIdPath  extends s
 {mapRegexToIdPath : t_mapRegexToIdPath< UnionIdPath,UnionRegex, ArrUnionClassNameType> } |{_mapRegexToIdPath : t_mapRegexToIdPath< UnionIdPath,UnionRegex, ArrUnionClassNameType> } 
 
 
-type fvsdfdsfsd = ReturnType<typeof createAddressBis<"fcdsf","fcdsf"> >
 type t_mapclassNameToId <ArrUnionClassNameType extends readonly string[]> = Map<arrToUnion<ArrUnionClassNameType>,Enumerate<ArrUnionClassNameType['length']>>
 //isRepetitivePatternStr < T extends string , pattern extends string , joinChar extends string ="">
 
@@ -189,6 +188,18 @@ export type t_union_pagination_field = t_pagination_field[number]
 export const date_field = "date" as const
 export type t_date_field = typeof date_field
 
+export const item_field = "Item" as const
+export type t_item_field = typeof item_field
+
+export const required_field = [...pagination_field,item_field] as const 
+export type t_required_field = typeof required_field
+export type t_union_required_field = t_required_field[number]
+
+export type t_ArrClassNameType <  ArrClassNameType extends readonly string[]> = insArray<ArrClassNameType,t_required_field > extends true ? ArrClassNameType : never
+/*
+ArrClassNameType extends readonly [infer A , ...infer R] ? A extends string ? R extends readonly string[] ? 
+[Capitalize<Lowercase<A>>,...t_ArrClassNameType<R>] : never : never : []
+*/
 
 export class MapRegexToIdPath< UnionRegex extends t_strRegex , UnionIdPath extends string ,ArrUnionClassNameType extends readonly string[]  , unionClassNameType extends arrToUnion<ArrUnionClassNameType> > {
      mapRegexToIdPath : t_mapRegexToIdPath< UnionIdPath,UnionRegex, ArrUnionClassNameType> 

@@ -40,5 +40,5 @@ for (var key in packageJson.config) {
 
 if( debug_cmd.length > 0)fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2));
 
-fs.writeFileSync('./src/data/config.ts', "export default " + JSON.stringify(config_json, null, 2) +"\n //# sourceMappingURL=config.js.map");
+fs.writeFileSync('./src/data/config.ts', "export default " + JSON.stringify(config_json, null, 2) +" as const \n //# sourceMappingURL=config.js.map");
 
