@@ -2,7 +2,7 @@
 import { buildArrClassNameType, getChildArr, rootClassName, t_getLeaf } from "@/utils/scraping/PageParsing/types.js";
 import { MapRegexToIdPath, pagination_field, t_mapRegexToIdPathFromArrArr } from "@shared/m_regexMapping.js";
 import { arrToUnion, ApplyGetElementNumberIArrArr, addSuffix, removePrefix } from "@shared/type.js";
-import { booksToscrape_books_rootClassName, booksToscrape_books_mainOfComponents, str_Books } from "./types.js";
+import { booksToscrape_books_rootClassName, booksToscrape_books_mainOfComponents, str_Books, t_str_Books } from "./types.js";
 import { ScrapingComponent, getTypesFromImportedComponentAndFct } from "@/utils/scraping/PageParsing/ComponentObject.js";
 import { Component } from "@/utils/scraping/PageParsing/Schema/Component/Component.js";
 import {FunctionalWrapperJsonComponentConfig, IFunctionalWrapperJsonComponent}from "@/utils/scraping/PageParsing/Schema/FunctionalWrapperJsonComponents/IFunctionalWrapperJsonComponents.js";
@@ -25,7 +25,7 @@ import { embedCapturingGroupStrOrRegex, getUnionNonMatchingGroups } from "@share
 const _arr_classNameType_booksToscrape_books = [
     rootClassName,"ContainerGrid","Grid",
     "ContainerPagination","Pagination","SelectedPagination","NextPagination",
-    "Item","Type","Image","PriceBox","Price","Stock"
+    "Item","Type"
 ] as const  
 
 export const arr_classNameType_booksToscrape_books = buildArrClassNameType(str_Books,_arr_classNameType_booksToscrape_books)
@@ -52,12 +52,8 @@ export const arr_booksToscrape_books  =
         getChildArr<t_arr_classNameType_booksToscrape_books,7>(arr_classNameType_booksToscrape_books,7),
         getChildArr<t_arr_classNameType_booksToscrape_books,2,[3]>(arr_classNameType_booksToscrape_books,2,[3]),
         getChildArr<t_arr_classNameType_booksToscrape_books,3,[8]>(arr_classNameType_booksToscrape_books,3,[8]),
-        getChildArr<t_arr_classNameType_booksToscrape_books,8,[9,10,11]>(arr_classNameType_booksToscrape_books,8,[9,10,11]),
+        getChildArr<t_arr_classNameType_booksToscrape_books,8,[9]>(arr_classNameType_booksToscrape_books,8,[9]),
         getChildArr<t_arr_classNameType_booksToscrape_books,9>(arr_classNameType_booksToscrape_books,9),
-        getChildArr<t_arr_classNameType_booksToscrape_books,10>(arr_classNameType_booksToscrape_books,10),
-        getChildArr<t_arr_classNameType_booksToscrape_books,11,[12,13]>(arr_classNameType_booksToscrape_books,11,[12,13]),
-        getChildArr<t_arr_classNameType_booksToscrape_books,12>(arr_classNameType_booksToscrape_books,12),
-        getChildArr<t_arr_classNameType_booksToscrape_books,13>(arr_classNameType_booksToscrape_books,13),
     ] as const
 
 export type t_arr_booksToscrape_books = typeof arr_booksToscrape_books
@@ -73,7 +69,7 @@ type t_imported_classNameType_booksToscrape_text = typeof imported_classNameType
 
 type _t_union_notSpecified_classNameType = 'Container' 
 
-type t_classNameType_notSpecified_union_text = removePrefix<'Books',t_union_classNameType_booksToscrape_books|_t_union_notSpecified_classNameType> extends infer A ?
+type t_classNameType_notSpecified_union_text = removePrefix<t_str_Books,t_union_classNameType_booksToscrape_books|_t_union_notSpecified_classNameType> extends infer A ?
  A extends string ? addSuffix <A,'Text'> extends infer B ? B : never : never :never 
 
 type t_union_notSpecified_classNameType = _t_union_notSpecified_classNameType| t_classNameType_notSpecified_union_text
@@ -94,19 +90,6 @@ const __IJsonComponents_leaf_booksToscrape_books : _IJsonComponents<t_classNameT
     },
     [arr_classNameType_booksToscrape_books[9]]:{
         childs_selectors : Component.df[str_childs_selectors],
-    },
-    [arr_classNameType_booksToscrape_books[10]]:{
-        childs_selectors : Component.df[str_childs_selectors],
-        [str_value_init] : nil_value,
-        childs_attributes : [{[str_attribute_name] : "src",selector : "img"},{[str_attribute_name] : "alt",selector : "img"}],
-    },
-    [arr_classNameType_booksToscrape_books[12]]:{
-        value_validation_strRegex : strRegexPrice,
-        childs_selectors : Component.df[str_childs_selectors],
-    },
-    [arr_classNameType_booksToscrape_books[13]]:{
-        value_validation_strRegex : embedCapturingGroupStrOrRegex(getUnionNonMatchingGroups("In stock","On request","Out of stock"),true),
-        childs_selectors : Component.df[str_childs_selectors],
     }
 }
 
@@ -120,13 +103,21 @@ const __IJsonComponents_booksToscrape_books : _IJsonComponents<t_union_className
     [booksToscrape_books_rootClassName] :{
         childs_selectors : [...booksToscrape_books_helpers.arrArr_selector(booksToscrape_books_helpers.arr_selector_join_arrArr(
                                 [
+
                                     [[
                                             {selector:Selector.cst_onePropAndTagg(classProp,'row',"ol",containOp)}
+                                    ],[
+                                            {selector:Selector.cst_onePropAndTagg(classProp,'u-grid',"article",containOp)}
                                     ]],
+
                                     [[
                                             {selector:Selector.cst_onePropAndTagg("",'',"div")},
                                             {selector:Selector.cst_onePropAndTagg(classProp,"pager","ul",containOp)}
+                                    ],[
+                                            {selector:Selector.cst_onePropAndTagg("",'',"div")},
+                                            {selector:Selector.cst_onePropAndTagg(classProp,"pagination","ul",containOp)}
                                     ]]
+
                                 ],(arr:string[])=>arr.join(char_child)
                             ),(str_selector)=>Selector.cst_onePropAndTagg("",'',"div").toString() + fct_mod_hasDirectChild(str_selector))
                         ],
@@ -135,7 +126,7 @@ const __IJsonComponents_booksToscrape_books : _IJsonComponents<t_union_className
     BooksContainerGrid:{
         childs_selectors : 
             [
-                [Selector.cst_onePropAndTagg(classProp,'row',"ol",containOp).toString()]
+                [Selector.cst_onePropAndTagg(classProp,'row',"ol",containOp).toString(),Selector.cst_onePropAndTagg(classProp,'u-grid',"article",containOp).toString()]
             ]
 
     },
@@ -145,6 +136,8 @@ const __IJsonComponents_booksToscrape_books : _IJsonComponents<t_union_className
                 [[
                         {selector:Selector.cst_onePropAndTagg("",'',"li")},
                         {selector:Selector.cst_onePropAndTagg(classProp,'product_pod',"article",containOp)}
+                ],[
+                        {selector:Selector.cst_onePropAndTagg(classProp,'card-product',"div",containOp)}
                 ]]
             ],
             (arr:string[])=>arr.join(char_child)
@@ -153,38 +146,23 @@ const __IJsonComponents_booksToscrape_books : _IJsonComponents<t_union_className
     BooksItem:{
         childs_selectors : [
             [
-                Selector.cst_onePropAndTagg("",'',"h3").toString()
-            ],
-            [
-                Selector.cst_onePropAndTagg(classProp,'image_container',"div",containOp).toString()
-            ],
-            [
-                Selector.cst_onePropAndTagg(classProp,'product_price',"div",containOp).toString()
+                Selector.cst_onePropAndTagg("",'',"h3").toString(), 
+                Selector.cst_onePropAndTagg(classProp,'card-product-container',"article",containOp).toString()
             ]
             
         ]
     },
-    BooksPriceBox:{
-        childs_selectors : [
-            [
-                Selector.cst_onePropAndTagg(classProp,'price_color',"p",containOp).toString()
-            ],
-            [
-                Selector.cst_onePropAndTagg(classProp,'price_color',"p",containOp,fct_mod_not).toString()
-            ]
-            
-        ]
-    },
-
-
 
     BooksContainerPagination :{
         childs_selectors : [...booksToscrape_books_helpers.arr_selector_join_arrArr(
             [
                 [[
-                {selector:Selector.cst_onePropAndTagg("",'',"div")},
-                {selector:Selector.cst_onePropAndTagg(classProp,"pager","ul",containOp)}
-            ]]
+                        {selector:Selector.cst_onePropAndTagg("",'',"div")},
+                        {selector:Selector.cst_onePropAndTagg(classProp,"pager","ul",containOp)}
+                ],[
+                        {selector:Selector.cst_onePropAndTagg("",'',"div")},
+                        {selector:Selector.cst_onePropAndTagg(classProp,"pagination","ul",containOp)}
+                ]]
         ],(arr:string[])=>arr.join(char_child))]
     },
     BooksPagination:{
@@ -240,7 +218,7 @@ export type t_json_booksToscrape_books = typeof json_booksToscrape_books
 
 export const id_field = `${str_Books}Type` as const 
 const required_field = [] as const 
-const optional_field = ["BooksImage","BooksPrice","BooksStock"] as const
+const optional_field = [] as const
 
 const arr_pathId = [id_field,...required_field,...optional_field,...pagination_field] as const 
 type t_arr_pathId =  typeof arr_pathId
@@ -255,9 +233,6 @@ export type t_resParsing = {
 
 const _mapRegexPathIds_booksToscrape_books = [
     [[rootClassName,booksToscrape_books_rootClassName,"BooksContainerGrid","BooksGrid","BooksItem",["BooksType"]],["BooksType"]],
-    [[rootClassName,booksToscrape_books_rootClassName,"BooksContainerGrid","BooksGrid","BooksItem",["BooksImage"]],["BooksImage"]],
-    [[rootClassName,booksToscrape_books_rootClassName,"BooksContainerGrid","BooksGrid","BooksItem","BooksPriceBox",["BooksPrice"]],["BooksPrice"]],
-    [[rootClassName,booksToscrape_books_rootClassName,"BooksContainerGrid","BooksGrid","BooksItem","BooksPriceBox",["BooksStock"]],["BooksStock"]],
     [[rootClassName,booksToscrape_books_rootClassName,"BooksContainerPagination","BooksPagination",["BooksNextPagination"]],[pagination_field[0]]],
     [[rootClassName,booksToscrape_books_rootClassName,"BooksContainerPagination","BooksPagination",["BooksSelectedPagination"]],[pagination_field[1]]],
  ] as const 

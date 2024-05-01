@@ -13,8 +13,9 @@ export const str_books = idRoutes_booksToscrape[2]
 export type t_str_books = typeof str_books
 
 export const str_Books = majFirstChar(str_books)
+export type t_str_Books = typeof str_Books
 
-export const booksToscrape_books_rootClassName = `${str_Books}Page` as const
+export const booksToscrape_books_rootClassName = `${str_Books}${rootClassName}` as const
 export type t_booksToscrape_books_rootClassName = typeof booksToscrape_books_rootClassName
 export const rootBooksBooksToscrapeChildType = StrChildType.compClassnameToChildType(booksToscrape_books_rootClassName)
 
