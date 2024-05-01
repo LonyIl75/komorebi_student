@@ -181,6 +181,14 @@ Elms extends readonly [infer A ,... infer subArr] ?
 : false
 
 
+export type insArray < Arr extends readonly any[] , Elms extends  readonly any[] > =
+Elms extends readonly [infer E ,... infer R] ?
+  R extends readonly any[] ?
+  inArray<Arr,E> extends true ? insArray<Arr,R>: false
+  :never 
+: true 
+
+
 enum Comparison {
   Greater,
   Equal,
@@ -605,20 +613,20 @@ export type t_JoinChar_pipe < T extends readonly string[] > = t_JoinChar<T,t_joi
 
 
 
-export  type joinCapitalize< Arr extends readonly string[]> = Arr extends readonly [infer A ,... infer B] ? 
+export  type t_joinCapitalize< Arr extends readonly string[]> = Arr extends readonly [infer A ,... infer B] ? 
 A extends string ? 
-        B extends readonly string[]? `${Capitalize<A>}${joinCapitalize<B>}`:`${Capitalize<A>}`
-: ""
+        B extends readonly string[]? `${Capitalize<A>}${t_joinCapitalize<B>}`:`${Capitalize<A>}`
+: never
 : ""
 
-export type joinUnderscore_to_joinMaj<T extends string> = joinChar_to_joinMaj<T,t_join_underscore>
+export type t_joinUnderscore_to_joinMaj<T extends string> = t_joinChar_to_joinMaj<T,t_join_underscore>
 
 
 
 //A FAIRE generalize with applyToArr
 
-export  type joinHyphen_to_joinMaj<T extends string> = T extends `${infer A}${t_join_hyphen}${infer B}` ? joinChar_to_joinMaj<T,t_join_hyphen> : Capitalize<T>
-export type joinChar_to_joinMaj <T extends string , joinChar extends string> = T extends `${infer A}${joinChar}${infer B}` ? joinCapitalize<[A, ...joinChar_to_joinMaj<B,joinChar>]> :[T] 
+export  type t_joinHyphen_to_joinMaj<T extends string> = T extends `${infer A}${t_join_hyphen}${infer B}` ? t_joinChar_to_joinMaj<T,t_join_hyphen> : Capitalize<T>
+export type t_joinChar_to_joinMaj <T extends string , joinChar extends string> = T extends `${infer A}${joinChar}${infer B}` ? t_joinCapitalize<[A, ...t_joinChar_to_joinMaj<B,joinChar>]> :[T] 
 
 type isStrNumber <T extends string> = T extends `${number}` ? true : false
 export type isCharNumber <T extends string> = T extends `${t_char_number}` ? true : false
@@ -635,10 +643,10 @@ export type majCuttingRetArr<T extends string , Buff extends string =""> =
   :[Buff]
 
 
-export type joinMaj_to_joinChar <T extends string , joinChar extends string> =
+export type t_joinMaj_to_joinChar <T extends string , joinChar extends string> =
 T extends `${infer A}${infer Rest}` ?t_JoinChar<majCuttingRetArr<T>,joinChar>: ""
 
-export type joinMaj_to_joinHyphen <T extends string > = joinMaj_to_joinChar<T,t_join_hyphen> 
+export type t_joinMaj_to_joinHyphen <T extends string > = t_joinMaj_to_joinChar<T,t_join_hyphen> 
 
 
 export type t_strEnum = string
@@ -736,10 +744,12 @@ Arr extends readonly [infer _ ,... infer R] ? R extends readonly any[] ? [Apply<
 
 
 
-export type filterNotNullOrUndefinedArr <  Arr extends readonly any[] , Acc extends any[]= []> =
+export type filterNotElmArr <  Arr extends readonly any[] ,US ,  Acc extends any[]= []> =
 Arr extends readonly [infer A , ... infer R] ? 
-  A extends null|undefined ? filterNotNullOrUndefinedArr<R,Acc> : filterNotNullOrUndefinedArr<R,[...Acc,A]>
+  A extends US ? filterNotElmArr<R,Acc> : filterNotElmArr<R,[...Acc,A]>
 : Acc
+
+export type filterNotNullOrUndefinedArr <Arr extends readonly any[]> =filterNotElmArr< Arr ,null|undefined >
 
 
 export type getPropFromArrOfObject < Arr extends readonly  {[k in t_indexable_key]:any}[] , propName extends t_indexable_key  , df_value = undefined > =

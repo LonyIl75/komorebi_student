@@ -6,12 +6,13 @@ import { doServiceBooksToscrape } from "./controller/scraping-services/Services/
 import { res_books, req_books } from "./routes/scraping-services/Services/src/booksToscrape/Services/Books/routes.input.js";
 
 
-const url = "https://books.toscrape.com/catalogue/category/books_1/index.html"  
-const route = "books"
-let header = new ServiceRequestHeaderBase(df_client_id,url,undefined,ServiceRequestHeaderBase.enum_privacy.public,true)
+const url = "https://books.toscrape.com/catalogue/category/books_1/index.html" 
+const routeName = "books" as const  
+let header = new ServiceRequestHeaderBase(routeName,df_client_id,url,undefined,ServiceRequestHeaderBase.enum_privacy.public,true)
 const arr_fct_name =HA_BooksToscrapeServiceBooks.namesOfPipelineFunction()
 let body = new ServiceRequestBodyBase({body:[arr_fct_name[0],arr_fct_name[2],arr_fct_name[4],arr_fct_name[5],arr_fct_name[3],arr_fct_name[6],arr_fct_name[7]],op:str_while,initEnv : {counter:0,max:3}} as any ) 
 let _res = new res_books(header)
 let _req = new req_books(header,body)
-await doServiceBooksToscrape(route , "process" ,  _req,_res)
+//TODO : 
+await doServiceBooksToscrape(routeName,"process" ,  _req,_res)
 console.log(_res)

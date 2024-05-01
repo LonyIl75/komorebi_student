@@ -1,6 +1,6 @@
 import { t_alphabet, t_alphaNumeriChar, UnionToArray, t_char_number, validateStrIsInAllPermutation } from "./type.js"
 
-export type t_specialChar_regex = "("|")"|"{"|"}"|"["|"]"|"*"|"+"|"?"|"."|"\\"|"^"|"$"|"|"
+export type t_specialChar_regex = "("|")"|"{"|"}"|"["|"]"|"*"|"+"|"?"|"."|"\\"|"^"|"$"|"|"|"&"|"/"
 export type t_specialChar_regex_withoutPattern = "."|"^"| "$"|"*"|"+"|"?"|"|"|"\\"
 
 export  type t_count_regex = `{${number}}`|`{${number},}` |`{${number},${number}}`
@@ -46,7 +46,7 @@ A extends `${char_u}${infer T}`? T : undefined
       
 export type t_strRegex = ReturnType < typeof RegExp.toString > 
 
-export const ju_escapeRegex = /[(){}\[\]*+?.\\\^$|]/g 
+export const ju_escapeRegex = /[(){}\[\]*+?.\\\^$|&\/]/g 
 export const arr_regex_flag = ["i","g","m","s","u","y"] as const 
 type t_arr_arr_regex_flag = typeof arr_regex_flag
 export type t_regex_flag = typeof arr_regex_flag[number]

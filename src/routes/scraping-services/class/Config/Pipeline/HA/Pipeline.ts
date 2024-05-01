@@ -2,7 +2,7 @@ import { IJson, IVoid, isEmptyJson, isNotEmptyJson } from "@shared/m_object.js"
 import { t_rules_base, PipelineBuilder  as _PipelineBuilder} from "@shared/m_pipeline.js"
 import { _isNullOrUndefined, t_noReturnValue } from "@shared/m_primitives.js"
 import { convertStrToRegexStr} from "@shared/m_regex.js"
-import { NestedArray, arrToUnion, arr_url_attributeName, getIndexOfElement, joinCharKeyJson, reshapeObject, t_arr_url_attributeName, t_join_underscore, t_notFoundIdx } from "@shared/type.js"
+import { NestedArray, arrToUnion, arr_url_attributeName, getIndexOfElement, joinCharKeyJson, removePrefix, reshapeObject, t_arr_url_attributeName, t_function, t_join_underscore, t_notFoundIdx } from "@shared/type.js"
 import { ReqAndResType } from "../../../utils/Data/ReqResRoute.js"
 import { AServiceRequest } from "../../../utils/Data/ServiceRoute.js"
 import { getBrowsers, BrowsersPool, t_browserId, t_targetId } from "@/utils/browser/BrowsersPool.js"
@@ -10,21 +10,23 @@ import { getElmFromArrSelector, trySelectors_any, trySelectors_any_all, waitSele
 import { base_getParsingTree, _buildParsingTree } from "@/utils/scraping/PageParsing/TreeParsing.js"
 import { take_screenshot } from "@shared/str_debug.js"
 import { t_page_fct_getMainComponent, t_page_fct_waitForPageFullLoading, waitForPageFullLoading } from "@/utils/scraping/DOMElements/page_selectors.js"
-import { t_arr_component, t_getClassNameTypeFromArrComponent, t_rootClassName } from "@/utils/scraping/PageParsing/types.js"
+import { concatRouteNameClassName, t_arr_component, t_concatRouteNameClassName, t_getClassNameTypeFromArrComponent, t_removeConcatRouteNameClassName, t_rootClassName } from "@/utils/scraping/PageParsing/types.js"
 import { selectors, t_ElementHN, t_pageOrElementHN, t_resSelector } from "@/utils/scraping/DOMElements/Selector/_Selector/type.js"
 import { _IJsonComponents } from "@/utils/scraping/PageParsing/Schema/FunctionalWrapperJsonComponents/_JsonComponents/_JsonComponents.js"
 import { hours, time } from "@shared/hours.js"
-import { MapRegexToIdPath, pagination_field, t_pagination_field } from "@shared/m_regexMapping.js"
+import { MapRegexToIdPath, date_field, pagination_field, t_pagination_field, t_required_field, t_union_required_field } from "@shared/m_regexMapping.js"
 import { t_agreg_path, unjoin_pathRoutes } from "@shared/routePath.js"
 import { NodeComponentValue, str_attributes } from "@/utils/scraping/PageParsing/Tree/NodeComponent.js"
 import { f_clicking } from "@/utils/scraping/primitives/human_actions.js"
 import { arrayOnlyIndices, convertToArray, isStrictArray } from "@shared/m_array.js"
-import { t_df_arr_fct_name, str_getNextPage, t_str_getNextPage, str_transformAfterGetNextPage, str_nextPage, str_transformAfterNextPage, str_getLocalFunction, str_getServiceFunction, str_save_serviceFunction, str_transformAfterGetServiceFunction, getUrlToScrap } from "./types.js"
+import { t_df_arr_fct_name, str_getNextPage, t_str_getNextPage, str_transformAfterGetNextPage, str_nextPage, str_transformAfterNextPage, str_getLocalFunction, str_getServiceFunction, str_save_serviceFunction, str_transformAfterGetServiceFunction, getUrlToScrap, t_str_nextPage, getUrlToScrapItem } from "./types.js"
 import { createSubJsonFromArrRegex, deepCloneJson, getSubsetKeysFromArrRegex } from "@shared/m_json.js"
 import { getRootPropFromResValue, getRootPropFromValue, isGetValue, str_json_value, t_resValue } from "@/utils/scraping/PageParsing/Tree/TreeComponent.js"
 import { embedBeginAndEndOfLineStrOrRegex } from "@shared/m_regex_prefixAndSuffix.js"
 import { t_req_any, t_res_any } from "@/controller/scraping-services/class/constraints.js"
 import { t_strRegex } from "@shared/_regexp.js"
+import { getBodyUrlAndParamsReq } from "@shared/validate-url/functions.js"
+import { t_url } from "@shared/validate-url/_types.js"
 
 //TODO-IMP refactor
 
@@ -40,37 +42,49 @@ export type t_json_nextPage = {
     nexts : any[]
 }
 
-type  t_IAHA_ServiceBase <Req extends t_req_any , Res extends t_res_any,UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
+export type  t_IAHA_ServiceBase <RouteName extends string ,Req extends t_req_any , Res extends t_res_any,UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
 ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>,  arr_fcts extends readonly string[] = t_df_arr_fct_name  > =  
 {
-    getServiceParam :((req:Req , res : Res)=>t_AHA_Service_Param)
+    routeName : RouteName 
+    getServiceParam (req:Req , res : Res):t_AHA_Service_Param<RouteName>
 
-    [str_getServiceFunction] : ((req:Req , res : Res) => t_ha_res),
-    [str_getLocalFunction] : ((req:Req , res : Res) => t_ha_res),
-    [str_transformAfterGetServiceFunction] : ((req:Req , res : Res, json:Awaited<t_ha_res> ) => ReqAndResType<Req, Res>)
+    [str_getServiceFunction] (req:Req , res : Res) : t_ha_res
+    [str_getLocalFunction] (req:Req , res : Res) : t_ha_res
+    [str_transformAfterGetServiceFunction] (req:Req , res : Res, json:Awaited<t_ha_res> ): ReqAndResType<Req, Res>
         
 
-    getTree: t_AHA_Service_getTree<Req ,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>,
-    namesOfPipelineFunction : (()=>  arr_fcts)
+    getTree(...args:Parameters<t_AHA_Service_getTree<Req ,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>>):ReturnType<t_AHA_Service_getTree<Req ,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>>
+    namesOfPipelineFunction (): arr_fcts
 }
 
-type  t_IAHA_Service <Req extends t_req_any , Res extends t_res_any,UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
-ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>,  arr_fcts extends readonly string[] = t_df_arr_fct_name  > =  
-{
-    getNextPageParam :((req:Req , res : Res)=>t_AHA_Service_ParamNextPage)
+export type t_transformFromGet <Req extends t_req_any , Res extends t_res_any, F extends (( req:Req , res : Res  ) => t_ha_res) > = (req:Req , res : Res, json:Awaited<ReturnType<F>> ) => ReqAndResType<Req, Res>
 
-    [str_save_serviceFunction] : (( req:Req , res : Res  ) => Promise<void>),
+export type _t_IAHA_ServiceGetTransform<Req extends t_req_any , Res extends t_res_any,T extends IJson<string,( req:Req , res : Res  ) => t_ha_res> > = 
+T & {[k in keyof T as k extends string ? `transformAfter${Capitalize<k>}` :never ] :  t_transformFromGet<Req,Res,T[k]>}  
+
+export type t_isNext <Arr extends  readonly string[] > = getIndexOfElement<t_str_getNextPage,Arr>
+
+export type _t_IAHA_Service <RouteName extends string , Req extends t_req_any , Res extends t_res_any,UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>,arr_HA_df_fct_name extends readonly string[] =t_df_arr_fct_name,arr_restFct extends readonly string[] =[] 
+,_isNext extends boolean = t_isNext<[...arr_HA_df_fct_name,...arr_restFct]> extends t_notFoundIdx ? true : false 
+> ={
+    getNextPageParam (req:Req , res : Res):t_AHA_Service_ParamNextPage<RouteName>
+        
+    [str_save_serviceFunction]( req:Req , res : Res  ) : Promise<void>
     //A FAIRE : why no transform after save ? 
-    //TODO extract type : duplicate between getNextPage and nextPage and all other future optional fct
-    [str_getNextPage] : (getIndexOfElement<t_str_getNextPage,arr_fcts> extends t_notFoundIdx ? undefined : (( req:Req , res : Res  ) => t_ha_res))
-    [str_transformAfterGetNextPage] : (getIndexOfElement<t_str_getNextPage,arr_fcts> extends t_notFoundIdx ? undefined : ((req:Req , res : Res, json:Awaited<t_ha_res> ) => ReqAndResType<Req, Res>)),
-    
-    [str_nextPage] : (getIndexOfElement<t_str_getNextPage,arr_fcts> extends t_notFoundIdx ? undefined : (( req:Req , res : Res  ) => Promise<t_json_nextPage>))
-    [str_transformAfterNextPage] :(getIndexOfElement<t_str_getNextPage,arr_fcts> extends t_notFoundIdx ? undefined : ((req:Req , res : Res, json:Awaited<Promise<t_json_nextPage>> ) => ReqAndResType<Req, Res>)),
-    //} //extends infer Base ? Base extends {[k in t_df_fct_name] : t_function} ? Base : never : never  
-}& t_IAHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T,arr_fcts>
+    //TODO extract type : duplicate between getNextPage and nextPage and all other future optional fct , type_fct for get opt , transform opt , action opt
+} & (_isNext extends false ?IVoid:_t_IAHA_ServiceGetTransform<Req,Res,{
+    [str_getNextPage] ( req:Req , res : Res  ) : t_ha_res
+    [str_nextPage]( req:Req , res : Res  ) : Promise<t_json_nextPage>
+}>)
 
-export type t_AHA_Service_Param = {
+
+
+export type  t_IAHA_Service <RouteName extends string , Req extends t_req_any , Res extends t_res_any,UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
+ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>,  arr_fcts extends readonly string[] = t_df_arr_fct_name  > =  
+_t_IAHA_Service<RouteName,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T,arr_fcts> & t_IAHA_ServiceBase<RouteName,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T,arr_fcts>
+
+export type t_AHA_Service_Param<RouteName extends string> = {
+    routeName:RouteName,
     url : string ,
     url_toScrap ?: string,
     browserId : t_browserId ,
@@ -78,37 +92,46 @@ export type t_AHA_Service_Param = {
 
 }
 
+export type t_getLibPipeline<T , Arr extends readonly string[]> = 
+    Arr extends readonly [infer Id , ... infer R ] ? R extends readonly string[] ? Id extends keyof T ? 
+        T[Id] extends infer A ? A extends t_function ? 
+        {[k in Id]:((this:T,...args:Parameters<A>)=>ReturnType<A>)} & t_getLibPipeline<T,R>
+        : never : never 
+    : never : never : {}
 
-type _t_AHA_Service_ParamGetTree<
+
+
+type _t_AHA_Service_ParamGetTree<RouteName extends string ,
 BaseElement extends unionClassNameType ,UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
 ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>
-> = {mapFilter?:MapRegexToIdPath<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType>,prop_base_selectors:selectors,prop_base:BaseElement}
+> = {routeName : RouteName,mapFilter?:MapRegexToIdPath<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType>,prop_base_selectors:selectors,prop_base:BaseElement}
 
-export type t_AHA_Service_ArgsGetTree<
+export type t_AHA_Service_ArgsGetTree<RouteName extends string , 
 BaseElement extends unionClassNameType ,UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
 ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>
 
 > = 
 {
-    params: _t_AHA_Service_ParamGetTree<BaseElement,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>,
+
+    params: _t_AHA_Service_ParamGetTree<RouteName,BaseElement,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>,
     fct_loading:t_AHA_Service_FctLoadingGetTree
 }
 
 
 export type t_AHA_Service_getTree<Req extends t_req_any , Res extends t_res_any,_UnionRegex  extends t_strRegex ,_UnionIdPath  extends string , _ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],_unionClassNameType extends arrToUnion<_ArrUnionClassNameType> ,
 _ArrArr extends t_arr_component<_unionClassNameType> ,  _T extends _IJsonComponents<_unionClassNameType>> = 
-(<BaseElement extends unionClassNameType , UnionRegex  extends _UnionRegex ,UnionIdPath  extends _UnionIdPath , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly (Exclude<_ArrUnionClassNameType[number],t_rootClassName>)[]] ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> & readonly (_ArrArr[number])[] ,  T extends _IJsonComponents< unionClassNameType> & {[k in keyof _T ]: _T[k]}> (req:Req,res:Res,args:reshapeObject<t_AHA_Service_ArgsGetTree<BaseElement,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>>)=>ReturnType<typeof AHA_Service._getTree>)
+(<RouteName extends string , BaseElement extends unionClassNameType ,UnionRegex  extends _UnionRegex ,UnionIdPath  extends _UnionIdPath , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly (Exclude<_ArrUnionClassNameType[number],t_rootClassName>)[]] ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> & readonly (_ArrArr[number])[] ,  T extends _IJsonComponents< unionClassNameType> & {[k in keyof _T ]: _T[k]}> (req:Req,res:Res,args:reshapeObject<t_AHA_Service_ArgsGetTree<RouteName,BaseElement,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>>)=>ReturnType<typeof AHA_Service._getTree>)
 
 
-export type t_AHA_Service_ParamGetTree< BaseElement extends unionClassNameType,  UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
-ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>> = t_AHA_Service_Param & _t_AHA_Service_ParamGetTree<BaseElement,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>
+export type t_AHA_Service_ParamGetTree<RouteName extends string , BaseElement extends unionClassNameType,  UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
+ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>> = t_AHA_Service_Param<RouteName> & _t_AHA_Service_ParamGetTree<RouteName,BaseElement,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>
 
 export type t_AHA_Service_FctLoadingGetTree={
     waitForPageLoading : t_page_fct_getMainComponent ,  
     waitForPageFullLoading : t_page_fct_waitForPageFullLoading
 }
 
-export type t_AHA_Service_ParamNextPage = t_AHA_Service_Param & {result:IJson , nexts:any[]}
+export type t_AHA_Service_ParamNextPage<RouteName extends string> = t_AHA_Service_Param<RouteName> & {result:IJson , nexts:any[]}
 
 type t__ParamSavePage<TSample extends IJson ,TDbName extends string , TColId extends keyof TSample , TColDate extends keyof TSample > = {
     database:{
@@ -125,22 +148,28 @@ type t__ParamSavePage<TSample extends IJson ,TDbName extends string , TColId ext
 
 export type t_AHA_Service_ParamSavePage<TSample extends IJson ,TDbName extends string , TColId extends keyof TSample , TColDate extends keyof TSample >  =  t__ParamSavePage<TSample , TDbName , TColId , TColDate> //t_AHA_Service_Param &
 
-export abstract class AHA_ServiceBase<Req extends t_req_any , Res extends t_res_any,UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
+export abstract class AHA_ServiceBase<RouteName extends string , Req extends t_req_any , Res extends t_res_any,UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
 ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>,arr_HA_df_fct_name extends readonly string[] =t_df_arr_fct_name,arr_restFct extends readonly string[] =[] > 
-implements t_IAHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T,readonly [...arr_HA_df_fct_name,...arr_restFct]>{
+implements t_IAHA_ServiceBase<RouteName,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T,readonly [...arr_HA_df_fct_name,...arr_restFct]>{
+    routeName: RouteName
 
-    abstract getServiceParam :((req:Req , res : Res)=>t_AHA_Service_Param)
+    abstract getServiceParam (req:Req , res : Res):t_AHA_Service_Param<RouteName>
 
-    abstract getServiceFunction : ((req:Req , res : Res) => t_ha_res)
-    abstract getLocalFunction : ((req:Req , res : Res) => t_ha_res)
-    abstract transformAfterGetServiceFunction : ((req:Req , res : Res, json:Awaited<t_ha_res> ) => ReqAndResType<Req, Res>)
+    abstract getServiceFunction(req:Req , res : Res) : t_ha_res
+    abstract getLocalFunction (req:Req , res : Res):t_ha_res
+    abstract transformAfterGetServiceFunction (req:Req , res : Res, json:Awaited<t_ha_res> ) : ReqAndResType<Req, Res>
 
-    abstract getTree: t_AHA_Service_getTree<Req ,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>
+    abstract getTree(...args:Parameters<t_AHA_Service_getTree<Req ,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>>):ReturnType<t_AHA_Service_getTree<Req ,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>>
 
-    abstract namesOfPipelineFunction : (()=> readonly [...arr_HA_df_fct_name,...arr_restFct])
+    abstract namesOfPipelineFunction(): readonly [...arr_HA_df_fct_name,...arr_restFct]
 
-    static getServiceParam <Req extends t_req_any , Res extends t_res_any>(req:Req , res : Res):t_AHA_Service_Param {
+    getIdRequiredField(idField :t_removeConcatRouteNameClassName<RouteName,unionClassNameType> & t_union_required_field ){
+        return concatRouteNameClassName(this.routeName,idField)
+    }
+
+    static getServiceParam <RouteName extends string ,Req extends t_req_any , Res extends t_res_any>(req:Req , res : Res):t_AHA_Service_Param<RouteName> {
         return {
+            routeName : req.header.routeName,
             url:req.header.url,
             url_toScrap : req.header.url_toScrap,
             browserId : req.body.browserId,
@@ -149,9 +178,9 @@ implements t_IAHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
     }
         
 
-    static async _getTree< BaseElement extends unionClassNameType,  UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
+    static async _getTree< RouteName extends string , BaseElement extends unionClassNameType,  UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
     ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>>(
-        param:t_AHA_Service_ParamGetTree<BaseElement,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>,
+        param:t_AHA_Service_ParamGetTree<RouteName,BaseElement,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>,
         fct_loading : t_AHA_Service_FctLoadingGetTree
             ):Promise<any>{
         const url_toScrap = param.url_toScrap || param.url
@@ -213,21 +242,14 @@ export type t_nextJson<isBase extends boolean = false,isSingleNext extends boole
 {[k in t_pagination_field[0]] : R } & {[k in t_pagination_field[1]] :t_nextJson_selectedPagination<isBase>} : never 
 
 
-export abstract class AHA_Service<Req extends t_req_any , Res extends t_res_any,UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
+
+
+//t_IAHA_Service<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T,readonly [...arr_HA_df_fct_name,...arr_restFct]>
+export abstract class AHA_Service<RouteName extends string ,Req extends t_req_any , Res extends t_res_any,UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
 ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>,arr_HA_df_fct_name extends readonly string[] =t_df_arr_fct_name,arr_restFct extends readonly string[] =[] > 
-extends  AHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T,readonly [...arr_HA_df_fct_name,...arr_restFct]> implements t_IAHA_Service<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T,readonly [...arr_HA_df_fct_name,...arr_restFct]>   {
+extends  AHA_ServiceBase<RouteName,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T,readonly [...arr_HA_df_fct_name,...arr_restFct]> implements t_IAHA_ServiceBase<RouteName,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T,readonly [...arr_HA_df_fct_name,...arr_restFct]>   {
         
-        abstract getNextPageParam :((req:Req , res : Res)=>t_AHA_Service_ParamNextPage)
-    
-       
-        abstract save_serviceFunction : (( req:Req , res : Res  ) => Promise<void>)
-
-        //TODO extract type : duplicate between getNextPage and nextPage and all other future optional fct , type_fct for get opt , transform opt , action opt
-        abstract getNextPage : (getIndexOfElement<t_str_getNextPage,[...arr_HA_df_fct_name,...arr_restFct]> extends t_notFoundIdx ? undefined : (( req:Req , res : Res  ) => t_ha_res))
-        abstract transformAfterGetNextPage  : (getIndexOfElement<t_str_getNextPage,[...arr_HA_df_fct_name,...arr_restFct]> extends t_notFoundIdx ? undefined : ((req:Req , res : Res, json:Awaited<t_ha_res> ) => ReqAndResType<Req, Res>))
-
-        abstract nextPage : (getIndexOfElement<t_str_getNextPage,[...arr_HA_df_fct_name,...arr_restFct]> extends t_notFoundIdx ? undefined : (( req:Req , res : Res  ) => Promise<t_json_nextPage>))
-        abstract transformAfterNextPage :  (getIndexOfElement<t_str_getNextPage,[...arr_HA_df_fct_name,...arr_restFct]> extends t_notFoundIdx ? undefined : ((req:Req , res : Res, json:Awaited<Promise<t_json_nextPage>> ) => ReqAndResType<Req, Res>))
+        routeName: RouteName
 
         static _nextsJson (_json :t_nextJson<true>) {
             const selected_pagination = _json[pagination_field[1]]
@@ -235,7 +257,7 @@ extends  AHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,un
 
             let _nextPagination_values = nextPagination
             if(_nextPagination_values.length > 1){
-                let nextPagination_values = _nextPagination_values as t_nextJson<true,false>["NextPagination"]
+                let nextPagination_values = _nextPagination_values as t_nextJson<true,false>[t_pagination_field[0]]
                 const json = _json as t_nextJson<true,false>
                 const limit = parseInt(getRootPropFromValue(pagination_field[1],json as any ))//TODO 
                 
@@ -254,7 +276,7 @@ extends  AHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,un
                 });
                 _nextPagination_values = nextPagination_values
             }else {
-                let nextPagination_values = _nextPagination_values as t_nextJson<true,true>["NextPagination"]
+                let nextPagination_values = _nextPagination_values as t_nextJson<true,true>[t_pagination_field[0]]
                 _nextPagination_values =[{[pagination_field[0]] :nextPagination_values[0]}]
                 _nextPagination_values = nextPagination_values
             }
@@ -284,9 +306,8 @@ extends  AHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,un
                     , ...deepCloneJson({[pagination_field[1]]:(json[pagination_field[1]] as t_nextJson_selectedPagination<true>)})
                 })[pagination_field[0]]
         }
-        static async _getNextPage < TNextPagination extends unionClassNameType , BaseElement extends unionClassNameType,  UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
-        ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>>(nextPageId :TNextPagination , 
-              param:t_AHA_Service_ParamGetTree<BaseElement,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>, fct_loading : t_AHA_Service_FctLoadingGetTree){
+        static async _getNextPage <  RouteName extends string,BaseElement extends unionClassNameType,  UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
+        ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>>( param:t_AHA_Service_ParamGetTree<RouteName,BaseElement,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>, fct_loading : t_AHA_Service_FctLoadingGetTree){
 
 
             type t_1 = UnionRegex
@@ -295,6 +316,9 @@ extends  AHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,un
             type t_4 = unionClassNameType
             type t_5 =   readonly (ArrArr[number])[]
             type t_6 =  {[k in keyof T ]: T[k]}
+
+            const _nextPageId = concatRouteNameClassName(param.routeName,pagination_field[0])
+            const nextPageId = _nextPageId as typeof _nextPageId & unionClassNameType  //TODO 
 
             let mpage = await getBrowsers().then((brwsrsP:BrowsersPool)=>brwsrsP.getMPageFromTargetIdx(param.browserId,param.targetId))
             const url_toScrap = param.url_toScrap || param.url
@@ -316,7 +340,7 @@ extends  AHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,un
                 const new_map_regex = new MapRegexToIdPath<t_1,t_2,any,t_4>( {_arrClassname :unjoin_pathRoutes<unionClassNameType>(path_to_nextComponent).slice(1) } , { _mapRegexToIdPath : new_arr_regex } ) 
     
                 
-                const tree = await AHA_Service._getTree<BaseElement,t_1,t_2,any,t_4,t_5,t_6>({
+                const tree = await AHA_Service._getTree<RouteName,BaseElement,t_1,t_2,any,t_4,t_5,t_6>({
                     ...param,
                     mapFilter:new_map_regex
                 },fct_loading)
@@ -329,7 +353,7 @@ extends  AHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,un
             }
         }
 
-        static getNextPageParam <Req extends t_req_any , Res extends t_res_any>(req:Req , res : Res):t_AHA_Service_ParamNextPage {
+        static getNextPageParam <RouteName extends string,Req extends t_req_any , Res extends t_res_any>(req:Req , res : Res):t_AHA_Service_ParamNextPage<RouteName> {
             return {
                 ...this.getServiceParam(req,res),
                 result : res.body.result,
@@ -338,7 +362,7 @@ extends  AHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,un
         }
         
         //A FAIRE : refactor see if part isnt be better in another file and also be static // this nextPage is only relevant for not scrolling next => enum.next => [scroll , click , goto ]
-        static async _nextPage(param:t_AHA_Service_ParamNextPage){
+        static async _nextPage<RouteName extends string >(param:t_AHA_Service_ParamNextPage<RouteName>){
             const nexts =param.nexts
             if(_isNullOrUndefined(nexts))throw Error(`No nexts ${nexts}`)
 
@@ -471,6 +495,17 @@ extends  AHA_ServiceBase<Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameType,un
             //TODO-IMP createMany dont work in SQLite 
             return Promise.all([...promise_create,...promise_update])
 
+        }
+
+        static embedItems <T extends IJson ,TUrl extends string , ItemField extends string  >(_json:T,url_toScrap:TUrl,item_field:ItemField){
+            let json = _json[url_toScrap]
+            const _date = _json[date_field]
+            const {bodyUrl,paramsUrl} = getBodyUrlAndParamsReq(url_toScrap)
+            //TODO extract add req_param 
+            json[item_field]= json[item_field].reduce((acc,e,idx)=>{return {...acc, [getUrlToScrapItem(bodyUrl,paramsUrl,idx)]:{...e,[date_field] : _date}}},{})//A FAIRE : extract 
+            delete json[date_field]
+            return json
+            
         }
      
 }

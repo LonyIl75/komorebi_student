@@ -5,7 +5,7 @@ import { concatNameModuleAndDebug } from "./str_debug.js";
 
 const name_module :string = "m_string"
 
-import { char_join_hyphen, char_join_underscore, t_JoinChar_hyphen, t_JoinChar_underscore, t_JoinChar_underscore_lowercase } from "./type.js";
+import { char_join_hyphen, char_join_underscore, t_JoinChar_hyphen, t_JoinChar_underscore, t_JoinChar_underscore_lowercase, t_joinCapitalize } from "./type.js";
 import { _isNullOrUndefined, nullOrUndefined } from "./m_primitives.js";
 
 export const todo_str ="TODO"
@@ -59,8 +59,12 @@ export const getSetterPrefixName = <T extends string > (name:T)=> getMemberPrefi
 export const majAllStr = <Z extends string > (str:Z) : Uppercase<Z> => str.toUpperCase() as Uppercase<Z>  ;
 export const majFirstChar = <Z extends string > (str:Z) : Capitalize<Z> => str.charAt(0).toUpperCase() + str.slice(1) as Capitalize<Z>  ;
 export const minAllStr = <Z extends string > (str:Z) : Lowercase<Z> => str.toLowerCase() as Lowercase<Z>  ;
-export const minFirstChar = <Z extends string > (str:Z) : Lowercase<Z> => str.charAt(0).toLowerCase() + str.slice(1) as Lowercase<Z>  ;
+export const minFirstChar = <Z extends string > (str:Z) : Uncapitalize<Z> => str.charAt(0).toLowerCase() + str.slice(1) as Uncapitalize<Z>  ;
 
+export const joinCapitalize = <T extends readonly string[]>(...args:T) => {
+    return args.reduce((_str,elm) => `${_str}${majFirstChar(elm)}`,"") as t_joinCapitalize<T>
+}
+  
 export const str_validation_strRegex = "validation_strRegex" as const
 export type t_str_validation_strRegex = typeof str_validation_strRegex
 

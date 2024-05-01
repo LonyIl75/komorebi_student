@@ -1,6 +1,7 @@
-import { concatNameAndValueQueryParam, queryParamOperator } from "@/utils/scraping/primitives/page.js"
 import { IJson } from "@shared/m_object.js"
 import { m_regex_getContext } from "@shared/m_regex_getContext.js"
+import { joinEndParamUrlIfNotEmpty } from "@shared/validate-url/functions.js"
+import { joinReqUrl, joinBegParamUrl, char_headQuery } from "@shared/validate-url/types.js"
 
 export const str_getServiceFunction = "getServiceFunction" as const
 export const str_getLocalFunction = "getLocalFunction" as const
@@ -25,8 +26,13 @@ export type t_str_transformAfterNextPage = typeof str_transformAfterNextPage
 
 
 
-const name_queryParamNumberScrapPage = "pageScrap"
+const name_queryParamNumberScrapPage = "pageScrap" as const 
+const name_queryParamNumberScrapItem = "itemScrap" as const 
 
 export const getUrlToScrap = (cur_url : string , result:IJson)=> {
-    return m_regex_getContext.getIthContextSuffix(concatNameAndValueQueryParam(name_queryParamNumberScrapPage,""),cur_url,result,queryParamOperator)
+    return m_regex_getContext.getIthContextSuffix(joinBegParamUrl(name_queryParamNumberScrapPage,""),cur_url,result,char_headQuery)
+}
+
+export const getUrlToScrapItem = <S extends string , PA extends string , Idx extends number > (cur_url : S ,paramsUrl : PA ,  idx: Idx )=> {
+    return joinReqUrl(cur_url,joinEndParamUrlIfNotEmpty(paramsUrl,joinBegParamUrl(name_queryParamNumberScrapItem,`${idx}`)))
 }

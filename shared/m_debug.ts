@@ -6,6 +6,7 @@ export const nameFile = "m_debug"//TODO = getBaseFileName(__filename)
 import debug from 'debug';
 import {config as package_config } from "./data/config.js"
 import {Debugger} from "debug"  
+import { t_JoinChar } from './type.js';
 
 interface currentLine{
     method : string,
@@ -32,7 +33,7 @@ _("app:startup")("debugging is enabled")
 export const debug_sep =package_config.debug_sep
 
 
-export const debug_join = (arr_str : string[]) :string => arr_str.join(debug_sep)
+export const debug_join = <Arr extends readonly string[] >(arr_str : Arr)  => arr_str.join(debug_sep) as t_JoinChar<Arr,typeof debug_sep>
 
 
 const get_embedding = (propNames : string[] , json_obj:any) :string => {

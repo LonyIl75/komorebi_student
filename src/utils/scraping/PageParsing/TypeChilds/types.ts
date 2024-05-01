@@ -1,13 +1,13 @@
 import { isNumeric } from "@shared/m_primitives.js";
-import { joinHyphen_to_joinMaj, joinMaj_to_joinHyphen } from "@shared/type.js";
+import { t_joinHyphen_to_joinMaj, t_joinMaj_to_joinHyphen } from "@shared/type.js";
 
 
 export namespace StrChildType{ 
 
     export const child_type_sep ="-"  
 
-    export  const compClassnameToChildType  = <T extends string > (str:T):joinMaj_to_joinHyphen<T>  =>{
-        if(!str?.length)return "" as joinMaj_to_joinHyphen<T>
+    export  const compClassnameToChildType  = <T extends string > (str:T):t_joinMaj_to_joinHyphen<T>  =>{
+        if(!str?.length)return "" as t_joinMaj_to_joinHyphen<T>
         let ca =str[0].toLowerCase()
         var i=1;
         for(; i<str.length;i++) {
@@ -24,7 +24,7 @@ export namespace StrChildType{
             ca+=str[i]
             }
         }
-        return ca as joinMaj_to_joinHyphen<T>
+        return ca as t_joinMaj_to_joinHyphen<T>
     }
 
     export type t_childType<unionType extends string > = 
@@ -33,7 +33,7 @@ export namespace StrChildType{
     ReturnType<typeof compClassnameToChildType<unionType>>
 
 
-    export const _childTypeToCompClassname = <T extends t_childType<string> > (str:T) : joinHyphen_to_joinMaj<T>=> {
+    export const _childTypeToCompClassname = <T extends t_childType<string> > (str:T) : t_joinHyphen_to_joinMaj<T>=> {
         let ca =str[0].toUpperCase()
         var i=1;
         for(; i<str.length-1;i++) {
@@ -46,7 +46,7 @@ export namespace StrChildType{
             }
         }
         if(str[i])ca+=str[i]
-    return ca  as joinHyphen_to_joinMaj<T>
+    return ca  as t_joinHyphen_to_joinMaj<T>
     }
 
 

@@ -98,16 +98,18 @@ export type t_databaseMeta_type = t_arr_databaseMeta_type[number]
 
 
 export type t_DatabaseMeta_type = t_databaseMeta_type
-export const providerDbToType = (providerDb : string) : t_DatabaseMeta_type => {
+export type t_providerDbToType <T extends string > = string extends T ?t_DatabaseMeta_type : Lowercase<T> extends Lowercase<t_DatabaseMeta_type>? t_DatabaseMeta_type : undefined
+export const providerDbToType = <T extends string >(providerDb : T ) : t_providerDbToType<T> => {
+    let res : any = undefined 
     if(providerDb) {
     
         const minProviderDb = minAllStr(providerDb)
         for(const type of arr_databaseMeta_type){
             let min_type = minAllStr(type)
-            if(minProviderDb.startsWith(min_type)) return type
+            if(minProviderDb.startsWith(min_type)) {res = type; break}
         }
     }
-    return undefined 
+    return res as t_providerDbToType<T> 
 
 }
 
