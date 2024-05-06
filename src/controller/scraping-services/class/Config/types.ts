@@ -9,7 +9,7 @@ const debug_IJsonConfig : Debugger = debug(name_module)
 
 import { IJson} from "@/../shared/m_object.js";
 import { createAddress } from "@/../shared/routePath.js";
-import { FixTuple, UnionToArray, arrToUnion } from '@shared/type.js';
+import { FixTuple, UnionToArray, arrToUnion, t_function } from '@shared/type.js';
 
 export type t_routeIdAndRemoteAddress = readonly [string , string] ;
 export type t_arrRouteIdAndRemoteAddress = readonly t_routeIdAndRemoteAddress[] ;
@@ -78,16 +78,28 @@ export type t_str_idRoutes = typeof str_idRoutes ;
 
 export const str_login = "login"
 export type t_str_login = typeof str_login ;
-export const isNotLoginRoute = (key:string) => key !== str_login ;
+type t_isNotLogin <T extends string > = T extends t_str_login ? false : true ;
+export const isNotLoginRoute = <T extends string >(key:T) => (key !== str_login) as t_isNotLogin<T> ;
+export const getIdxIdLoginRoute = ():0=> 0  ;
 
 const id_val_serviceRoutes = [str_login] as const ; //[ "login" ,"posts", "profile" ]  as const ;
 export const id_arr_serviceRoutes =  [...id_val_serviceRoutes ]   as const ; 
 export type t_base_id_serviceRoutes = typeof id_arr_serviceRoutes;
 export type base_id_serviceRoutes = arrToUnion <t_base_id_serviceRoutes>;
 
-const getIdxIdHomeRoute = ():t_base_id_serviceRoutes["length"]=> id_arr_serviceRoutes.length  ;
+type t_isNotHomeRoute <T extends string > = T extends t_str_idRoute_home ? false : true ;
+export const isNotHomeRoute = <T extends string >(key:T)  => (key !== str_main) as t_isNotHomeRoute<T> ;
+export const getIdxIdHomeRoute = ():t_base_id_serviceRoutes["length"]=> id_arr_serviceRoutes.length  ;
 export type idx_idHomeRoute = ReturnType<typeof getIdxIdHomeRoute> ;
 
+export const validIdRoutesOrThrow = <ArrIdRoutes extends readonly string[]>(arr:ArrIdRoutes,reqOrRes : "req"|"res"|"idRoutes"="idRoutes")=> {
+    const validatePipeline : ([number,t_function<boolean,[string]>,string]) []= [[getIdxIdLoginRoute(),isNotLoginRoute,str_login],[getIdxIdHomeRoute(),isNotHomeRoute,str_main]]
+
+    validatePipeline.forEach((idxValidateFctName)=>{
+        const [idx,validateFct,name] = idxValidateFctName ;
+        if(validateFct(arr[idx])) throw new Error(`${reqOrRes}s should include ${name} as is ${idx} element `)
+    })
+}
 
 export type t_getBaseRouteArr <H extends string > = [H, ...t_base_id_serviceRoutes]
 

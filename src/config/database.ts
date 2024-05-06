@@ -1,14 +1,14 @@
 
-import {_getMongoClusterKOBSuffix, _getMongoClusterKOBUrl}  from './envVar.js';
+import {_getMongoDBClusterKOBSuffix, _getMongoDBClusterKOBUrl}  from './envVar.js';
 
-import { IClusterMetaMongo } from '@/../shared/m_database.js';
+import { IClusterMetaMongoDB } from '@/../shared/m_database.js';
 
 
-const json_clusterKOB : IClusterMetaMongo = {
+const json_clusterKOB : IClusterMetaMongoDB = {
     id:"0",
-    url:_getMongoClusterKOBUrl(),
+    url:_getMongoDBClusterKOBUrl(),
     admin:"LonyIl",
-    options:{suffix:_getMongoClusterKOBSuffix()},
+    options:{suffix:_getMongoDBClusterKOBSuffix()},
     name:"ClusterKOB"
 }
 

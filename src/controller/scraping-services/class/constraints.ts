@@ -11,7 +11,7 @@ export type _validateServiceName = string
 
 
 export type _validateRemoteAddress<SN extends _validateServiceName > =  
-string extends SN ? t_url<{sld:SN,tld:string}> : 
+string extends SN ? t_url<{subdomain:string,sld:SN,tld:string}> : 
 t_joinMaj_to_joinChar<SN,"."|"_"|"-"> extends infer _SN ? _SN extends string ? t_url<{sld:_SN,tld:string}> : never : never 
 
 export type t_args_validateRemoteAddress = [_validateServiceName] 

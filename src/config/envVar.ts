@@ -32,10 +32,10 @@ export const _getFolderHttpCert = () => process.env.HTTPCERT_FOLDER;
 export const _getHttpCert = ()  => process.env.HTTPCERT_FILE ;
 export const _getHttpKeyCert = ()  => process.env.HTTPCERT_KEY_FILE;
 
-export const _getMongoSuffix = ():string => process.env.MONGO_URL_SUFFIX || "retryWrites=true&w=majority"
+export const _getMongoDBSuffix = ():string => process.env.MONGO_URL_SUFFIX || "retryWrites=true&w=majority"
 
-export const _getMongoClusterKOBUrl = ():string => process.env.MONGO_CLUSTER_KOB_URL;
-export const _getMongoClusterKOBSuffix = ():string => process.env.MONGO_URL_KOB_SUFFIX || _getMongoSuffix(); 
+export const _getMongoDBClusterKOBUrl = ():string => process.env.MONGO_CLUSTER_KOB_URL;
+export const _getMongoDBClusterKOBSuffix = ():string => process.env.MONGO_URL_KOB_SUFFIX || _getMongoDBSuffix(); 
 
 //#ADD NEW SERVICE HERE
 

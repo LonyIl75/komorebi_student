@@ -230,12 +230,12 @@ const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb
         return fct_map_join_join(permutator(grouped_annotations),reqSpaceoptWordSpace,(str)=>str)
     }
 
-    type t_trad_annotations < TArrMongo extends readonly string [] , TArrSqlite extends readonly string []> = 
-    TArrMongo extends readonly [infer M,... infer MR] ? TArrSqlite extends readonly [infer S,... infer SR] ? 
+    type t_trad_annotations < TArrMongoDB extends readonly string [] , TArrSqlite extends readonly string []> = 
+    TArrMongoDB extends readonly [infer M,... infer MR] ? TArrSqlite extends readonly [infer S,... infer SR] ? 
     M extends t_indexable_key ? MR extends readonly string []  ? SR extends readonly string []  ? 
     {[k in M]:S}& t_trad_annotations<MR,SR> : never : never : never : never : TArrSqlite extends readonly [infer _,... infer _R] ? never : {}
 
-    type t_idField_annotation_trad< TArrMongo extends readonly string [] , TArrSqlite extends readonly string [] , TIdx extends number = number  > = {idx:TIdx ,mongodb_to_sqlite:t_trad_annotations<TArrMongo,TArrSqlite> }
+    type t_idField_annotation_trad< TArrMongoDB extends readonly string [] , TArrSqlite extends readonly string [] , TIdx extends number = number  > = {idx:TIdx ,mongodb_to_sqlite:t_trad_annotations<TArrMongoDB,TArrSqlite> }
 
     const getReplacedContent = <TMongo extends readonly string []  , TSqlite extends readonly string [] , TIdx extends number = number  >
                 (matched : RegExpMatchArray , _str:string , _idField_annotations_trad:t_idField_annotation_trad<TMongo,TSqlite, TIdx> )=>{
@@ -260,13 +260,13 @@ const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb
 
     if(fromDb == toDb) return content
     else {
-        if(fromDb !== "MongoDB") throw new Error("fromDb is not Mongo => not implemented")
+        if(fromDb !== "MongoDB") throw new Error(`fromDb is not ${"MongoDB"} => not implemented`)
         switch(toDb){
             case "SQLite":  
                 //TODO-IMP refactor
                 const idField_name = {idx: 1 ,mongodb :"id",sqlite:"id"}
                 const idField_type = {idx: 2 ,mongodb :"String",sqlite :"Int"}
-                type t_idField_annotation< TArrMongo extends readonly string [] , TArrSqlite extends readonly string [], TIdx extends number = number >  = {idx: TIdx ,mongodb : TArrMongo ,sqlite : TArrSqlite }
+                type t_idField_annotation< TArrMongoDB extends readonly string [] , TArrSqlite extends readonly string [], TIdx extends number = number >  = {idx: TIdx ,mongodb : TArrMongoDB ,sqlite : TArrSqlite }
                 const mongodbAnnotations =["@id","@db.ObjectId","@default(auto())"] as const 
                 type t_mongodbAnnotations = typeof mongodbAnnotations
                 const sqliteAnnotations =["@id","","@default(autoincrement())"] as const

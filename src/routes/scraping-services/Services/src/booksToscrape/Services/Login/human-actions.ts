@@ -1,4 +1,4 @@
-import { idRoutes_booksToscrape, serviceName_booksToscrape } from "@/controller/scraping-services/Services/Config/booksToscrape/config.js";
+import { idRoutes_booksToscrape, serviceName_booksToscrape, t_serviceName_booksToscrape } from "@/controller/scraping-services/Services/Config/booksToscrape/config.js";
 
 
 export const str_login = idRoutes_booksToscrape[0] 
@@ -25,10 +25,10 @@ import { arrToUnion, reshapeObject } from "@shared/type.js";
 import { rootClassName, t_arr_component, t_rootClassName } from "@/utils/scraping/PageParsing/types.js";
 import { _IJsonComponents } from "@/utils/scraping/PageParsing/Schema/FunctionalWrapperJsonComponents/_JsonComponents/_JsonComponents.js";
 import { _isNullOrUndefined } from "@shared/m_primitives.js";
-import { df_arr_fct_name, t_df_arr_fct_name } from "@/routes/scraping-services/class/Config/Pipeline/HA/types.js";
+import { df_arr_fct_name, str_getLocalFunction, str_getServiceFunction, t_df_arr_fct_name, t_str_getServiceFunction } from "@/routes/scraping-services/class/Config/Pipeline/HA/types.js";
 import { ReqAndResType } from "@/routes/scraping-services/class/utils/Data/ReqResRoute.js";
 
-type t_args_getTree < BaseElement extends t_unionClassName_login=t_rootClassName>= t_AHA_Service_ArgsGetTree<t_str_login,BaseElement,t_unionRegex_mapRegex_booksToscrape_login ,t_unionIdPath_mapRegex_booksToscrape_login , t_arrClassName_login,t_unionClassName_login ,t_arrChilds_login ,  t_IJsonComponent_login>
+type t_args_getTree < BaseElement extends t_unionClassName_login=t_rootClassName>= t_AHA_Service_ArgsGetTree<t_serviceName_booksToscrape,t_str_login,BaseElement,t_unionRegex_mapRegex_booksToscrape_login ,t_unionIdPath_mapRegex_booksToscrape_login , t_arrClassName_login,t_unionClassName_login ,t_arrChilds_login ,  t_IJsonComponent_login>
 
 
 type t_1 = t_unionRegex_mapRegex_booksToscrape_login
@@ -40,15 +40,16 @@ type t_6 =  {[k in keyof t_IJsonComponent_login ]: t_IJsonComponent_login[k]}
 
 //
 //TODO function cannot return undefined as value 
-class HA_BooksToscrapeServiceLogin extends  AHA_ServiceBase<t_str_login,req_login,res_login,t_unionRegex_mapRegex_booksToscrape_login ,t_unionIdPath_mapRegex_booksToscrape_login , t_arrClassName_login,t_unionClassName_login ,t_arrChilds_login ,  t_IJsonComponent_login,t_df_arr_fct_name>  implements t_IAHA_ServiceBase<t_str_login,req_login,res_login,t_unionRegex_mapRegex_booksToscrape_login ,t_unionIdPath_mapRegex_booksToscrape_login , t_arrClassName_login,t_unionClassName_login ,t_arrChilds_login ,  t_IJsonComponent_login,t_df_arr_fct_name > {
+class HA_BooksToscrapeServiceLogin extends  AHA_ServiceBase<t_serviceName_booksToscrape,t_str_login,req_login,res_login,t_unionRegex_mapRegex_booksToscrape_login ,t_unionIdPath_mapRegex_booksToscrape_login , t_arrClassName_login,t_unionClassName_login ,t_arrChilds_login ,  t_IJsonComponent_login,t_df_arr_fct_name>  implements t_IAHA_ServiceBase<t_serviceName_booksToscrape,t_str_login,req_login,res_login,t_unionRegex_mapRegex_booksToscrape_login ,t_unionIdPath_mapRegex_booksToscrape_login , t_arrClassName_login,t_unionClassName_login ,t_arrChilds_login ,  t_IJsonComponent_login,t_df_arr_fct_name > {
 
+    serviceName: t_serviceName_booksToscrape  = serviceName_booksToscrape
     routeName : t_str_login = str_login 
     constructor() {
         super()
     }
 
 
-    getLocalFunction( req:req_login , res : res_login  ): t_ha_res {
+    [str_getLocalFunction]( req:req_login , res : res_login  ): t_ha_res {
         return AService.df_localFunction()
     }
 
@@ -65,12 +66,12 @@ class HA_BooksToscrapeServiceLogin extends  AHA_ServiceBase<t_str_login,req_logi
 
     }}
 
-    getServiceParam (req:req_login , res : res_login):t_AHA_Service_Param<t_str_login>{
-        return AHA_ServiceBase.getServiceParam<t_str_login,req_login,res_login>(req,res)
+    getServiceParam (req:req_login , res : res_login):t_AHA_Service_Param<t_serviceName_booksToscrape,t_str_login>{
+        return AHA_ServiceBase.getServiceParam<t_serviceName_booksToscrape,t_str_login,req_login,res_login>(req,res)
     }
 
 
-    getParamTree< BaseElement extends unionClassNameType  ,  UnionRegex  extends t_1  ,UnionIdPath  extends t_2 , ArrUnionClassNameType extends t_3 ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> & t_5  ,  T extends _IJsonComponents< unionClassNameType> & t_6  >(req:req_login , res : res_login,_args:reshapeObject< t_AHA_Service_ArgsGetTree<t_str_login,BaseElement,UnionRegex ,UnionIdPath , ArrUnionClassNameType,unionClassNameType ,ArrArr ,  T>>= {}  ): Parameters<typeof AHA_ServiceBase._getTree<t_str_login,BaseElement,  t_unionRegex_mapRegex_booksToscrape_login ,t_unionIdPath_mapRegex_booksToscrape_login , t_arrClassName_login,t_unionClassName_login ,t_arrChilds_login ,  t_IJsonComponent_login>> {
+    getTreeParam< BaseElement extends unionClassNameType  ,  UnionRegex  extends t_1  ,UnionIdPath  extends t_2 , ArrUnionClassNameType extends t_3 ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> & t_5  ,  T extends _IJsonComponents< unionClassNameType> & t_6  >(req:req_login , res : res_login,_args:reshapeObject< t_AHA_Service_ArgsGetTree<t_serviceName_booksToscrape,t_str_login,BaseElement,UnionRegex ,UnionIdPath , ArrUnionClassNameType,unionClassNameType ,ArrArr ,  T>>= {}  ): Parameters<typeof AHA_ServiceBase._getTree<t_serviceName_booksToscrape,t_str_login,BaseElement,  t_unionRegex_mapRegex_booksToscrape_login ,t_unionIdPath_mapRegex_booksToscrape_login , t_arrClassName_login,t_unionClassName_login ,t_arrChilds_login ,  t_IJsonComponent_login>> {
 
         //{scrapingComponent:ScrapingComponent<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>,waitForPageLoading:t_page_fct_getMainComponent,waitForPageFullLoading:t_page_fct_waitForPageFullLoading,prop_base_selectors:selectors,prop_base:unionClassNameType}
 
@@ -79,7 +80,7 @@ class HA_BooksToscrapeServiceLogin extends  AHA_ServiceBase<t_str_login,req_logi
             ..._args
         } as t_args_getTree<BaseElement>
 
-        const param :t_AHA_Service_ParamGetTree<t_str_login,BaseElement,  t_unionRegex_mapRegex_booksToscrape_login ,t_unionIdPath_mapRegex_booksToscrape_login , t_arrClassName_login,t_unionClassName_login ,t_arrChilds_login ,  t_IJsonComponent_login> = {
+        const param :t_AHA_Service_ParamGetTree<t_serviceName_booksToscrape,t_str_login,BaseElement,  t_unionRegex_mapRegex_booksToscrape_login ,t_unionIdPath_mapRegex_booksToscrape_login , t_arrClassName_login,t_unionClassName_login ,t_arrChilds_login ,  t_IJsonComponent_login> = {
             ...this.getServiceParam(req,res),
             ...args.params
         }
@@ -90,16 +91,16 @@ class HA_BooksToscrapeServiceLogin extends  AHA_ServiceBase<t_str_login,req_logi
         return [param,fct_loading]
     }
 
-    getTree< BaseElement extends unionClassNameType  ,  UnionRegex  extends t_1  ,UnionIdPath  extends t_2 , ArrUnionClassNameType extends t_3 ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> & t_5  ,  T extends _IJsonComponents< unionClassNameType> & t_6  >(req:req_login , res : res_login,_args:reshapeObject< t_AHA_Service_ArgsGetTree<t_str_login,BaseElement,UnionRegex ,UnionIdPath , ArrUnionClassNameType,unionClassNameType ,ArrArr ,  T>>= {}  ){
-        const params = this.getParamTree(req,res,_args)
-        return AHA_ServiceBase._getTree< t_str_login,BaseElement,  t_unionRegex_mapRegex_booksToscrape_login ,t_unionIdPath_mapRegex_booksToscrape_login , t_arrClassName_login,t_unionClassName_login ,t_arrChilds_login ,  t_IJsonComponent_login>(...params)
+    getTree< BaseElement extends unionClassNameType  ,  UnionRegex  extends t_1  ,UnionIdPath  extends t_2 , ArrUnionClassNameType extends t_3 ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> & t_5  ,  T extends _IJsonComponents< unionClassNameType> & t_6  >(req:req_login , res : res_login,_args:reshapeObject< t_AHA_Service_ArgsGetTree<t_serviceName_booksToscrape,t_str_login,BaseElement,UnionRegex ,UnionIdPath , ArrUnionClassNameType,unionClassNameType ,ArrArr ,  T>>= {}  ){
+        const params = this.getTreeParam(req,res,_args)
+        return AHA_ServiceBase._getTree< t_serviceName_booksToscrape,t_str_login,BaseElement,  t_unionRegex_mapRegex_booksToscrape_login ,t_unionIdPath_mapRegex_booksToscrape_login , t_arrClassName_login,t_unionClassName_login ,t_arrChilds_login ,  t_IJsonComponent_login>(...params)
     }
 
-    getServiceFunction(req: req_login, res: res_login): t_ha_res{
+    [str_getServiceFunction](req: req_login, res: res_login): t_ha_res{
         throw new Error("Method not implemented."); 
     }
 
-    transformAfterGetServiceFunction(req: req_login, res: res_login, json:Awaited<ReturnType <typeof HA_BooksToscrapeServiceLogin.provider.getServiceFunction>>): ReqAndResType<req_login, res_login> {
+    transformAfterGetServiceFunction(req: req_login, res: res_login, json:Awaited<ReturnType <typeof HA_BooksToscrapeServiceLogin.provider[t_str_getServiceFunction]>>): ReqAndResType<req_login, res_login> {
         throw new Error("Method not implemented."); 
     }
 

@@ -10,7 +10,7 @@ const debug_argumentConverter : Debugger = debug(getNameDebugAllNameModule(name_
 
 
 import { IJson } from "@/../shared/m_object.js";
-import { EmptyInit, haveSerializer, haveSerializerAndEmptyInit, t_serializer } from '@shared/m_json.js';
+import { EmptyInit, AHaveSerializer, haveSerializerAndEmptyInit, t_serializer } from '@shared/m_json.js';
 
 type transformFunction = (value:any ) => string;
 

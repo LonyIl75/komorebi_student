@@ -187,9 +187,9 @@ export async function _buildParsingTree<
     
       const _v : IComponent<unionclassname,UnionChilds>  = (ScrapingComponent.getFwJsonComponent().json[p_prop_base] as any)//TODO we remove getComponent cause not class but json 
 
-      if(!_v) return Promise.reject(NodeComponent._getEmptyInit())
+      if(!_v) return Promise.reject(NodeComponent.getEmptyInit())
 
-      let mres : _t_nodeComponent = NodeComponent._getEmptyInit()
+      let mres : _t_nodeComponent = NodeComponent.getEmptyInit()
 
       let _isALeaf : boolean = Component.isEmptyChilds_components(_v)
 
@@ -260,7 +260,7 @@ export async function _buildParsingTree<
                                                               return  leaf_getNodeComponentValue(element,component,agreg_selector,selectors,is_test)
                                                             }) 
 
-                                                    let nodesIdsOrNodeValues : Promise<Array<number>|_t_nodeComponentValue[]>= Promise.all(childs_nodesOrValues.map(promise => promise.catch(error =>{return rien ;  /*NodeComponent._getEmptyInit() console.log("errorCHILDS",error);return error*/}))).then( //type : null
+                                                    let nodesIdsOrNodeValues : Promise<Array<number>|_t_nodeComponentValue[]>= Promise.all(childs_nodesOrValues.map(promise => promise.catch(error =>{return rien ;  /*NodeComponent.getEmptyInit() console.log("errorCHILDS",error);return error*/}))).then( //type : null
                                                         (_arr_res:t_childs_nodesOrValuesWithRien[]   )=> {
                                                                 
                                                           let arr_res :t_childs_nodesOrValues[]  = (_arr_res as any[] ).filter((_res:any )=> !isRien(_res) ) as Exclude<t_childs_nodesOrValuesWithRien,t_rien>[] as any 
@@ -279,7 +279,7 @@ export async function _buildParsingTree<
                                                   })(unionclassnameOfChild ,nodesIdsOrNodeValues)
     
                                     }
-                                    return  Promise.resolve( TypeChilds._getEmptyInit()  ) 
+                                    return  Promise.resolve( TypeChilds.getEmptyInit()  ) 
                                     
                                   }).catch(
                                     (err)=>err_function_retPromNullTypeChild( `Error p_nodeOrValue ${JSON.stringify( Component.getChilds_components(component))} index_type : ${idx} on ${prop_base}` )(err)

@@ -125,10 +125,10 @@ export function f_ServiceConfig<C_SN extends _validateServiceName  , C_FR extend
         return _ServiceConfig.builder<SN ,R ,H,T1 ,RA >(_json.serviceName , _json.remoteName ,_json.remoteAddress ,_json.mainAddress ,_json.idRoute_home , _json.idRoutes , _json.idRouteAndRemoteAddresss , _json.doProcessFunctionName );
     }
 
-    static strToStrRoute<SN extends C_SN  , T1 extends _C_T1<C_FT1,[SN]>,_R extends T1[number]  =  T1[number]> (str_route : _R , 
+    static strToStrRoute<SN extends C_SN  , T1 extends _C_T1<C_FT1,[SN]>,_R extends T1[number]  =  T1[number]> (routeName : _R , 
         config : t_IJson_ServiceConfig_any
     ):string   {
-        return str_route == _ServiceConfig.df[str_idRoute_home] ?  getRootRepertoryName(config) /*config.mainAddress*/  :str_route ;
+        return routeName == _ServiceConfig.df[str_idRoute_home] ?  getRootRepertoryName(config) /*config.mainAddress*/  :routeName ;
     }
 
 

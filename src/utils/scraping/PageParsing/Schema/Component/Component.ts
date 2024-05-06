@@ -1,4 +1,4 @@
-import { deepCloneJson, haveSerializer } from "@shared/m_json.js";
+import { deepCloneJson, AHaveSerializer } from "@shared/m_json.js";
 import { IJson } from "@shared/m_object.js";
 import { _notFoundIdx } from "@shared/type.js";
 import ChildAttributeType, { IChildAttributeType } from "../_Component/ChildAttributeType/ChildAttributeType.js";
@@ -19,7 +19,7 @@ export interface IComponent <unionclassname  extends string , UnionChildsClassNa
 }
 
 //type t_childs_components < UnionChildsClassName extends string > = UnionChildsClassName  extends t_component_empty_childs[0] ? t_component_empty_childs :  TypeChilds<UnionChildsClassName>[] ; 
-export class Component<unionclassname  extends string , UnionChildsClassName extends string = unionclassname > extends haveSerializer<Component<unionclassname,UnionChildsClassName>> implements IComponent<unionclassname,UnionChildsClassName> {
+export class Component<unionclassname  extends string , UnionChildsClassName extends string = unionclassname > extends AHaveSerializer<Component<unionclassname,UnionChildsClassName>> implements IComponent<unionclassname,UnionChildsClassName> {
     [str_type]:StrChildType.t_childType<unionclassname>  ; 
     [str_childs_selectors] :t_childsSelectors ;
 

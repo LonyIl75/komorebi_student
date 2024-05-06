@@ -11,7 +11,7 @@ import puppeteer, { CDPSession, Page, Protocol } from 'puppeteer';
 import { t_clientId } from "./BrowsersPool.js";
 import { hours } from '@shared/hours.js';
 import { joinFilePath, t_readFileSync_options, ifFileExistRetReadData, isValidPathSyntax } from '@shared/m_file.js';
-import { EmptyInit, haveSerializer, haveSerializerAndEmptyInit, t_configObject } from '@shared/m_json.js';
+import { EmptyInit, AHaveSerializer, haveSerializerAndEmptyInit, t_configObject } from '@shared/m_json.js';
 import { IVoid, getEmptyJson, IJson, isEmptyJson } from '@shared/m_object.js';
 import { _undefined, nullOrUndefined } from '@shared/m_primitives.js';
 
@@ -70,16 +70,16 @@ export class ConnectionCookie extends t_configObject<ConnectionCookie> implement
         static emptyObject : EmptyInit<ConnectionCookie>  = new EmptyInit<ConnectionCookie>(ConnectionCookie) ;
 
         
-        static _getEmptyInit: () =>ConnectionCookie= () => {
+        static getEmptyInit: () =>ConnectionCookie= () => {
           return ConnectionCookie.emptyObject.emptyInit() ;
         }
 
         getEmptyInit : () => ConnectionCookie = ()=>{
-          return ConnectionCookie._getEmptyInit() ;
+          return ConnectionCookie.getEmptyInit() ;
         }
 
-        static isTypeof: (obj: haveSerializer<ConnectionCookie>) => boolean = (obj:haveSerializer<ConnectionCookie>)=>{
-          return haveSerializerAndEmptyInit.st_isTypeof(ConnectionCookie._getEmptyInit(),obj)
+        static isTypeof: (obj: AHaveSerializer<ConnectionCookie>) => boolean = (obj:AHaveSerializer<ConnectionCookie>)=>{
+          return haveSerializerAndEmptyInit._isTypeof(ConnectionCookie.getEmptyInit(),obj)
         }
 
         isTypeof = ConnectionCookie.isTypeof

@@ -1,70 +1,86 @@
-import { AServiceRequest, ServiceRequestBodyBase, ServiceRequestHeaderBase } from "@/routes/scraping-services/class/utils/Data/ServiceRoute.js";
-import { EmptyInit, haveSerializer, haveSerializerAndEmptyInit } from "@shared/m_json.js";
+import { AServiceRequest, ServiceRequestBodyBase, ServiceRequestHeaderBase, t_st_AServiceRequest } from "@/routes/scraping-services/class/utils/Data/ServiceRoute.js";
+import { EmptyInit, AHaveSerializer, haveSerializerAndEmptyInit } from "@shared/m_json.js";
 import { IJson } from "@shared/m_object.js";
-
-export class req_books extends AServiceRequest {
-
-    body : ServiceRequestBodyBase
-    header : ServiceRequestHeaderBase
-
-    static emptyObject : EmptyInit<AServiceRequest>  = new EmptyInit<AServiceRequest>(req_books as unknown as (new (header?: ServiceRequestHeaderBase, body?: ServiceRequestBodyBase) => AServiceRequest) ) ;
-
-    static _getEmptyInit: () =>AServiceRequest= () => {
-        return req_books.emptyObject.emptyInit() ;
-    }
-
-    getEmptyInit: () => AServiceRequest= () => {
-        return req_books._getEmptyInit() ;
-    }
-
-    static isTypeof: (obj: haveSerializer<AServiceRequest>) => boolean = (obj:haveSerializer<AServiceRequest>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(req_books._getEmptyInit(),obj)
-    }
-
-    isTypeof = req_books.isTypeof
-
-
-    constructor(header : ServiceRequestHeaderBase= new ServiceRequestHeaderBase(),body : ServiceRequestBodyBase = new ServiceRequestBodyBase()) {
-        super(header,body);
-
-    }
-
-    static fromJson = (json: IJson) : AServiceRequest => {
-        return AServiceRequest.fromJson<ServiceRequestBodyBase,ServiceRequestHeaderBase>(json,req_books)
-    }
-}
+import { t_verifyStatic } from "@shared/type.js";
 
 
 
-
-export class res_books extends AServiceRequest {
+ class _req_books extends AServiceRequest {
 
     body : ServiceRequestBodyBase
     header : ServiceRequestHeaderBase
 
-    static emptyObject : EmptyInit<AServiceRequest>  = new EmptyInit<AServiceRequest>(res_books as unknown as (new (header?: ServiceRequestHeaderBase, body?: ServiceRequestBodyBase) => AServiceRequest) ) ;
+    getEmptyInit: () => AServiceRequest= () => {
+        return _req_books.getEmptyInit() ;
+    }
 
-    static _getEmptyInit: () =>AServiceRequest= () => {
-        return res_books.emptyObject.emptyInit() ;
+    
+    isTypeof = _req_books.isTypeof
+
+    constructor(header : ServiceRequestHeaderBase= new ServiceRequestHeaderBase(),body : ServiceRequestBodyBase = new ServiceRequestBodyBase()) {
+        super(header,body,_req_books.fromJson);
+    }
+
+    static emptyObject : EmptyInit<AServiceRequest>  = new EmptyInit<AServiceRequest>(_req_books ) ;
+
+    static getEmptyInit: () =>AServiceRequest= () => {
+        return _req_books.emptyObject.emptyInit() ;
+    }
+
+    static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{
+        return haveSerializerAndEmptyInit._isTypeof(_req_books.getEmptyInit(),obj)
+    }
+
+
+    static fromJson = (json: IJson) : AServiceRequest => {
+        return AServiceRequest.abstract_fromJson<ServiceRequestBodyBase,ServiceRequestHeaderBase>(_req_books,json)
+    }
+ 
+}
+
+type IReq_books = t_verifyStatic<typeof _req_books ,t_st_AServiceRequest,true> 
+export const _Req_books = _req_books  as {
+    new (...args:ConstructorParameters<typeof _req_books >): _req_books 
+} & IReq_books
+
+export class req_books extends _Req_books {}
+
+class _res_books extends AServiceRequest {
+
+    body : ServiceRequestBodyBase
+    header : ServiceRequestHeaderBase
+
+    static emptyObject : EmptyInit<AServiceRequest>  = new EmptyInit<AServiceRequest>(_res_books) ;
+
+    static getEmptyInit: () =>AServiceRequest= () => {
+        return _res_books.emptyObject.emptyInit() ;
     }
 
     getEmptyInit: () => AServiceRequest= () => {
-        return res_books._getEmptyInit() ;
+        return _res_books.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: haveSerializer<AServiceRequest>) => boolean = (obj:haveSerializer<AServiceRequest>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(res_books._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{
+        return haveSerializerAndEmptyInit._isTypeof(_res_books.getEmptyInit(),obj)
     }
 
-    isTypeof = res_books.isTypeof
+    isTypeof = _res_books.isTypeof
 
 
     constructor(header : ServiceRequestHeaderBase= new ServiceRequestHeaderBase(),body : ServiceRequestBodyBase = new ServiceRequestBodyBase()) {
-        super(header,body);
+        super(header,body,_res_books.fromJson);
 
     }
 
     static fromJson = (json: IJson) : AServiceRequest => {
-        return AServiceRequest.fromJson<ServiceRequestBodyBase,ServiceRequestHeaderBase>(json,res_books)
+        return AServiceRequest.abstract_fromJson<ServiceRequestBodyBase,ServiceRequestHeaderBase>(_res_books,json)
     }
 }
+
+type IRes_books = t_verifyStatic<typeof _res_books ,t_st_AServiceRequest,true> 
+export const _Res_books = _res_books  as {
+    new (...args:ConstructorParameters<typeof _res_books >): _res_books 
+} & IRes_books
+
+
+export class res_books extends _Res_books {}

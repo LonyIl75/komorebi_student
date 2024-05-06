@@ -10,11 +10,8 @@ type t_json_scrapingJsonType = typeof json_scrapingJsonType ;
 
 export type keyofJsonService_1 = keyof t_json_scrapingJsonType[t_serviceName_MainService]
 
-
 export type getPropsFromServiceNamePropsName<SN extends t_serviceName_MainService , Props extends keyofJsonService_1> = 
 t_json_scrapingJsonType[SN][Props] 
-
-type getUnionServiceNameProps <Props extends keyofJsonService_1> = getPropsFromServiceNamePropsName<t_serviceName_MainService,Props> ;
 
 
 export type getConfigFromServiceName < SN extends t_serviceName_MainService> = t_json_scrapingJsonType[SN] ;

@@ -1,4 +1,4 @@
-import { EmptyInit, haveSerializer, haveSerializerAndEmptyInit, t_j } from "@shared/m_json.js";
+import { EmptyInit, AHaveSerializer, haveSerializerAndEmptyInit, t_j } from "@shared/m_json.js";
 import {AArgumentConverter,IArgumentConverter} from "../ArgumentConverter.js"; 
 import { IJson } from "@shared/m_object.js";
 
@@ -19,20 +19,20 @@ export class ArgTranslate extends AArgumentConverter<ArgTranslate>  implements  
     from_language ?:string ;
 
 
-    static isTypeof: (obj: haveSerializer<ArgTranslate>) => boolean = (obj:haveSerializer<ArgTranslate>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(ArgTranslate._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<ArgTranslate>) => boolean = (obj:AHaveSerializer<ArgTranslate>)=>{
+        return haveSerializerAndEmptyInit._isTypeof(ArgTranslate.getEmptyInit(),obj)
     }
 
     isTypeof = ArgTranslate.isTypeof    
 
     static emptyObject : EmptyInit<ArgTranslate>  = new EmptyInit<ArgTranslate>(ArgTranslate) ;
 
-    static _getEmptyInit: () => ArgTranslate = () => {
+    static getEmptyInit: () => ArgTranslate = () => {
         return ArgTranslate.emptyObject.emptyInit() ;
     }
 
     getEmptyInit: () => ArgTranslate = () => {
-        return ArgTranslate._getEmptyInit() ;
+        return ArgTranslate.getEmptyInit() ;
     }
     
 

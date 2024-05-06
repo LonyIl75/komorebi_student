@@ -80,7 +80,7 @@ export class BrowserMPage {
         await gl_page.page.on('console', msg => console.log('PAGE LOG:', msg.text()));
     }
 
-    async newMPage(_description_page:t_opt_value_description,jsonScrap : t_JsonWithScrapingComponent = JsonWithScrapingComponents._getEmptyInit()) : Promise<[t_targetId,t_mPage]>{
+    async newMPage(_description_page:t_opt_value_description,jsonScrap : t_JsonWithScrapingComponent = JsonWithScrapingComponents.getEmptyInit()) : Promise<[t_targetId,t_mPage]>{
         return this.browser.newPage().then(async (_page:Page) => {
             await BrowserMPage.initPage(_page)
             let target_idx:t_targetId = this.browser.targets().indexOf(_page.target()) as t_targetId;

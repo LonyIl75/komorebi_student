@@ -10,7 +10,7 @@ const debug_pageParsing_typeChilds : Debugger = debug(name_module)
 
 
 import {IJson} from "@shared/m_object.js";
-import { EmptyInit, functionError_RetPromDfEmpty, haveSerializer, haveSerializerAndEmptyInit } from '@shared/m_json.js';
+import { EmptyInit, functionError_RetPromDfEmpty, AHaveSerializer, haveSerializerAndEmptyInit } from '@shared/m_json.js';
 import { StrChildType, noneChildType, t_noneCompClassName } from './types.js';
 import { err_function } from '@shared/m_function.js';
 
@@ -26,7 +26,7 @@ export type t_emptyITypeChilds = ITypeChilds<t_noneCompClassName>
 
 
 export function err_function_retPromNullTypeChild ( message ?: string ): err_function<Promise<t_emptyTypeChilds>> {
-    return functionError_RetPromDfEmpty<t_emptyTypeChilds>(TypeChilds._getEmptyInit() , message) 
+    return functionError_RetPromDfEmpty<t_emptyTypeChilds>(TypeChilds.getEmptyInit() , message) 
 }
 
 
@@ -38,16 +38,16 @@ export  class TypeChilds< unionChildType extends string  >   extends  haveSerial
 
     static emptyObject : EmptyInit< TypeChilds<any>>  = new EmptyInit< TypeChilds<any>>(TypeChilds) ;
              
-    static _getEmptyInit: () => t_emptyTypeChilds = () => {
+    static getEmptyInit: () => t_emptyTypeChilds = () => {
         return TypeChilds.emptyObject.emptyInit() ;
     }
 
     getEmptyInit: () => t_emptyTypeChilds  = () => {
-        return TypeChilds._getEmptyInit() ;
+        return TypeChilds.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: haveSerializer<TypeChilds<any>>) => boolean = (obj:haveSerializer<TypeChilds<any>>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(TypeChilds._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<TypeChilds<any>>) => boolean = (obj:AHaveSerializer<TypeChilds<any>>)=>{
+        return haveSerializerAndEmptyInit._isTypeof(TypeChilds.getEmptyInit(),obj)
     }
 
     isTypeof = TypeChilds.isTypeof
@@ -75,9 +75,9 @@ export  class TypeChilds< unionChildType extends string  >   extends  haveSerial
     }
 
 
-    //TODO interface with function isEq , integrate/"implemented by" in haveSerializer for example
+    //TODO interface with function isEq , integrate/"implemented by" in AHaveSerializer for example
     static isEmpty (ch_type:TypeChilds<any>) : boolean {
-        let empty = TypeChilds._getEmptyInit()
+        let empty = TypeChilds.getEmptyInit()
         return ch_type.type == empty.type && ch_type.ids == empty.ids
     }
 

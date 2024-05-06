@@ -26,6 +26,7 @@ import { str_doProcessFunctionName } from '@/controller/scraping-services/class/
 import { JsonWithScrapingComponents, t_ScrapingComponent_any } from '@/utils/scraping/PageParsing/ComponentObject.js';
 import { _validateRemoteAddress, _validateRoute, _validateServiceName, t_req_any, t_res_any } from '@/controller/scraping-services/class/constraints.js';
 import { t_add_bodyUrl } from '@shared/validate-url/_types.js';
+import { str_getLocalFunction } from '../Config/Pipeline/HA/types.js';
 
 export const str_process = ServiceConfig.df[str_doProcessFunctionName] 
 export type t_str_process = typeof str_process
@@ -35,13 +36,83 @@ export type t_service_functions<SN extends _validateServiceName , _R extends T1[
 
 
 
+//TODO integrate
+export type t_st_AService<SN extends string> = {
+    address:  `${_validateRemoteAddress<SN>}/${string}` //A FAIRE : redo
+    databaseLocalAndRemote : DatabaseLocalAndRemote<SN>
+    service :_AService<SN>
+}
+
+export interface IAService<SN extends _validateServiceName,R extends _validateRemoteAddress<SN> , T1 extends _validateRoute<SN>, _R extends T1[number]   , 
+Addr extends t_add_bodyUrl<R,string> = t_add_bodyUrl<R,string>,
+TServiceF extends t_service_functions<SN,_R,T1> = t_service_functions<SN,_R,T1> 
+> {
+    address : Addr
+    routeName : _R
+    databaseLocalAndRemote : DatabaseLocalAndRemote<SN>
+    optionsScraping: IOptionScraping
+
+    getNamesOfPipelineFunction() : readonly string[]
+    getAddress():Addr
+    getDatabaseLocalAndRemote(): DatabaseLocalAndRemote<SN>
+    isInFunctions(key : string) : boolean
+    setOptionsScraping(optionsScraping: IOptionScraping) : void
+    initIfNotSetOptionsScraping(optionsScraping: IOptionScraping) : IOptionScraping
+    process( req:Parameters<TServiceF[t_str_process]>[0] & t_req_any ,res:Parameters<TServiceF[t_str_process]>[1] & t_res_any ) : Promise<void>
+    getJsonScraping() : t_ScrapingComponent_any
+    process_serviceFunction( req:Parameters<TServiceF[t_str_process]>[0] & t_req_any ,res:Parameters<TServiceF[t_str_process]>[1] & t_res_any ) :Promise<t_connectionCookie>
+    process_localFunction (   req:Parameters<TServiceF[t_str_process]>[0] & t_req_any ,res:Parameters<TServiceF[t_str_process]>[1] & t_res_any ) :Promise<t_connectionCookie>
+    getNamesOfFunction() : readonly string[]
+    getServicePipelineFunction(req : Parameters<t_service_functions<SN,_R,T1>[t_str_process]>[0]  ,res:Parameters<t_service_functions<SN,_R,T1>[t_str_process]>[1]  ) : any
+    getLocalPipelineFunction(req : Parameters<t_service_functions<SN,_R,T1>[t_str_process]>[0]  ,res:Parameters<t_service_functions<SN,_R,T1>[t_str_process]>[1]  ) : any
+    getService():_AService<SN>
+}
+
+type t_IAService_1_union_nameFct_ToImplement = "getJsonScraping"
+export type IAService_1<
+SN extends _validateServiceName ,_R extends  T1[number] , 
+R extends _validateRemoteAddress<SN> = _validateRemoteAddress<SN> ,T1 extends _validateRoute<SN>=_validateRoute<SN>,
+Addr extends t_add_bodyUrl<R,string> = t_add_bodyUrl<R,string>,
+TServiceF extends t_service_functions<SN,_R,T1> = t_service_functions<SN,_R,T1>> =
+{[k in t_IAService_1_union_nameFct_ToImplement]:IAService<SN,R,T1,_R,Addr,TServiceF>[k]}
+
+
+
+
+type t_st_service_2_union_nameFct_ToImplement = "service"
+export type t_st_service_2<SN extends _validateServiceName> = 
+    {[k in t_st_service_2_union_nameFct_ToImplement]:t_st_AService<SN>[k]}
+
+type t_IAService_2_union_nameFct_ToImplement = "getService"
+export type IAService_2<
+SN extends _validateServiceName ,_R extends  T1[number] , 
+R extends _validateRemoteAddress<SN> = _validateRemoteAddress<SN> ,T1 extends _validateRoute<SN>=_validateRoute<SN>,
+Addr extends t_add_bodyUrl<R,string> = t_add_bodyUrl<R,string>,
+TServiceF extends t_service_functions<SN,_R,T1> = t_service_functions<SN,_R,T1>
+> = {[k in t_IAService_2_union_nameFct_ToImplement]:IAService<SN,R,T1,_R,Addr,TServiceF>[k]}
+ 
+
+type t_st_service_3_union_nameFct_ToImplement = Exclude<keyof t_st_AService<string>,t_st_service_2_union_nameFct_ToImplement>
+export type t_st_service_3<SN extends _validateServiceName> = 
+    {[k in t_st_service_3_union_nameFct_ToImplement]:t_st_AService<SN>[k]}
+
+
+type t_IAService_3_union_nameFct_ToImplement = "getNamesOfPipelineFunction"|"getLocalPipelineFunction"|"getServicePipelineFunction"
+export type IAService_3<
+SN extends _validateServiceName ,_R extends  T1[number] ,
+R extends _validateRemoteAddress<SN> = _validateRemoteAddress<SN> ,T1 extends _validateRoute<SN>=_validateRoute<SN>,
+Addr extends t_add_bodyUrl<R,string> = t_add_bodyUrl<R,string>,
+TServiceF extends t_service_functions<SN,_R,T1> = t_service_functions<SN,_R,T1>
+> = {[k in t_IAService_3_union_nameFct_ToImplement]:IAService<SN,R,T1,_R,Addr,TServiceF>[k]}
+
 //TODO Addr
 export  abstract class AService<SN extends _validateServiceName,R extends _validateRemoteAddress<SN> , T1 extends _validateRoute<SN>, _R extends T1[number]   , 
 Addr extends t_add_bodyUrl<R,string> = t_add_bodyUrl<R,string>,
 TServiceF extends t_service_functions<SN,_R,T1> = t_service_functions<SN,_R,T1> 
-> { 
+> implements IAService<SN,R,T1,_R,Addr,TServiceF>{ 
+
     address : Addr
-    str_route : _R 
+    routeName : _R
     databaseLocalAndRemote : DatabaseLocalAndRemote<SN>
     //functions :  t_service_functions<SN,R>; //ICI 28
     optionsScraping: IOptionScraping
@@ -66,12 +137,12 @@ TServiceF extends t_service_functions<SN,_R,T1> = t_service_functions<SN,_R,T1>
         return this.getNamesOfPipelineFunction().includes(key)
     }
 
-    constructor(str_route : _R , address :Addr , databaseLocalAndRemote : DatabaseLocalAndRemote<SN> ,optionsScraping: IOptionScraping ={} as any   ) {
+    constructor(routeName : _R , address :Addr , databaseLocalAndRemote : DatabaseLocalAndRemote<SN> ,optionsScraping: IOptionScraping ={} as any   ) {
         //@ts-ignore
         this.address = address ;
         this.optionsScraping = {...optionsScraping,...OptionScraping.df};
         this.databaseLocalAndRemote = databaseLocalAndRemote;
-        this.str_route = str_route;
+        this.routeName = routeName;
         
     }
 
@@ -93,7 +164,7 @@ TServiceF extends t_service_functions<SN,_R,T1> = t_service_functions<SN,_R,T1>
     }
 
     abstract getJsonScraping() : t_ScrapingComponent_any
-        //return json_scrapingJsonType[this.getService().serviceName][this.str_route]
+        //return json_scrapingJsonType[this.getService().serviceName][this.routeName]
     
 
     async process_serviceFunction( req:Parameters<TServiceF[t_str_process]>[0] & t_req_any ,res:Parameters<TServiceF[t_str_process]>[1] & t_res_any ) :Promise<t_connectionCookie> {
@@ -209,8 +280,7 @@ export class _ALoginService  {
 
     }
 
-    getLocalFunction( req:req_login<_passAndEmail>   )  { //ICI 18
-        console.log("getLocalFunction",req);
+    [str_getLocalFunction]( req:req_login<_passAndEmail>   )  { //ICI 18
 
         return ((client_id:t_clientId , login_data :_passAndEmail) => async(service_name ):Promise<t_connectionCookie> => {
                 const json_cookiesArr = await _ALoginService.getCookieFromFile(client_id,service_name) 

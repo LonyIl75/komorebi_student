@@ -1,8 +1,9 @@
 import { t_browserId, t_targetId, t_clientId, df_client_id, IOptionScraping, OptionScraping } from "@/utils/browser/BrowsersPool.js"
 import { hours } from "@shared/hours.js"
-import { t_configObject, EmptyInit, haveSerializer, haveSerializerAndEmptyInit, getReqOrResJsonFromTConfigObj } from "@shared/m_json.js"
+import { t_configObject, EmptyInit, AHaveSerializer, haveSerializerAndEmptyInit, getReqOrResJsonFromTConfigObj, t_j, t_st_configObject } from "@shared/m_json.js"
 import { IJson } from "@shared/m_object.js"
 import { df_pipeline_json, t_pipeline_json } from "@shared/m_pipeline.js"
+import { removeLastArray, t_function_staticToMember, t_verifyStatic } from "@shared/type.js"
 
 export class ServiceRequestBodyBase extends t_configObject<ServiceRequestBodyBase>{
 
@@ -23,16 +24,16 @@ export class ServiceRequestBodyBase extends t_configObject<ServiceRequestBodyBas
         if(targetId)this.targetId = targetId
         
     }
-    static _getEmptyInit: () =>ServiceRequestBodyBase= () => {
+    static getEmptyInit: () =>ServiceRequestBodyBase= () => {
         return ServiceRequestBodyBase.emptyObject.emptyInit() ;
     }
 
     getEmptyInit: () => ServiceRequestBodyBase= () => {
-        return ServiceRequestBodyBase._getEmptyInit() ;
+        return ServiceRequestBodyBase.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: haveSerializer<ServiceRequestBodyBase>) => boolean = (obj:haveSerializer<ServiceRequestBodyBase>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(ServiceRequestBodyBase._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<ServiceRequestBodyBase>) => boolean = (obj:AHaveSerializer<ServiceRequestBodyBase>)=>{
+        return haveSerializerAndEmptyInit._isTypeof(ServiceRequestBodyBase.getEmptyInit(),obj)
     }
 
     isTypeof = ServiceRequestBodyBase.isTypeof
@@ -62,6 +63,7 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
     privacy : ServiceRequestHeaderBase.enum_privacy
     url : string  
     routeName : string
+    serviceName : string 
     client_id : t_clientId
     is_streaming : boolean 
     url_toScrap ?:string
@@ -71,7 +73,9 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
     isStreaming : boolean
 
     static df = {
-        routeName:null,//TODO incorrect routeName
+        //TODO incorrect serviceName & routeName  
+        serviceName : null,
+        routeName:null,
         client_id : df_client_id,
         url :"",
         url_toScrap : undefined,
@@ -79,8 +83,9 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
         //privacy //TODO ?  
         is_streaming: false 
     }
-    constructor(routeName : string = ServiceRequestHeaderBase.df.routeName, client_id : t_clientId =  ServiceRequestHeaderBase.df.client_id , url : string = ServiceRequestHeaderBase.df.url,url_toScrap:string = undefined , privacy:ServiceRequestHeaderBase.enum_privacy = ServiceRequestHeaderBase.getDefault(),is_streaming :boolean = ServiceRequestHeaderBase.df.is_streaming,needUpdate :ReturnType<typeof hours.getTimeNow> = ServiceRequestHeaderBase.df.needUpdate) {
+    constructor(serviceName : string = ServiceRequestHeaderBase.df.serviceName , routeName : string = ServiceRequestHeaderBase.df.routeName, client_id : t_clientId =  ServiceRequestHeaderBase.df.client_id , url : string = ServiceRequestHeaderBase.df.url,url_toScrap:string = undefined , privacy:ServiceRequestHeaderBase.enum_privacy = ServiceRequestHeaderBase.getDefault(),is_streaming :boolean = ServiceRequestHeaderBase.df.is_streaming,needUpdate :ReturnType<typeof hours.getTimeNow> = ServiceRequestHeaderBase.df.needUpdate) {
         super({toJson:ServiceRequestHeaderBase.toJson , fromJson:ServiceRequestHeaderBase.fromJson});
+        this.serviceName = serviceName
         this.routeName = routeName
         this.privacy = privacy
         this.url = url
@@ -93,16 +98,16 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
         this.setIsStreaming()
         
     }
-    static _getEmptyInit: () =>ServiceRequestHeaderBase= () => {
+    static getEmptyInit: () =>ServiceRequestHeaderBase= () => {
         return ServiceRequestHeaderBase.emptyObject.emptyInit() ;
     }
 
     getEmptyInit: () => ServiceRequestHeaderBase= () => {
-        return ServiceRequestHeaderBase._getEmptyInit() ;
+        return ServiceRequestHeaderBase.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: haveSerializer<ServiceRequestHeaderBase>) => boolean = (obj:haveSerializer<ServiceRequestHeaderBase>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(ServiceRequestHeaderBase._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<ServiceRequestHeaderBase>) => boolean = (obj:AHaveSerializer<ServiceRequestHeaderBase>)=>{
+        return haveSerializerAndEmptyInit._isTypeof(ServiceRequestHeaderBase.getEmptyInit(),obj)
     }
 
     isTypeof = ServiceRequestHeaderBase.isTypeof
@@ -113,11 +118,11 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
 
     static toJson = (obj:ServiceRequestHeaderBase)  =>
     {
-        return {routeName: obj.routeName,client_id :obj.client_id ,url : obj.url,url_toScrap :obj.url_toScrap,privacy:obj.privacy ,isStreaming : obj.isStreaming, needUpdate : obj.needUpdate} as const 
+        return {serviceName : obj.serviceName ,routeName: obj.routeName,client_id :obj.client_id ,url : obj.url,url_toScrap :obj.url_toScrap,privacy:obj.privacy ,isStreaming : obj.isStreaming, needUpdate : obj.needUpdate} as const 
     }
 
     static fromJson = (json: IJson) : ServiceRequestHeaderBase => {
-        return new ServiceRequestHeaderBase(json.routeName ,json.client_id ,json.url,json.url_toScrap,json.privacy,json.isStreaming,json.needUpdate)
+        return new ServiceRequestHeaderBase(json.serviceName ,json.routeName ,json.client_id ,json.url,json.url_toScrap,json.privacy,json.isStreaming,json.needUpdate)
     }
 
     setIsPrivate(){
@@ -146,21 +151,25 @@ export namespace ServiceRequestHeaderBase  {
 
 
 
-export interface IAServiceRequest <B extends t_configObject<B> = ServiceRequestBodyBase , H extends t_configObject<H>= ServiceRequestHeaderBase > {
-    body :  ReturnType<typeof getReqOrResJsonFromTConfigObj <B>>
-    header : ReturnType<typeof getReqOrResJsonFromTConfigObj <H>>
-}
 
-
-export abstract class AServiceRequest<B extends t_configObject<B> = ServiceRequestBodyBase, H extends t_configObject<H>= ServiceRequestHeaderBase> extends t_configObject<AServiceRequest<B,H>>{
+export abstract class  AAServiceRequest <B extends t_configObject<B> = ServiceRequestBodyBase , H extends t_configObject<H>= ServiceRequestHeaderBase >  {
     body : B
-    header : H
+    header :H
 
     abstract getEmptyInit: () => AServiceRequest<B,H>
 
+}
 
-    constructor(header:H,body:B ) {
-        super({toJson:AServiceRequest.toJson , fromJson:AServiceRequest.fromJson});
+export interface t_st_AServiceRequest<B extends t_configObject<B> = ServiceRequestBodyBase, H extends t_configObject<H>= ServiceRequestHeaderBase> extends t_st_configObject<AServiceRequest<B,H>> {}
+
+
+export abstract class AServiceRequest<B extends t_configObject<B> = ServiceRequestBodyBase, H extends t_configObject<H>= ServiceRequestHeaderBase> extends t_configObject<AServiceRequest<B,H>> implements AAServiceRequest<B,H> {
+
+    body :  B
+    header : H
+
+    constructor(header:H,body:B , fromJson : t_function_staticToMember<typeof AServiceRequest.abstract_fromJson>,toJson : typeof AServiceRequest.toJson = AServiceRequest.toJson ){
+        super({toJson:toJson , fromJson:fromJson});
         this.body = body
         this.header = header
         
@@ -170,13 +179,13 @@ export abstract class AServiceRequest<B extends t_configObject<B> = ServiceReque
         return this.getEmptyInit().toJson()
     }
 
+    static abstract_fromJson = <B extends t_configObject<B> , H extends t_configObject<H>>(_class :  new (...args : [header:H,body:B]) => AServiceRequest<B,H>,json: IJson ) : AServiceRequest<any,any> => {
+        return new _class(json.header,json.body )
+    }
 
     static toJson = <B extends t_configObject<B> , H extends t_configObject<H>>(obj:AServiceRequest<B,H>)  =>
     {
-        return {body:obj.body.toJson() , header : obj.header.toJson()} as const 
+            return {body:obj.body.toJson() , header : obj.header.toJson()} as const 
     }
 
-    static fromJson = <B extends t_configObject<B> , H extends t_configObject<H>>(json: IJson, _class :  new (...args : ConstructorParameters<typeof AServiceRequest<B,H>>) => AServiceRequest<B,H> ) : AServiceRequest<any,any> => {
-        return new _class(json.header,json.body )
-    }
 }

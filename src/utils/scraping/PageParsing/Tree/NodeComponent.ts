@@ -10,7 +10,7 @@ const debug_pageParsing_nodeComponent : Debugger = debug(name_module)
 import {IJson} from "@shared/m_object.js";
 import { arrToUnion, joinCharKeyJson, json_ExactlyOne, param_jsonAsForEach, reshapeObject, t_join_underscore } from "@shared/type.js";
 import { char_join_pathRoutes,  createAddressBis,  t_agreg_path, t_char_join_pathRoutes } from "@shared/routePath.js";
-import { EmptyInit, deepCloneJson, functionError_RetPromDfEmpty, haveSerializer, haveSerializerAndEmptyInit, t_j } from '@shared/m_json.js';
+import { EmptyInit, deepCloneJson, functionError_RetPromDfEmpty, AHaveSerializer, haveSerializerAndEmptyInit, t_j } from '@shared/m_json.js';
 import { selectors, t_ElementHN, t_pageOrElementHN } from '../../DOMElements/Selector/_Selector/type.js';
 import ChildAttributeType, { IChildAttributeType } from '../Schema/_Component/ChildAttributeType/ChildAttributeType.js';
 import { getTextContent } from '../../primitives/misc.js';
@@ -84,7 +84,7 @@ export class NodeComponentValue extends haveSerializerAndEmptyInit<NodeComponent
 
 
     static emptyObject : EmptyInit<NodeComponentValue>  = new EmptyInit<NodeComponentValue>(NodeComponentValue) ;
-    static _getEmptyInit: () => NodeComponentValue = () => {
+    static getEmptyInit: () => NodeComponentValue = () => {
         return NodeComponentValue.emptyObject.emptyInit() ;
     }
 
@@ -94,11 +94,11 @@ export class NodeComponentValue extends haveSerializerAndEmptyInit<NodeComponent
     }
 
     getEmptyInit: () => NodeComponentValue = () => {
-        return NodeComponentValue._getEmptyInit() ;
+        return NodeComponentValue.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: haveSerializer<NodeComponentValue>) => boolean = (obj:haveSerializer<NodeComponentValue>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(NodeComponentValue._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<NodeComponentValue>) => boolean = (obj:AHaveSerializer<NodeComponentValue>)=>{
+        return haveSerializerAndEmptyInit._isTypeof(NodeComponentValue.getEmptyInit(),obj)
     }
 
     isTypeof = NodeComponentValue.isTypeof
@@ -157,7 +157,7 @@ type t_any_nodeComponent = NodeComponent<any,any,any>
 type t_any_INodeComponent = INodeComponent<any,any,any,any>
 
 
-export type t_NodeComponentValueEmpty =  ReturnType<typeof NodeComponentValue._getEmptyInit>
+export type t_NodeComponentValueEmpty =  ReturnType<typeof NodeComponentValue.getEmptyInit>
 export type  t_nodeComponent_values = (NodeComponentValue)[]  ;
 
 export function  err_function_retPromfEmptyNodeComponent<unionPathId extends string , ArrUnionClassName extends readonly string[] ,unionclassname  extends arrToUnion<ArrUnionClassName>,unionChildClassname extends unionclassname>( className: unionclassname ,   agreg_path :t_agreg_path<unionclassname>,_cur_node_value : reshapeObject<INodeComponentValue>,  message ?: string ): err_function<Promise<IJson>>  {
@@ -198,7 +198,7 @@ export class NodeComponent< unionPathId extends string ,ArrUnionClassName extend
     //static df_idPath = null 
     static df_compoPath : t_char_join_pathRoutes = char_join_pathRoutes
     static df_className : t_noneCompClassName = noneCompClassName
-    static dfValue : NodeComponentValue = NodeComponentValue._getEmptyInit()
+    static dfValue : NodeComponentValue = NodeComponentValue.getEmptyInit()
 
     static isDfProp = <K extends keyof INodeComponentValue = keyof INodeComponentValue > (node_val:reshapeObject<INodeComponentValue,K>, name_prop : K) => {
         return (node_val as any)[name_prop] == NodeComponent.dfValue[name_prop]
@@ -232,7 +232,7 @@ export class NodeComponent< unionPathId extends string ,ArrUnionClassName extend
     }
     static emptyObject : EmptyInit<t_any_nodeComponent>  = new EmptyInit<t_any_nodeComponent>(NodeComponent) ;
 
-    static _getEmptyInit: () => t_any_nodeComponent = () => {
+    static getEmptyInit: () => t_any_nodeComponent = () => {
         return NodeComponent.emptyObject.emptyInit() ;
     }
 
@@ -245,11 +245,11 @@ export class NodeComponent< unionPathId extends string ,ArrUnionClassName extend
     }
 
     getEmptyInit: () => t_any_nodeComponent = () => {
-        return NodeComponent._getEmptyInit() ;
+        return NodeComponent.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: haveSerializer<t_any_nodeComponent>) => boolean = (obj:haveSerializer<t_any_nodeComponent>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(NodeComponent._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<t_any_nodeComponent>) => boolean = (obj:AHaveSerializer<t_any_nodeComponent>)=>{
+        return haveSerializerAndEmptyInit._isTypeof(NodeComponent.getEmptyInit(),obj)
     }
     isTypeof = NodeComponent.isTypeof
 

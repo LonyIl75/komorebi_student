@@ -7,8 +7,8 @@ const name_module :string  = getNameModule("database","booksToscrape_database")
 const debug_booksToscrape_database : Debugger = debug(name_module)
 
 
-import { _getBooksToscrapeDatabaseName, _getMongoSuffix } from "@/config/envVar.js";
-import { IDatabaseMetaMongo,DatabaseMetaMongo,IDatabaseMetaSQLite ,DatabaseMetaSQLite, IDatabaseMetaPrisma, DatabaseMetaPrisma, DatabaseAndPrismaMeta, IDatabaseMetaDBMongo, DatabaseLocalAndRemote, IDatabaseMetaDBPrisma, IDatabaseMetaDBSQLite, IDatabaseAndPrismaMeta } from "@shared/m_database.js";
+import { _getBooksToscrapeDatabaseName, _getMongoDBSuffix } from "@/config/envVar.js";
+import { IDatabaseMetaMongoDB,DatabaseMetaMongoDB,IDatabaseMetaSQLite ,DatabaseMetaSQLite, IDatabaseMetaPrisma, DatabaseMetaPrisma, DatabaseAndPrismaMeta, IDatabaseMetaDBMongoDB, DatabaseLocalAndRemote, IDatabaseMetaDBPrisma, IDatabaseMetaDBSQLite, IDatabaseAndPrismaMeta } from "@shared/m_database.js";
 import { getJsonClusterKOB } from "@/config/database.js";
 import { serviceName_booksToscrape, t_serviceName_booksToscrape } from '@/controller/scraping-services/Services/Config/booksToscrape/config.js';
 import { getServicePathClientPrisma } from '../../utils/prisma.js';
@@ -18,9 +18,9 @@ import { fp_writeMergedServiceSchema } from '../../utils/prismaService.js';
 import { OptionalKeys, makeOptional, makeRequired, reshapeObject, reshapeObjectIgnoreOpt } from '@shared/type.js';
 
 
-const json_booksToscrapeRemoteDatabase  : IDatabaseMetaDBMongo =  {
+const json_booksToscrapeRemoteDatabase  : IDatabaseMetaDBMongoDB =  {
     name: _getBooksToscrapeDatabaseName(),
-    options : {suffix:_getMongoSuffix()},
+    options : {suffix:_getMongoDBSuffix()},
     cluster: getJsonClusterKOB(),
     type : "MongoDB"
 }
@@ -40,7 +40,7 @@ const json_booksToscrapePrisma : IDatabaseMetaDBPrisma = {
 }
 
 
-const booksToscrapeRemotePrismaDatabase : reshapeObjectIgnoreOpt<IDatabaseAndPrismaMeta<"MongoDB",IDatabaseMetaDBMongo>,null,"prisma_meta"> ={
+const booksToscrapeRemotePrismaDatabase : reshapeObjectIgnoreOpt<IDatabaseAndPrismaMeta<"MongoDB",IDatabaseMetaDBMongoDB>,null,"prisma_meta"> ={
     database_meta:json_booksToscrapeRemoteDatabase,
     isDev : df_isDev
 }

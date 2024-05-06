@@ -1,4 +1,4 @@
-import { EmptyInit, haveSerializer, haveSerializerAndEmptyInit } from "@shared/m_json.js"
+import { EmptyInit, AHaveSerializer, haveSerializerAndEmptyInit } from "@shared/m_json.js"
 import { str_value_init, t_value_init, str_value_validation_strRegex, t_value_validation_strRegex, df_value_init, df_value_validation_strRegex, df, str_joinChar_group } from "./types.js"
 import { IJson } from "@shared/m_object.js"
 
@@ -46,16 +46,16 @@ export class ValTextContent extends haveSerializerAndEmptyInit<ValTextContent>  
 
     static emptyObject : EmptyInit<ValTextContent>  = new EmptyInit<ValTextContent>(ValTextContent) ;
 
-    static _getEmptyInit: () => ValTextContent = () => {
+    static getEmptyInit: () => ValTextContent = () => {
         return ValTextContent.emptyObject.emptyInit() ;
     }
 
     getEmptyInit: () => ValTextContent = () => {
-        return ValTextContent._getEmptyInit() ;
+        return ValTextContent.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: haveSerializer<ValTextContent>) => boolean = (obj:haveSerializer<ValTextContent>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(ValTextContent._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<ValTextContent>) => boolean = (obj:AHaveSerializer<ValTextContent>)=>{
+        return haveSerializerAndEmptyInit._isTypeof(ValTextContent.getEmptyInit(),obj)
     }
 
     isTypeof = ValTextContent.isTypeof

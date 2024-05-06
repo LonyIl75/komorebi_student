@@ -18,7 +18,7 @@ import { execSync } from "child_process"
 import  mongoose,{ConnectOptions,Mongoose} from 'mongoose';
 import { ifNotGetDfErrorHandler, t_fct_errorHandler } from "./m_error.js"
 import writeMergedSchema, { getServicePathClientPrisma, t_json_replaceOrStrRegex } from "@/database/scraping-services/utils/prisma.js";
-import { EmptyInit, deepCloneJson, haveSerializer, haveSerializerAndEmptyInit } from "./m_json.js";
+import { EmptyInit, deepCloneJson, AHaveSerializer, haveSerializerAndEmptyInit } from "./m_json.js";
 import { minAllStr } from "./m_string.js";
 import { fp_writeMergedServiceSchema } from "@/database/scraping-services/utils/prismaService.js";
 import { t_serviceName_MainService } from "@/controller/scraping-services/Services/src/types.js";
@@ -151,16 +151,16 @@ export class DatabaseMeta extends  haveSerializerAndEmptyInit<DatabaseMeta> impl
 
     static emptyObject : EmptyInit<DatabaseMeta>  = new EmptyInit<DatabaseMeta>(DatabaseMeta) ;
 
-    static _getEmptyInit: <IConnection = any ,IOptions = any>() => DatabaseMeta = () => {
+    static getEmptyInit: <IConnection = any ,IOptions = any>() => DatabaseMeta = () => {
         return DatabaseMeta.emptyObject.emptyInit() ;
     }
 
     getEmptyInit: () => DatabaseMeta = () => {
-        return DatabaseMeta._getEmptyInit() ;
+        return DatabaseMeta.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: haveSerializer<DatabaseMeta>) => boolean = (obj:haveSerializer<DatabaseMeta>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(DatabaseMeta._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<DatabaseMeta>) => boolean = (obj:AHaveSerializer<DatabaseMeta>)=>{
+        return haveSerializerAndEmptyInit._isTypeof(DatabaseMeta.getEmptyInit(),obj)
     }
 
     isTypeof = DatabaseMeta.isTypeof
@@ -188,28 +188,28 @@ export class DatabaseMeta extends  haveSerializerAndEmptyInit<DatabaseMeta> impl
     
 }   
 
-export interface _IDatabaseMetaMongo extends IDatabaseMeta{
+export interface _IDatabaseMetaMongoDB extends IDatabaseMeta{
     options : IJson;
 }
 
-export interface _IDatabaseMetaDBMongo extends _IDatabaseMetaMongo,IDatabaseMetaDB<"MongoDB">{}
+export interface _IDatabaseMetaDBMongoDB extends _IDatabaseMetaMongoDB,IDatabaseMetaDB<"MongoDB">{}
 
-export interface _IFDatabaseMetaMongo extends _IDatabaseMetaMongo,_IFDatabaseMeta{
+export interface _IFDatabaseMetaMongoDB extends _IDatabaseMetaMongoDB,_IFDatabaseMeta{
     getFullMongoUrl():ReturnType<typeof getFctFullMongoUrl>;
 }
 
-export interface _IFDatabaseMetaDBMongo extends _IFDatabaseMetaMongo,_IFDatabaseMetaDB<"MongoDB">{}
+export interface _IFDatabaseMetaDBMongoDB extends _IFDatabaseMetaMongoDB,_IFDatabaseMetaDB<"MongoDB">{}
 
 
 
-export interface IClusterMetaMongo  extends _IDatabaseMetaMongo{}
-export interface IFClusterMetaMongo  extends _IFDatabaseMetaMongo{}
+export interface IClusterMetaMongoDB  extends _IDatabaseMetaMongoDB{}
+export interface IFClusterMetaMongoDB  extends _IFDatabaseMetaMongoDB{}
 
-function getFctFullMongoUrl(obj:_IDatabaseMetaMongo ){
+function getFctFullMongoUrl(obj:_IDatabaseMetaMongoDB ){
     return _getFctFullMongoUrl(obj.url,obj.options?.suffix||"")
 }
 
-export class ClusterMetaMongo extends  haveSerializerAndEmptyInit<ClusterMetaMongo> implements IClusterMetaMongo {
+export class ClusterMetaMongoDB extends  haveSerializerAndEmptyInit<ClusterMetaMongoDB> implements IClusterMetaMongoDB {
    
     
     name?:string;
@@ -221,7 +221,7 @@ export class ClusterMetaMongo extends  haveSerializerAndEmptyInit<ClusterMetaMon
     static getDfNameFromId = (id:string) => `cluster${id}` ;
    
     constructor(id: string=DatabaseMeta.invalid_id , url:string = undefined  , name : string = undefined ,options : IJson = undefined , admin : string = undefined  ){
-        super( {toJson:ClusterMetaMongo.toJson , fromJson:ClusterMetaMongo.fromJson});
+        super( {toJson:ClusterMetaMongoDB.toJson , fromJson:ClusterMetaMongoDB.fromJson});
         this.id = id 
         this.url = url
         this.admin = admin 
@@ -231,8 +231,8 @@ export class ClusterMetaMongo extends  haveSerializerAndEmptyInit<ClusterMetaMon
 
     static cst = (id?:string , url?:string , name ?:string  , options ?:IJson , admin?:string) => {
         let tmp_obj = new DatabaseMeta(id,url,name,admin);
-        tmp_obj.name = name || ClusterMetaMongo.getDfNameFromId(tmp_obj.id)
-        let obj = ClusterMetaMongo.fromJson({...DatabaseMeta.toJson(tmp_obj),options});
+        tmp_obj.name = name || ClusterMetaMongoDB.getDfNameFromId(tmp_obj.id)
+        let obj = ClusterMetaMongoDB.fromJson({...DatabaseMeta.toJson(tmp_obj),options});
         return obj 
     }
 
@@ -240,30 +240,30 @@ export class ClusterMetaMongo extends  haveSerializerAndEmptyInit<ClusterMetaMon
 
     getFullMongoUrl = ()=> getFctFullMongoUrl(this)
 
-    static toJson(_clusterMongo:ClusterMetaMongo)   
+    static toJson(_clusterMongo:ClusterMetaMongoDB)   
     {
         return {id:_clusterMongo.id , name:_clusterMongo.name , url:_clusterMongo.url , admin:_clusterMongo.admin , options:{..._clusterMongo.options}} as const 
     }
 
-    static  fromJson = (json: IJson) : ClusterMetaMongo => {
-        return new ClusterMetaMongo(json.id , json.url, json.admin , json.options, json.name)
+    static  fromJson = (json: IJson) : ClusterMetaMongoDB => {
+        return new ClusterMetaMongoDB(json.id , json.url, json.admin , json.options, json.name)
     }
 
-    static emptyObject : EmptyInit<ClusterMetaMongo>  = new EmptyInit<ClusterMetaMongo>(ClusterMetaMongo) ;
+    static emptyObject : EmptyInit<ClusterMetaMongoDB>  = new EmptyInit<ClusterMetaMongoDB>(ClusterMetaMongoDB) ;
 
-    static _getEmptyInit: () => ClusterMetaMongo = () => {
-        return ClusterMetaMongo.emptyObject.emptyInit() ;
+    static getEmptyInit: () => ClusterMetaMongoDB = () => {
+        return ClusterMetaMongoDB.emptyObject.emptyInit() ;
     }
 
-    getEmptyInit: () => ClusterMetaMongo = () => {
-        return ClusterMetaMongo._getEmptyInit() ;
+    getEmptyInit: () => ClusterMetaMongoDB = () => {
+        return ClusterMetaMongoDB.getEmptyInit() ;
     }
     
-    static isTypeof: (obj: haveSerializer<ClusterMetaMongo>) => boolean = (obj:haveSerializer<ClusterMetaMongo>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(ClusterMetaMongo._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<ClusterMetaMongoDB>) => boolean = (obj:AHaveSerializer<ClusterMetaMongoDB>)=>{
+        return haveSerializerAndEmptyInit._isTypeof(ClusterMetaMongoDB.getEmptyInit(),obj)
     }
 
-    isTypeof = ClusterMetaMongo.isTypeof
+    isTypeof = ClusterMetaMongoDB.isTypeof
 
 
 }   
@@ -304,42 +304,42 @@ export class DatabaseMetaSQLite extends  DatabaseMeta implements  IFDatabaseMeta
 
 }
 
-export interface IDatabaseMetaMongo extends _IDatabaseMetaMongo 
+export interface IDatabaseMetaMongoDB extends _IDatabaseMetaMongoDB 
 {
-    readonly cluster : IClusterMetaMongo;
+    readonly cluster : IClusterMetaMongoDB;
 
 }
-export interface IDatabaseMetaDBMongo extends IDatabaseMetaMongo, _IDatabaseMetaDBMongo{}
+export interface IDatabaseMetaDBMongoDB extends IDatabaseMetaMongoDB, _IDatabaseMetaDBMongoDB{}
 
-interface IFDatabaseMetaMongo extends _IFDatabaseMetaMongo,IDatabaseMetaMongo{}
-interface IFDatabaseMetaDBMongo extends _IFDatabaseMetaDBMongo,IDatabaseMetaDBMongo{}
+interface IFDatabaseMetaMongoDB extends _IFDatabaseMetaMongoDB,IDatabaseMetaMongoDB{}
+interface IFDatabaseMetaDBMongoDB extends _IFDatabaseMetaDBMongoDB,IDatabaseMetaDBMongoDB{}
 
-export class DatabaseMetaMongo extends  DatabaseMeta implements  IFDatabaseMetaDBMongo {  
+export class DatabaseMetaMongoDB extends  DatabaseMeta implements  IFDatabaseMetaDBMongoDB {  
     name?: string;
     id :string;
     url : string;
     admin ?: string ;
     options : IJson;
     type :"MongoDB" = "MongoDB";
-    readonly cluster : IClusterMetaMongo;
+    readonly cluster : IClusterMetaMongoDB;
 
-    constructor(cluster : IClusterMetaMongo , options : IJson, meta_database : DatabaseMeta   ){
+    constructor(cluster : IClusterMetaMongoDB , options : IJson, meta_database : DatabaseMeta   ){
         let tmp_url = meta_database.url|| createAddress([cluster.url],meta_database.name)
-        super(meta_database.id,tmp_url,meta_database.name,meta_database.admin,DatabaseMetaMongo.toJson,DatabaseMetaMongo.fromJson); 
+        super(meta_database.id,tmp_url,meta_database.name,meta_database.admin,DatabaseMetaMongoDB.toJson,DatabaseMetaMongoDB.fromJson); 
         this.cluster = cluster
         this.options = options
        
     }
 
-    static toJson = (obj: DatabaseMetaMongo)  => {
+    static toJson = (obj: DatabaseMetaMongoDB)  => {
         return {...DatabaseMeta.toJson(obj), type:"MongoDB" , cluster:deepCloneJson(obj.cluster), options:deepCloneJson(obj.options)} as const 
     }
 
 
-    static fromJson = (json: IDatabaseMetaMongo) : DatabaseMetaMongo => {
+    static fromJson = (json: IDatabaseMetaMongoDB) : DatabaseMetaMongoDB => {
         let obj= DatabaseMeta.fromJson(json) as any
         obj.type = "MongoDB"
-        return new DatabaseMetaMongo(json.cluster,json.options,obj)
+        return new DatabaseMetaMongoDB(json.cluster,json.options,obj)
     }
 
     getFullMongoUrl = ()=> getFctFullMongoUrl(this)
@@ -385,12 +385,12 @@ type t_prismaClient_options = ConstructorParameters<typeof _PrismaClient>
 
 type t_DatabaseMeta< T extends t_DatabaseMeta_type > = 
     T extends "SQLite" ? DatabaseMetaSQLite : 
-    T extends "MongoDB" ? DatabaseMetaMongo : 
+    T extends "MongoDB" ? DatabaseMetaMongoDB : 
     T extends "Prisma" ? DatabaseMetaPrisma : never
 
 type t_IDatabaseMetaDB< T extends t_DatabaseMeta_type > = 
     T extends "SQLite" ? IDatabaseMetaDBSQLite : 
-    T extends "MongoDB" ? IDatabaseMetaDBMongo : 
+    T extends "MongoDB" ? IDatabaseMetaDBMongoDB : 
     T extends "Prisma" ? IDatabaseMetaDBPrisma : never
 
 type t_connectionDatabase< T extends t_DatabaseMeta_type ,MultiDB extends t_multiDB > = MultiDB extends undefined ? (T extends "SQLite" ? sqlite3.Database : T extends "MongoDB" ? Mongoose :  T  extends t_DatabaseMeta_type ? _PrismaClient : never) : t_getMultiDBClient<MultiDB>
@@ -426,7 +426,7 @@ abstract class ADatabaseMetaAndConnection<T extends t_DatabaseMeta_type,D extend
 }
 
 
-class DatabaseMetaAndConnectionMongo extends ADatabaseMetaAndConnection<"MongoDB",DatabaseMetaMongo,Mongoose,ConnectOptions> {
+class DatabaseMetaAndConnectionMongoDB extends ADatabaseMetaAndConnection<"MongoDB",DatabaseMetaMongoDB,Mongoose,ConnectOptions> {
     async connect() {
         return connectToMongoDB(this.database_meta.url,this.getOptions()) .then((_co :any )=>this.setConnection(_co))
     }
@@ -435,9 +435,9 @@ class DatabaseMetaAndConnectionMongo extends ADatabaseMetaAndConnection<"MongoDB
         super();
     }
 
-    static cst:(co_options :ConnectOptions,...args:ConstructorParameters<typeof DatabaseMetaMongo>)=> DatabaseMetaAndConnectionMongo =(co_options :ConnectOptions, ...args:ConstructorParameters<typeof DatabaseMetaMongo>)=>{
-        let database_meta = new DatabaseMetaMongo (...args)
-        let obj = new DatabaseMetaAndConnectionMongo()
+    static cst:(co_options :ConnectOptions,...args:ConstructorParameters<typeof DatabaseMetaMongoDB>)=> DatabaseMetaAndConnectionMongoDB =(co_options :ConnectOptions, ...args:ConstructorParameters<typeof DatabaseMetaMongoDB>)=>{
+        let database_meta = new DatabaseMetaMongoDB (...args)
+        let obj = new DatabaseMetaAndConnectionMongoDB()
         ADatabaseMetaAndConnection.super_init(obj,database_meta,co_options)
         return obj
      }
@@ -531,7 +531,7 @@ export class DatabaseAndPrismaMeta<T extends t_databaseMeta_type , D extends IDa
             let r : IDatabaseMetaDB<t_databaseMeta_type> & DatabaseMeta
             switch(type){
                 case "MongoDB": 
-                    r= DatabaseMetaMongo.fromJson(json_database_meta as unknown as IDatabaseMetaDBMongo) 
+                    r= DatabaseMetaMongoDB.fromJson(json_database_meta as unknown as IDatabaseMetaDBMongoDB) 
                     break 
                 case "SQLite": 
                     r= DatabaseMetaSQLite.fromJson(json_database_meta as unknown as IDatabaseMetaDBSQLite)
@@ -613,11 +613,11 @@ export class DatabaseAndPrismaMeta<T extends t_databaseMeta_type , D extends IDa
 
 
 export type t_jsonDatabaseMeta = IDatabaseMeta
-export type t_jsonClusterMeta = IClusterMetaMongo
-//export type t_jsonCollection = IDatabaseMetaMongo
+export type t_jsonClusterMeta = IClusterMetaMongoDB
+//export type t_jsonCollection = IDatabaseMetaMongoDB
 
-export type t_databaseMetaAndCo = DatabaseMetaAndConnectionMongo | DatabaseMetaAndConnectionSQLite
-export type t_clusterMeta = ClusterMetaMongo
+export type t_databaseMetaAndCo = DatabaseMetaAndConnectionMongoDB | DatabaseMetaAndConnectionSQLite
+export type t_clusterMeta = ClusterMetaMongoDB
 //export type t_collection = DatabaseMongo
 
 

@@ -38,7 +38,7 @@ type t_arrOfResType_only_booksToscrapeRoute =  [res_books]
 export const arrOfResType_booksToscrapeRoute = [...arrOfResType_baseService_booksToscrapeRoute,booksToscrape_ResTypeHome,...arrOfResType_only_booksToscrapeRoute] as const  ;
 type t_arrOfResType_booksToscrapeRoute = [...t_arrOfResType_baseService_booksToscrapeRoute,t_booksToscrape_ResTypeHome,...t_arrOfResType_only_booksToscrapeRoute]
 
-export const arrOfReqResType_booksToscrapeRoute = [[arrOfReqType_booksToscrapeRoute[0]._getEmptyInit(), arrOfResType_booksToscrapeRoute[0]._getEmptyInit()],[arrOfReqType_booksToscrapeRoute[1]._getEmptyInit(), arrOfResType_booksToscrapeRoute[1]._getEmptyInit()],[arrOfReqType_booksToscrapeRoute[2]._getEmptyInit(), arrOfResType_booksToscrapeRoute[2]._getEmptyInit()]] as const  ;
+export const arrOfReqResType_booksToscrapeRoute = [[arrOfReqType_booksToscrapeRoute[0].getEmptyInit(), arrOfResType_booksToscrapeRoute[0].getEmptyInit()],[arrOfReqType_booksToscrapeRoute[1].getEmptyInit(), arrOfResType_booksToscrapeRoute[1].getEmptyInit()],[arrOfReqType_booksToscrapeRoute[2].getEmptyInit(), arrOfResType_booksToscrapeRoute[2].getEmptyInit()]] as const  ;
 type t_arrOfReqResType_booksToscrapeRoute = [readonly [t_arrOfReqType_booksToscrapeRoute[0], t_arrOfResType_booksToscrapeRoute[0]],readonly[t_arrOfReqType_booksToscrapeRoute[1], t_arrOfResType_booksToscrapeRoute[1]],readonly [t_arrOfReqType_booksToscrapeRoute[2], t_arrOfResType_booksToscrapeRoute[2]]]
 
 

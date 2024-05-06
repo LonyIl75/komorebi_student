@@ -421,7 +421,7 @@ export type t_emptyNDArray = t_empty1DArray | NestedArray<t_empty1DArray>
 
 
 export type arrAdd < T extends readonly any[] , Add extends any  > = T extends  readonly [any,... infer R] ? [T[0],...arrAdd<R,Add>] :[] 
-export type arrToUnion <T extends readonly any[] > = T extends  readonly [any,... infer R] ? R extends readonly any[] ? T[0] | arrToUnion <R> : never : never
+export type arrToUnion <T extends readonly any[] > = T extends  readonly [any,... infer R] ? R extends readonly any[] ? T[0] | arrToUnion <R> : never : string[] extends T ? T[number] : never
 export type arrToUnion_add <T extends readonly any[] , Add extends any  > = arrAdd <arrToUnion < T > , Add>
 
 export type arrArrAdd < T extends readonly (readonly any[]) [] , Add extends readonly any[] =[] > = T extends  readonly [readonly any[],... infer R] ? R extends readonly any[] ? [[...Add,...T[0]],...arrArrAdd<R,Add>] :[] :[]
@@ -924,6 +924,17 @@ type t_rest_classe<P=any > = {prototype: P}
 
 export type t_class = t_constructor & t_rest_classe
 export type t_class_abs = t_abs_constructor & t_rest_classe
+
+
+export type getNameOfStaticFields<_this> = Exclude<keyof _this,"prototype">
+export type t_typeofClass = {"prototype":any} & {[k in string]:any}
+
+export type _t_verifyStatic<_this extends {[k in string]:any} ,staticType extends {[k in string]:any} >  = 
+{[k in getNameOfStaticFields<_this> as k extends keyof staticType ? _this[k] extends staticType[k] ? k : never : k  ] : _this[k]}
+
+export type t_verifyStatic<_this extends t_typeofClass ,staticType extends {[k in string]:any} , needisComplete extends boolean = false > = _t_verifyStatic<_this,staticType> extends infer A ?
+A extends {[k in string]:any} ? 
+needisComplete extends true ? keyof staticType extends keyof A ? A : never : A : never : never 
 
 
 

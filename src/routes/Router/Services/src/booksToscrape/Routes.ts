@@ -15,7 +15,7 @@ class BooksToscrapeRoutes implements t_json_ReqResType_booksToscrape{
     }
     //[x: Exclude<string,id_union_booksToscrapeRoutes> ]: [any,any];
 
-    static df = new BooksToscrapeRoutes();
+    static provider = new BooksToscrapeRoutes();
 }
 
 

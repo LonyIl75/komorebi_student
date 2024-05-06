@@ -12,7 +12,7 @@ import {IJson, getEmptyJson} from "@shared/m_object.js";
 import { t_arr_component,  t_getChildTypeFromArrComponent, t_getClassNameTypeFromArrComponent, t_rootClassName} from "./types.js";
 import {_Enumerate, arrToUnion,reshapeObject, t_function } from "@shared/type.js";
 import {_notFoundIdx} from "@shared/type.js";
-import { EmptyInit, haveSerializer, haveSerializerAndEmptyInit, } from '@shared/m_json.js';
+import { EmptyInit, AHaveSerializer, haveSerializerAndEmptyInit, } from '@shared/m_json.js';
 import { MapRegexToIdPath } from '@shared/m_regexMapping.js';
 import { FrameAddScriptTagOptions } from 'puppeteer';
 import { ExposeObject, t_exposeObject } from '../PageEvaluate/ExposeObject.js';
@@ -26,7 +26,7 @@ import { _IJsonComponents } from './Schema/FunctionalWrapperJsonComponents/_Json
 import { t_strRegex } from '@shared/_regexp.js';
 
 
-export type t_ScrapingComponent_any = ScrapingComponent<t_strRegex, string, readonly [t_rootClassName,...readonly string[]],  any, t_arr_component<string>, _IJsonComponents<string>>
+export type t_ScrapingComponent_any = ScrapingComponent<any,any,any,any,any,any>
 
 
 export class ScrapingComponent<UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends readonly [t_rootClassName,...readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
@@ -82,11 +82,11 @@ unionClassNameType extends arrToUnion<ArrUnionClassNameType>, t_arrrArrUnion_pag
     }
 
     getEmptyInit: () => t_JsonWithScrapingComponent = () => {
-        return JsonWithScrapingComponents._getEmptyInit() ;
+        return JsonWithScrapingComponents.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: haveSerializer<t_JsonWithScrapingComponent>) => boolean = (obj:haveSerializer<t_JsonWithScrapingComponent>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(JsonWithScrapingComponents._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<t_JsonWithScrapingComponent>) => boolean = (obj:AHaveSerializer<t_JsonWithScrapingComponent>)=>{
+        return haveSerializerAndEmptyInit._isTypeof(JsonWithScrapingComponents.getEmptyInit(),obj)
     }
 
     isTypeof = JsonWithScrapingComponents.isTypeof
@@ -105,7 +105,7 @@ unionClassNameType extends arrToUnion<ArrUnionClassNameType>, t_arrrArrUnion_pag
     }
     static emptyObject : EmptyInit<t_JsonWithScrapingComponent>  = new EmptyInit<t_JsonWithScrapingComponent>(JsonWithScrapingComponents) ;
 
-    static _getEmptyInit: () => t_JsonWithScrapingComponent = () => {
+    static getEmptyInit: () => t_JsonWithScrapingComponent = () => {
         return JsonWithScrapingComponents.emptyObject.emptyInit() ;
     }
 

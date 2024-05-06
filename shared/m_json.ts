@@ -28,8 +28,9 @@ export type t_j <T> = { [k in keyof T as T[k] extends Function ? never : k ] ?:
     T[k] extends object ? T[k] extends readonly any[] ?t_arr_j<T[k]> :t_j<T[k]> : T[k] 
 }
 
+
 export type t_serializer<T,J extends t_j<T> = t_j<T>> = { toJson : ( obj : T) => J , fromJson : (json:J) => T   }
-export abstract class haveSerializer<T,J extends t_j<T>=t_j<T>  > {
+export abstract class AHaveSerializer<T,J extends t_j<T>=t_j<T>  > {
 
 
     obj_serializer:t_serializer<T,J> ; 
@@ -81,7 +82,7 @@ export class EmptyInit<T>  {
         return this._emptyInit()
     }
 
-    _getEmptyInit = () => {
+    getEmptyInit = () => {
         if(this.obj_emptyInit == undefined) this.obj_emptyInit = this.emptyInit();
         return this.obj_emptyInit;
     }
@@ -89,7 +90,7 @@ export class EmptyInit<T>  {
 
 }
 
-type t_ret_getEmptyInit<T,J extends t_j<T> = t_j<T>> = T & haveSerializer <T,J>
+type t_retGetEmptyInit<T,J extends t_j<T> = t_j<T>> = T & AHaveSerializer <T,J>
 type t_ret_ObjectKeys = string[]
 
 type t_keysObject<K extends t_indexable_key = t_indexable_key, V = any > = {keys:t_ret_ObjectKeys,obj:IJson<K,V>}
@@ -140,7 +141,7 @@ const fct_isSameKeys =
     }
 }
 
-const fct_st_isTypeof = <T,J extends t_j<T> = t_j<T>>(_this:t_ret_getEmptyInit<T,J> ,  obj : haveSerializer<any> , mode : enum_compare_mode = enum_compare_mode.firstLevel ) : boolean => {
+const fct_st_isTypeof = <T,J extends t_j<T> = t_j<T>>(_this:t_retGetEmptyInit<T,J> ,  obj : AHaveSerializer<any> , mode : enum_compare_mode = enum_compare_mode.firstLevel ) : boolean => {
     return fct_isSameKeys(obj.toJson(),_this.toJson(),mode)
 }
 
@@ -148,22 +149,43 @@ type t_fct_st_isTypeof<T,J extends t_j<T> = t_j<T>> = typeof fct_st_isTypeof<T,J
 type t_fct_mb_isTypeof = t_function_staticToMember<t_fct_st_isTypeof<any>>
 
 
-const fct_st_isEqual = <T,J extends t_j<T> = t_j<T>>(_this:t_ret_getEmptyInit<T,J> ,  obj : haveSerializer<any>  ) : boolean => {
+const fct_st_isEqual = <T,J extends t_j<T> = t_j<T>>(_this:t_retGetEmptyInit<T,J> ,  obj : AHaveSerializer<any>  ) : boolean => {
     return isEqJson(obj.toJson(),_this.toJson())
 }
 
 type t_fct_st_isEqual<T,J extends t_j<T> = t_j<T>> = typeof fct_st_isEqual<T,J>
 type t_fct_mb_isEqual = t_function_staticToMember<t_fct_st_isEqual<any>>
 
-export interface AEmptyInit<T,J extends t_j<T> = t_j<T>> {
-    getEmptyInit:()=>t_ret_getEmptyInit<T,J> ;
-    isTypeof :t_fct_st_isTypeof<T,J>
-    isEqual :t_fct_st_isEqual<T,J>
+export interface t_st_haveSerializer< T,J extends t_j<T> = t_j<T> >  extends t_serializer<T,J>{
+}
+
+export interface t_st_emptyInit<T,J extends t_j<T> = t_j<T>,_T extends t_retGetEmptyInit<T,J> =t_retGetEmptyInit<T,J>> {
+    emptyObject : EmptyInit<_T>
+    getEmptyInit:()=>_T;
+}
+  
+export interface t_st_haveSerializerAndEmptyInit< T  extends haveSerializerAndEmptyInit<T> > extends t_st_haveSerializer<T>,t_st_emptyInit<T>{
+    isTypeof:t_function_staticToMember<t_fct_st_isTypeof<T>>
+    //isEqual:t_function_staticToMember<t_fct_st_isEqual<T>>
+}
+
+
+export interface IEmptyInit<T,J extends t_j<T> = t_j<T>,_T extends t_retGetEmptyInit<T,J> =t_retGetEmptyInit<T,J>> {
+    getEmptyInit:()=>_T;
     isEmpty : () => boolean
 }
 
 
-export abstract class haveSerializerAndEmptyInit<T, J extends t_j<T> = t_j<T>,_T extends t_ret_getEmptyInit<T,J> =t_ret_getEmptyInit<T,J>> extends haveSerializer<T,J> implements AEmptyInit<T,J>   {
+export interface IHaveSerializerAndEmptyInit< T, J extends t_j<T> = t_j<T>,_T extends t_retGetEmptyInit<T,J> =t_retGetEmptyInit<T,J>> extends  IEmptyInit<T,J,_T> ,AHaveSerializer<T,J>{
+    isEqual :t_function_staticToMember<t_fct_st_isTypeof<T>>
+}
+
+export abstract class AHaveSerializerAndEmptyInit<T, J extends t_j<T> = t_j<T>,_T extends t_retGetEmptyInit<T,J> =t_retGetEmptyInit<T,J>>{
+    abstract getEmptyInit:()=>_T;
+    abstract isTypeof :t_fct_st_isTypeof<T,J>
+}
+
+export abstract class haveSerializerAndEmptyInit<T, J extends t_j<T> = t_j<T>,_T extends t_retGetEmptyInit<T,J> =t_retGetEmptyInit<T,J>> extends AHaveSerializer<T,J> implements IHaveSerializerAndEmptyInit<T,J,_T>,AHaveSerializerAndEmptyInit<T,J,_T>   {
     
     constructor(intializer){
         super(intializer);
@@ -173,17 +195,17 @@ export abstract class haveSerializerAndEmptyInit<T, J extends t_j<T> = t_j<T>,_T
     abstract getEmptyInit:()=>_T;
     abstract isTypeof :t_fct_st_isTypeof<T,J>
 
-    static st_isTypeof<T,J extends t_j<T> = t_j<T>>(...args:Parameters<t_fct_st_isTypeof<T,J>>) { return fct_st_isTypeof<T,J>(...args) }
-    static st_isEqual<T,J extends t_j<T> = t_j<T>>(...args:Parameters<t_fct_st_isEqual<T,J>>) { return fct_st_isEqual<T,J>(...args) }
+    static _isTypeof<T,J extends t_j<T> = t_j<T>>(...args:Parameters<t_fct_st_isTypeof<T,J>>) { return fct_st_isTypeof<T,J>(...args) }
+    static _isEqual<T,J extends t_j<T> = t_j<T>>(...args:Parameters<t_fct_st_isEqual<T,J>>) { return fct_st_isEqual<T,J>(...args) }
 
     isEmpty = () => {
-        return fct_st_isEqual<T,J>(this as unknown as _T,this.getEmptyInit())
+        return this.isEqual(this.getEmptyInit())
     }
 
 
 
     isEqual = (obj: _T) :boolean =>  {
-        return haveSerializerAndEmptyInit.st_isEqual(this as unknown as _T,obj)
+        return haveSerializerAndEmptyInit._isEqual(this as unknown as _T,obj)
     }
 
     
@@ -242,8 +264,10 @@ export function pickAndFilterProps<T extends  haveSerializerAndEmptyInit<T>, _TP
     return {extracted_props , restProps };
 
 }
+export interface t_st_configObject<T extends haveSerializerAndEmptyInit<T>> extends t_st_haveSerializerAndEmptyInit<T> {}
 
 export abstract class t_configObject<T> extends haveSerializerAndEmptyInit<T> {}
+
 
 export const getReqOrResJsonFromTConfigObj = < O extends t_configObject<O>> (obj:O)=> {
     return obj.toJson() as ReturnType<O["toJson"] >

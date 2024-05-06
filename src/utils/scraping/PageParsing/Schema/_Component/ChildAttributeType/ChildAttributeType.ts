@@ -1,4 +1,4 @@
-import { haveSerializerAndEmptyInit, EmptyInit, haveSerializer, deepCloneJson } from "@shared/m_json.js";
+import { haveSerializerAndEmptyInit, EmptyInit, AHaveSerializer, deepCloneJson } from "@shared/m_json.js";
 import { IJson, createJsonFromEntries, entryGetKey, t_createJsonFromEntries } from "@shared/m_object.js";
 import {  NOT,PopUnion, getIntersectJsons, jsonObjectToArrKey, jsonObjectToArrValue } from "@shared/type.js";
 import {df, arr_function_attribute_function, arr_key_attribute_name,df_str_attribute_name, isAttributeName_, isAttributeNoneFunctionName, isAttributeNoneName_, isNoneAttributeNameVal_, str_attribute_name, str_attribute_name_function, str_selector,t_Object_withAttributeName,t_arr_attribute_name,t_attributeFunctionName, t_attribute_name, t_attribute_name_, t_attribute_name_notNoneName, t_isAttributeName_, t_isAttributeNoneName_, t_union_attribute_name__val, t_union_attribute_name_function_val, t_union_attribute_name_val, t_union_key_attribute_name, validateAttributeNamValue, str_args_setting, t_args_setting, arr_function_attribute_name } from "./types.js";
@@ -96,16 +96,16 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
 
     static emptyObject : EmptyInit<ChildAttributeType>  = new EmptyInit<ChildAttributeType>(ChildAttributeType) ;
 
-    static _getEmptyInit: () => ChildAttributeType = () => {
+    static getEmptyInit: () => ChildAttributeType = () => {
         return ChildAttributeType.emptyObject.emptyInit() ;
     }
 
     getEmptyInit: () => ChildAttributeType = () => {
-        return ChildAttributeType._getEmptyInit() ;
+        return ChildAttributeType.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: haveSerializer<ChildAttributeType>) => boolean = (obj:haveSerializer<ChildAttributeType>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(ChildAttributeType._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<ChildAttributeType>) => boolean = (obj:AHaveSerializer<ChildAttributeType>)=>{
+        return haveSerializerAndEmptyInit._isTypeof(ChildAttributeType.getEmptyInit(),obj)
     }
 
     isTypeof = ChildAttributeType.isTypeof

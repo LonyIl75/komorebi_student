@@ -4,9 +4,13 @@ import { joinEndParamUrlIfNotEmpty } from "@shared/validate-url/functions.js"
 import { joinReqUrl, joinBegParamUrl, char_headQuery } from "@shared/validate-url/types.js"
 
 export const str_getServiceFunction = "getServiceFunction" as const
+export type t_str_getServiceFunction = typeof str_getServiceFunction
 export const str_getLocalFunction = "getLocalFunction" as const
+export type t_str_getLocalFunction = typeof str_getLocalFunction
 export const str_save_serviceFunction = "save_serviceFunction" as const
+export type t_str_save_serviceFunction = typeof str_save_serviceFunction
 export const str_transformAfterGetServiceFunction = "transformAfterGetServiceFunction" as const
+export type t_str_transformAfterGetServiceFunction = typeof str_transformAfterGetServiceFunction
 
 export const df_arr_fct_name = [str_getServiceFunction,str_getLocalFunction,str_transformAfterGetServiceFunction] as const
 export type t_df_arr_fct_name = typeof df_arr_fct_name

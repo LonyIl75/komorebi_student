@@ -1,4 +1,4 @@
-import { haveSerializerAndEmptyInit, EmptyInit, haveSerializer } from "@shared/m_json.js";
+import { haveSerializerAndEmptyInit, EmptyInit, AHaveSerializer } from "@shared/m_json.js";
 import { IJson } from "@shared/m_object.js";
 import { t_function } from "@shared/type.js";
 import ChildAttributeType, { IChildAttributeType } from "./ChildAttributeType.js";
@@ -48,16 +48,16 @@ export class ChildAttributeTypeValue extends haveSerializerAndEmptyInit<ChildAtt
 
     static emptyObject : EmptyInit<ChildAttributeTypeValue>  = new EmptyInit<ChildAttributeTypeValue>(ChildAttributeTypeValue) ;
 
-    static _getEmptyInit: () => ChildAttributeTypeValue = () => {
+    static getEmptyInit: () => ChildAttributeTypeValue = () => {
         return ChildAttributeTypeValue.emptyObject.emptyInit() ;
     }
 
     getEmptyInit: () => ChildAttributeTypeValue = () => {
-        return ChildAttributeTypeValue._getEmptyInit() ;
+        return ChildAttributeTypeValue.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: haveSerializer<ChildAttributeTypeValue>) => boolean = (obj:haveSerializer<ChildAttributeTypeValue>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(ChildAttributeTypeValue._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<ChildAttributeTypeValue>) => boolean = (obj:AHaveSerializer<ChildAttributeTypeValue>)=>{
+        return haveSerializerAndEmptyInit._isTypeof(ChildAttributeTypeValue.getEmptyInit(),obj)
     }
 
     isTypeof = ChildAttributeTypeValue.isTypeof
