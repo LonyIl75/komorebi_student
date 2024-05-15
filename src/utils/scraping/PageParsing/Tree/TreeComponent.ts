@@ -4,7 +4,7 @@ import { t_agreg_path } from "@shared/routePath.js"
 import { arrToUnion} from "@shared/type.js"
 import { INodeComponent, NodeComponent, NodeComponentValue, _t_NodeComponentValue_getJsonValue } from "./NodeComponent.js"
 import { _isNullOrUndefined } from "@shared/m_primitives.js"
-import { IJson, entryGetKey, entryGetValue, isEmptyJson, isNotEmptyJson, isObject } from "@shared/m_object.js"
+import { IJson, entryGetKey, entryGetValue, isEmptyJson, isNotEmptyJson, isObject, t_s_getProp } from "@shared/m_object.js"
 import { deepCloneJson, getSubsetJsonFromPredicate } from "@shared/m_json.js"
 import { isNoneCompClassName, t_noneCompClassName } from "../TypeChilds/types.js"
 import { t_strRegex } from "@shared/_regexp.js"
@@ -232,15 +232,14 @@ export default class mTree<unionPathId extends string ,ArrUnionClassNameType ext
         }
 
         const fct_moreThenOne = <_isOne extends false = false  ,_TChild extends t_res<_isOne>["res_childs"] =t_res<_isOne>["res_childs"] > 
-        (arr_res : t_arr_res,acc : _TChild , ... args:[{_path:t__path,trad_path:t_trad_path,},...[_TChild[t__path],...any[]]]   ) => {
+        (arr_res : t_arr_res,acc : _TChild , ... args:[{_path:t__path,trad_path:t_trad_path,},...[t_s_getProp<_TChild,t__path,undefined>,...any[]]]   ) => {
 
           type t_isOne = false
 
-          const init_value = args.length > 1 ?args[1]:[]
+          const init_value = (args.length > 1 ?args[1]:undefined)||[] as []|Exclude<typeof args[1],undefined>
           const {trad_path,_path} = args[0]
-
           const c_acc : IJson< unionClassname, t_isOne extends true ? IJson :IJson[] >   = acc as any 
-          c_acc[_path] = [...init_value]
+          c_acc[_path] = [...init_value as any ]  //A FAIRE 
 
           for( const _res of arr_res){
             const {res_value,res_childs} = _res

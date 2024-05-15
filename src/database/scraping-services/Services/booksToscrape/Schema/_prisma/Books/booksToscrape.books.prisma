@@ -12,9 +12,4 @@ model Books {
   id String  @id @default(auto()) @map("_id") @db.ObjectId
   date Int
   BooksType String @unique
-  BooksTitle String
-  BooksImage_href String
-  BooksImage_alt String
-  BooksPrice String 
-  BooksStock String
 }

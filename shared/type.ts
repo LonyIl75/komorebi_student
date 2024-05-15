@@ -368,7 +368,7 @@ export type upsertInSimpleJson <_json extends {readonly [k in t_indexable_key]:a
 
 
 interface FnArrToUnion extends Fn {
-  return: _arrToUnion<Args<this>>
+  return: Args<this> extends readonly any[] ? arrToUnion<Args<this>> : never 
 }
 
 type _replaceOptional < TF extends t_function  > = 
@@ -397,7 +397,6 @@ export type repeat < T extends string , Acc extends readonly string[]> =
       `${T}${repeat<T,R>}` 
     : "" : ""
 
-type _arrToUnion <T> = T extends  readonly [any,... infer R] ? R extends readonly any[] ? T[0] | _arrToUnion <R> : never : never
 
 export type t_arrSameLength < Arr1 extends readonly any[] , Arr2 extends readonly any[]> = Arr1['length'] extends Arr2['length'] ? true : false
 export type _constraintSameLengthArr < T extends any , N extends number ,Acc extends readonly T[] = readonly [] > =N extends Acc["length"] ? Acc : _constraintSameLengthArr<T,N,readonly  [T,...Acc]>
@@ -421,7 +420,13 @@ export type t_emptyNDArray = t_empty1DArray | NestedArray<t_empty1DArray>
 
 
 export type arrAdd < T extends readonly any[] , Add extends any  > = T extends  readonly [any,... infer R] ? [T[0],...arrAdd<R,Add>] :[] 
-export type arrToUnion <T extends readonly any[] > = T extends  readonly [any,... infer R] ? R extends readonly any[] ? T[0] | arrToUnion <R> : never : string[] extends T ? T[number] : never
+
+//TODO :
+  type _arrToUnion_ <T extends readonly any[] > = T extends  readonly [any,... infer R] ? R extends readonly any[] ? T[0] | _arrToUnion_ <R> : never : T extends readonly string[] ? T[number] : never
+  export type arrToUnion <T extends readonly any[]> =  T extends undefined ? never : 
+  T extends  readonly [any,... infer R] ? R extends readonly any[] ? T[0] | arrToUnion <R> : never : 
+  T[number] extends infer A ? A extends string ?  A  : never : never
+
 export type arrToUnion_add <T extends readonly any[] , Add extends any  > = arrAdd <arrToUnion < T > , Add>
 
 export type arrArrAdd < T extends readonly (readonly any[]) [] , Add extends readonly any[] =[] > = T extends  readonly [readonly any[],... infer R] ? R extends readonly any[] ? [[...Add,...T[0]],...arrArrAdd<R,Add>] :[] :[]

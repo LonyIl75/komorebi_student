@@ -112,9 +112,9 @@ export class HABaseServiceRoute<SN extends string , R extends string , t_str_arr
         return `transformAfterGetServiceFunction(req:req_${this._routeName} , res : res_${this._routeName}, _json:Awaited<ReturnType< typeof HA_${majFirstChar(this._serviceName)}Service${majFirstChar(this._routeName)}.provider[t_str_getServiceFunction]>> )  {
             const url_toScrap = req.header.url_toScrap || req.header.url
             let json = ${this.extends.id}.embedItems(_json,url_toScrap,this.getIdRequiredField(item_field))
-            if(res.body?.result ) res.body.result[url_toScrap] = {...res.body.result[url_toScrap],...json[url_toScrap]}
+            res.body.result[url_toScrap] = {...res.body?.result?.[url_toScrap] || {},...json}
             else res.body.result = json
-            res.body.nexts=${this.extends.id}._bodyNextsJson(json[url_toScrap],this.getIdRequiredField(pagination_field[0]),this.getIdRequiredField(pagination_field[1]))
+            res.body.nexts=${this.extends.id}._bodyNextsJson(res.body.result,this.getIdRequiredField(pagination_field[0]),this.getIdRequiredField(pagination_field[1]))
             return [req,res]as ReqAndResType<req_${this._routeName} , res_${this._routeName}>
         }` as const 
     }
@@ -185,7 +185,7 @@ export class HAServiceNextPage<SN extends string , R extends string, t_str_arr_f
     transformAfterGetNextPage(){
         return `transformAfterGetNextPage(req:req_${this._routeName} , res : res_${this._routeName}, json:Awaited<ReturnType< typeof HA_${majFirstChar(this._serviceName)}Service${majFirstChar(this._routeName)}.provider[t_str_getNextPage]>> )  {
             const url_toScrap = req.header.url_toScrap || req.header.url
-            res.body.nexts = ${this.extends.id}._bodyNextsJson(json[url_toScrap],"${majFirstChar(this._routeName)}${pagination_field[0]}","${majFirstChar(this._routeName)}${pagination_field[1]}")
+            res.body.nexts = ${this.extends.id}._bodyNextsJson(json[url_toScrap]],this.getIdRequiredField(pagination_field[0]),this.getIdRequiredField(pagination_field[1]))
             return [req,res]as ReqAndResType<req_${this._routeName} , res_${this._routeName}>
         }`as const 
     }

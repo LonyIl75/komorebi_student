@@ -711,7 +711,7 @@ export class DatabaseLocalAndRemote<T extends string=string> implements t_Databa
   
     async connect(){
         await Promise.resolve()
-        //await Promise.all([this.getLocalDatabase().connect(),this.getRemoteDatabase().connect()])
+        await Promise.all([this.getLocalDatabase().connect(),this.getRemoteDatabase().connect()])
     }
 
     setPrismaUrl = (url_remote:string,url_local : string ) => {

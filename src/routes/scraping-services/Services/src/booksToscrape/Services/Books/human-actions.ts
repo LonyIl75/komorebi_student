@@ -32,7 +32,7 @@ import { BrowsersPool, getBrowsers } from "@/utils/browser/BrowsersPool.js";
 import { deepCloneJson, deepCloneJsonIfIsObject } from "@shared/m_json.js";
 import { t_df_arr_fct_name_withNextPage, df_arr_fct_name_withNextPage } from "@/routes/scraping-services/class/Config/Pipeline/config_actionNext.js";
 import { getUrlToScrapItem, str_getLocalFunction, str_getServiceFunction, t_str_getNextPage, t_str_getServiceFunction, t_str_nextPage } from "@/routes/scraping-services/class/Config/Pipeline/HA/types.js";
-import { IJson, t_getAllMethodsOfObject } from "@shared/m_object.js";
+import { IJson, isNotEmptyJson, t_getAllMethodsOfObject } from "@shared/m_object.js";
 import { date_field, item_field, pagination_field, t_union_required_field } from "@shared/m_regexMapping.js";
 import regex_url, { t_regex_url_fctEmbeds } from "@shared/validate-url/regexp.js";
 import { EmbeddingPASGroup, embedCapturingGroupStrOrRegex } from "@shared/m_regex_prefixAndSuffix.js";
@@ -136,9 +136,8 @@ class HA_BooksToscrapeServiceBooks  extends  AHA_Service<t_serviceName_booksTosc
 
         const url_toScrap = req.header.url_toScrap || req.header.url
         let json = AHA_Service.embedItems(_json,url_toScrap,this.getIdRequiredField(item_field))
-        if(res.body?.result ) res.body.result[url_toScrap] = {...res.body.result[url_toScrap],...json[url_toScrap]}
-        else res.body.result = json
-        res.body.nexts=AHA_Service._bodyNextsJson(json[url_toScrap],this.getIdRequiredField(pagination_field[0]),this.getIdRequiredField(pagination_field[1]))
+        res.body.result[url_toScrap] = {...res.body?.result?.[url_toScrap] || {},...json}
+        res.body.nexts=AHA_Service._bodyNextsJson(res.body.result,this.getIdRequiredField(pagination_field[0]),this.getIdRequiredField(pagination_field[1]))
         return [req,res]as ReqAndResType<req_books , res_books>
 
     }
@@ -169,7 +168,7 @@ class HA_BooksToscrapeServiceBooks  extends  AHA_Service<t_serviceName_booksTosc
     transformAfterGetNextPage(req:req_books , res : res_books, json:Awaited<ReturnType< typeof HA_BooksToscrapeServiceBooks.provider[t_str_getNextPage]>> )  {
 
         const url_toScrap = req.header.url_toScrap || req.header.url
-        res.body.nexts = AHA_Service._bodyNextsJson(json[url_toScrap],"BooksNextPagination","BooksSelectedPagination")
+        res.body.nexts = AHA_Service._bodyNextsJson(json[url_toScrap],this.getIdRequiredField(pagination_field[0]),this.getIdRequiredField(pagination_field[1]))
 
         return [req,res]as ReqAndResType<req_books , res_books>
     }
