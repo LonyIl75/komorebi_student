@@ -24,8 +24,8 @@ class PipelineService implements IPipeline{
          ] ;
 
 
-         const arrOfScrapingJsonType_only_${this._serviceName}Route = [scrapingComponent_${this._serviceName}_books] as const 
-         type t_arrOfScrapingJsonType_only_${this._serviceName}Route = [t_scrapingComponent_${this._serviceName}_books]
+         const arrOfScrapingJsonType_only_${this._serviceName}Route = [scrapingComponent_${this._serviceName}_startupsMtp] as const 
+         type t_arrOfScrapingJsonType_only_${this._serviceName}Route = [t_scrapingComponent_${this._serviceName}_startupsMtp]
 
          export const arrOfScrapingJsonType_${this._serviceName}Route = [...arrOfScrapingJsonType_baseService_${this._serviceName}Route,${this._serviceName}_ScrapingJsonTypeHome,...arrOfScrapingJsonType_only_${this._serviceName}Route] as const;
          type t_arrOfScrapingJsonType_${this._serviceName}Route = [...t_arrOfScrapingJsonType_baseService_${this._serviceName}Route,t_${this._serviceName}_ScrapingJsonTypeHome,...t_arrOfScrapingJsonType_only_${this._serviceName}Route];

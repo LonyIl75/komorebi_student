@@ -1,7 +1,7 @@
-import { serviceName_booksToscrape } from "@/controller/scraping-services/Services/Config/booksToscrape/config.js";
-import BooksToscrapeRoutes from "./src/booksToscrape/Routes.js";
+import { serviceName_lespepitestech } from "@/controller/scraping-services/Services/Config/lespepitestech/config.js";
+import LespepitestechRoutes from "./src/lespepitestech/Routes.js";
 
 export const json_ServiceRoutes = {
     //#ADD NEW SERVICE HERE
-    [serviceName_booksToscrape] :  BooksToscrapeRoutes,
+    [serviceName_lespepitestech] :  LespepitestechRoutes,
 } as const 

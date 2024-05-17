@@ -1,7 +1,7 @@
-import { serviceName_booksToscrape } from "@/controller/scraping-services/Services/Config/booksToscrape/config.js";
-import booksToscrapeLocalAndRemoteDatabase from "./booksToscrape/database.js";
+import { serviceName_lespepitestech } from "@/controller/scraping-services/Services/Config/lespepitestech/config.js";
+import lespepitestechLocalAndRemoteDatabase from "./lespepitestech/database.js";
 
 export const json_localAndRemoteDatabase = {
     // #ADD NEW SERVICE HERE
-    [serviceName_booksToscrape] :  booksToscrapeLocalAndRemoteDatabase,
+    [serviceName_lespepitestech] :  lespepitestechLocalAndRemoteDatabase,
 } as const 

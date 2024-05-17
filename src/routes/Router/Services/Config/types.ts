@@ -1,11 +1,11 @@
-import { serviceName_booksToscrape } from "@/controller/scraping-services/Services/Config/booksToscrape/config.js";
+import { serviceName_lespepitestech } from "@/controller/scraping-services/Services/Config/lespepitestech/config.js";
 import { t_getReq, t_getRes, cst_ReqAndResType, getReq, getRes } from "../../../scraping-services/class/utils/Data/ReqResRoute.js";
 import { t_serviceName_MainService, getUnionRouteOfServiceFromServiceName ,getPropsFromServiceName_ServiceRoutes} from "@/controller/scraping-services/Services/Config/types.js";
-import { t_json_ReqResType_booksToscrape } from "./booksToscrape/ConfigReqRes.js";
+import { t_json_ReqResType_lespepitestech } from "./lespepitestech/ConfigReqRes.js";
 
 export type t_json_main_service_ReqRes ={
     //#ADD NEW SERVICE HERE
-    [serviceName_booksToscrape] : t_json_ReqResType_booksToscrape
+    [serviceName_lespepitestech] : t_json_ReqResType_lespepitestech
 }
 
     

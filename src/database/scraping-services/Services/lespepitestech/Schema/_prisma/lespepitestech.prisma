@@ -1,0 +1,9 @@
+generator client {
+  provider = "prisma-client-js"
+  output = env("LESPEPITESTECH_GEN_CLIENT_OUTPUT")
+}
+
+datasource db {
+  provider = env("LESPEPITESTECH_DAT_DB_PROVIDER")
+  url = env("LESPEPITESTECH_DAT_DB_URL")
+}

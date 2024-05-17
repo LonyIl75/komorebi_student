@@ -25,6 +25,10 @@ export type t_jsonAddIfNotExist < T extends IJson , T2  extends IJson > = T & Om
 export const jsonAddIfNotExist = < T extends IJson , T2  extends IJson > (json : T , jsonToAdd : T2) : t_jsonAddIfNotExist<T,T2> => {
     return {...jsonToAdd,...json}
 }
+
+export type t_jsonFilterUndefinedField < T extends IJson , K extends keyof T = keyof T > = 
+Omit<T, {[k in K]: T[k] extends undefined ? k : never}[K]>
+
 export type jsonGetIfExistPropNameElseOther < T extends IJson , propName extends t_indexable_key , Other > = propName extends  keyof T  ? unknown extends T[propName]  ? Other : T[propName] : Other
 export type jsonGetIfExistPropNamesElseOther < T extends IJson , propNames extends readonly t_indexable_key[] , Other > = 
 propNames extends readonly [infer A,...infer BR] ? A extends t_indexable_key ? BR extends readonly t_indexable_key[] ?

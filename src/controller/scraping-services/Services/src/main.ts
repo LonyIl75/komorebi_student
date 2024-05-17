@@ -1,11 +1,11 @@
-import { serviceName_booksToscrape } from "../Config/booksToscrape/config.js"
-import { BooksToscrapeMainService, doServiceBooksToscrape } from "./booksToscrape/BookToscrape.js"
+import { serviceName_lespepitestech } from "../Config/lespepitestech/config.js"
+import { LespepitestechMainService, doServiceLespepitestech } from "./lespepitestech/Lespepitestech.js"
 
 
 
 export const json_MainService = {
     //#ADD NEW SERVICE HERE
-    [serviceName_booksToscrape] :  await BooksToscrapeMainService,
+    [serviceName_lespepitestech] :  await LespepitestechMainService,
 } as const 
 
 
@@ -13,5 +13,5 @@ export const json_MainService = {
 
 export const json_doService = {
     //#ADD NEW SERVICE HERE
-    [serviceName_booksToscrape] :  doServiceBooksToscrape,
+    [serviceName_lespepitestech] :  doServiceLespepitestech,
 } as const 

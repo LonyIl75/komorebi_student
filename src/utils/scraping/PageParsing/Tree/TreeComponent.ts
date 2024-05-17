@@ -196,7 +196,7 @@ export default class mTree<unionPathId extends string ,ArrUnionClassNameType ext
         for (const id of id_childs) {
           arr_res.push(this.getJsonValue(trad_map,{cur_node : this.nodes[id],cur_idx : cur_idxPath.regex_idx,cur_trad_paths:[trad_paths[0]]},var_isGetValue))// cur_idxPath[2] : current id regex
         }
-        //cur_node.className == "BooksProductDetails"
+        //cur_node.className == "StartupsMtpProductDetails"
         arr_res = arr_res.filter((res)=>res!==null)
 
         const fct_onlyOne =  <_isOne extends true = true ,_TChild extends t_res<_isOne>["res_childs"] =t_res<_isOne>["res_childs"] > (arr_res :t_arr_res ,acc : _TChild, ... args:[{_path:t__path,trad_path:t_trad_path,}] ) => {

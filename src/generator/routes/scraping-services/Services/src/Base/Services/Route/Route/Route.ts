@@ -25,7 +25,7 @@ export class RouteService<SN extends string , R extends string  > implements IRo
     
             if(${majFirstChar(this._serviceName)}Service${majFirstChar(this._routeName)}.databaseLocalAndRemote === undefined ){
                 ${majFirstChar(this._serviceName)}Service${majFirstChar(this._routeName)}.databaseLocalAndRemote = _databaseLocalAndRemote
-                HA_BooksToscrapeServiceBooks.getDatabaseLocalAndRemote = ()=>${majFirstChar(this._serviceName)}Service${majFirstChar(this._routeName)}.databaseLocalAndRemote
+                HA_LespepitestechServiceStartupsMtp.getDatabaseLocalAndRemote = ()=>${majFirstChar(this._serviceName)}Service${majFirstChar(this._routeName)}.databaseLocalAndRemote
             }
             if(_databaseLocalAndRemote == undefined) throw new Error("address is undefined")
     

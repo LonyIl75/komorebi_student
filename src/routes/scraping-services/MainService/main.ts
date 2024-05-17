@@ -1,16 +1,16 @@
-import { serviceName_booksToscrape } from "@/controller/scraping-services/Services/Config/booksToscrape/config.js";
-import { str_login } from "../Services/src/booksToscrape/Services/Login/human-actions.js";
-import { str_main } from "../Services/src/booksToscrape/Services/Main/human-actions.js";
-import { str_books } from "../Services/src/booksToscrape/Services/Books/human-actions.js";
-import { BooksToscrapeServiceBooks } from "../Services/src/booksToscrape/Services/Books/Books.js";
-import { BooksToscrapeServiceLogin } from "../Services/src/booksToscrape/Services/Login/Login.js";
-import { BooksToscrapeServiceMain } from "../Services/src/booksToscrape/Services/Main/Main.js";
+import { serviceName_lespepitestech } from "@/controller/scraping-services/Services/Config/lespepitestech/config.js";
+import { str_login } from "../Services/src/lespepitestech/Services/Login/human-actions.js";
+import { str_main } from "../Services/src/lespepitestech/Services/Main/human-actions.js";
+import { str_startupsMtp } from "../Services/src/lespepitestech/Services/StartupsMtp/human-actions.js";
+import { LespepitestechServiceStartupsMtp } from "../Services/src/lespepitestech/Services/StartupsMtp/StartupsMtp.js";
+import { LespepitestechServiceLogin } from "../Services/src/lespepitestech/Services/Login/Login.js";
+import { LespepitestechServiceMain } from "../Services/src/lespepitestech/Services/Main/Main.js";
 
 export const json_serviceRoute = {
     //#ADD NEW SERVICE HERE
-    [serviceName_booksToscrape] :{
-      [str_login]:BooksToscrapeServiceLogin,
-      [str_main]:BooksToscrapeServiceMain,
-      [str_books]:BooksToscrapeServiceBooks,
+    [serviceName_lespepitestech] :{
+      [str_login]:LespepitestechServiceLogin,
+      [str_main]:LespepitestechServiceMain,
+      [str_startupsMtp]:LespepitestechServiceStartupsMtp,
     }
   }

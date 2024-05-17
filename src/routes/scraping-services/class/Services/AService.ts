@@ -27,6 +27,7 @@ import { JsonWithScrapingComponents, t_ScrapingComponent_any } from '@/utils/scr
 import { _validateRemoteAddress, _validateRoute, _validateServiceName, t_req_any, t_res_any } from '@/controller/scraping-services/class/constraints.js';
 import { t_add_bodyUrl } from '@shared/validate-url/_types.js';
 import { str_getLocalFunction } from '../Config/Pipeline/HA/types.js';
+import { createAddress } from '@shared/routePath.js';
 
 export const str_process = ServiceConfig.df[str_doProcessFunctionName] 
 export type t_str_process = typeof str_process
@@ -157,7 +158,8 @@ TServiceF extends t_service_functions<SN,_R,T1> = t_service_functions<SN,_R,T1>
     async process( req:Parameters<TServiceF[t_str_process]>[0] & t_req_any ,res:Parameters<TServiceF[t_str_process]>[1] & t_res_any ) { 
         req.body.optionsScraping = this.initIfNotSetOptionsScraping(req.body?.optionsScraping)
         req.header.client_id = getDfClientIdIfUndefined()
-        req.header.url = req.header.url/*createAddress([this.getAddress()],req.header.url)*/;res.header.url = req.header.url;//TODO test 
+        //A FAIRE req.header.url != default  req.header.url better then logical op checking
+        req.header.url = req.header.url || createAddress([this.getAddress()],req.header.url);res.header.url = req.header.url;//TODO test 
         res.body.result = incorrect_cookie() 
         console.log("res_local",res.body.result)
         if(isIncorrect_cookie(res.body.result )) await this.process_serviceFunction( req,res)

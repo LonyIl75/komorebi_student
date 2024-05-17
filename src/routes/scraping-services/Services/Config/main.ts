@@ -1,16 +1,16 @@
-import { serviceName_booksToscrape } from "@/controller/scraping-services/Services/Config/booksToscrape/config.js";
-import { json_booksToscrapeScrapingJsonType } from "./booksToscrape/Config.js";
-import { json_booksToscrapeConfigPipeline } from "./booksToscrape/Pipeline.js";
+import { serviceName_lespepitestech } from "@/controller/scraping-services/Services/Config/lespepitestech/config.js";
+import { json_lespepitestechScrapingJsonType } from "./lespepitestech/Config.js";
+import { json_lespepitestechConfigPipeline } from "./lespepitestech/Pipeline.js";
 
 
 export const json_scrapingJsonType = {
     //#ADD NEW SERVICE HERE
-    [serviceName_booksToscrape] :json_booksToscrapeScrapingJsonType,
+    [serviceName_lespepitestech] :json_lespepitestechScrapingJsonType,
 } as const ;
 
 
 
 export const json_ConfigPipeline = {
     //#ADD NEW SERVICE HERE
-    [serviceName_booksToscrape] :json_booksToscrapeConfigPipeline,
+    [serviceName_lespepitestech] :json_lespepitestechConfigPipeline,
 } as const ;

@@ -1,0 +1,1 @@
+export const lespepitestech_imgImage_selectors =[`img[class*="image"]`]

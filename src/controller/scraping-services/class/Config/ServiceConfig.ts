@@ -62,6 +62,7 @@ export class __ServiceConfig<SN extends _validateServiceName  , R extends _valid
         this.idRoutes  =  idRoutes ;
         this.idRouteAndRemoteAddresss = idRouteAndRemoteAddresss;
         this.doProcessFunctionName = doProcessFunctionName;
+        //TODO : use idRouteAndRemoteAddresss to retrieve remoteAddress from idRoutes (see TODO in config service) , atm this is ${string}/${idRoute}
         this.service_address =  getServiceAddress<SN, typeof remoteName , R , T1  >(this.serviceName,this.remoteName , this.remoteAddress , idRoutes )  as serviceAdress <T1[number] , string , string> ;
         const _tmp :[H] = [idRoute_home]
         this.url_main_page =  getScrapingPageUrl<R,  [H]>(__ServiceConfig.isLocal() , this.remoteAddress , _tmp)[_tmp.length-1] as string  ;
