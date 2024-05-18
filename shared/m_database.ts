@@ -487,6 +487,7 @@ export interface IDatabaseAndPrismaMeta<T extends t_databaseMeta_type ,D extends
 
 type t_initFunction = (_:t_json_replaceOrStrRegex<-1>)=> ReturnType<typeof writeMergedSchema >
 
+//TODO : shared/m_database.ts -> src/database/scraping-services/utils/prisma.ts -> shared/m_database.ts
 export class DatabaseAndPrismaMeta<T extends t_databaseMeta_type , D extends IDatabaseMetaDB<T>> extends ADatabaseMetaAndConnection<T,D,_PrismaClient,t_prismaClient_options,"Prisma"> implements IDatabaseAndPrismaMeta<T,D> {
     prisma_meta : DatabaseMetaPrisma;
     database_meta : D;
@@ -711,7 +712,7 @@ export class DatabaseLocalAndRemote<T extends string=string> implements t_Databa
   
     async connect(){
         await Promise.resolve()
-        await Promise.all([this.getLocalDatabase().connect(),this.getRemoteDatabase().connect()])
+        await Promise.all([/*this.getLocalDatabase().connect(),*/this.getRemoteDatabase().connect()])
     }
 
     setPrismaUrl = (url_remote:string,url_local : string ) => {

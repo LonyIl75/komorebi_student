@@ -15,14 +15,14 @@ import { convertStrToRegexStr } from "@shared/m_regex.js";
 
 const protocols = [str_http,str_https] as const
 const regex_head_http_https = getUnionNonMatchingGroups(...protocols) ;
-const regex_subdomain = "[-a-zA-Z0-9@:%_\\+~#=]{1,256}"  as const
+const regex_subdomain = "[-a-zA-Z0-9@:%_\\+~#=]{1,256}\." as const
 const regex_sld = "[-a-zA-Z0-9@:%_\\+~#=]{1,256}"  as const
 const regex_domain_tld = "[a-zA-Z0-9()]{1,6}" as const ;
 
 const arrKeys_domain = [str_subdomain,str_sld,str_tld] as const
 const regex_schema_domain   = [
-    {regex:regex_subdomain,name: arrKeys_domain[0]},
-    {regex:regex_sld,name: arrKeys_domain[1],joinChar:"\\."},
+    {regex:regex_subdomain,name: arrKeys_domain[0],op:"?"},
+    {regex:regex_sld,name: arrKeys_domain[1],joinChar:""},
     {regex:regex_domain_tld,name: arrKeys_domain[2],joinChar:"\\."}
 ] as const
 
@@ -35,9 +35,9 @@ const regex_schema_protocolAndDomain = [
     //{regex:`${regex_www}\\.`,name : arrKeys_wwwsDomain[1] ,operator:"?"},
     {regex:regex_domain}] as const 
 
-    
-const str_protocolAndDomain = "protocolAndDomain" as const
-type t_str_protocolAndDomain = typeof str_protocolAndDomain
+  
+export const str_protocolAndDomain = "protocolAndDomain" as const
+export type t_str_protocolAndDomain = typeof str_protocolAndDomain
 const regex_protocolAndDomain = new CompositeRegexp<t_str_protocolAndDomain , typeof arrKeys_protocolAndDomain,typeof regex_schema_protocolAndDomain  >(str_protocolAndDomain , regex_schema_protocolAndDomain , arrKeys_protocolAndDomain)
 
 

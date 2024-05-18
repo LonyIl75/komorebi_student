@@ -15,10 +15,10 @@ import { selectors, t_ElementHN, t_pageOrElementHN, t_resSelector } from "@/util
 import { _IJsonComponents } from "@/utils/scraping/PageParsing/Schema/FunctionalWrapperJsonComponents/_JsonComponents/_JsonComponents.js"
 import { hours, time } from "@shared/hours.js"
 import { MapRegexToIdPath, date_field, pagination_field, t_pagination_field, t_required_field, t_union_required_field } from "@shared/m_regexMapping.js"
-import { t_agreg_path, unjoin_pathRoutes } from "@shared/routePath.js"
+import { char_join_pathRoutes, t_agreg_path, unjoin_pathRoutes } from "@shared/routePath.js"
 import { NodeComponentValue, str_attributes } from "@/utils/scraping/PageParsing/Tree/NodeComponent.js"
 import { f_clicking } from "@/utils/scraping/primitives/human_actions.js"
-import { arrayOnlyIndices, convertToArray, isStrictArray } from "@shared/m_array.js"
+import { arrayOnlyIndices, convertToArray, isArray, isNullArray, isStrictArray } from "@shared/m_array.js"
 import { t_df_arr_fct_name, str_getNextPage, t_str_getNextPage, str_transformAfterGetNextPage, str_nextPage, str_transformAfterNextPage, str_getLocalFunction, str_getServiceFunction, str_save_serviceFunction, str_transformAfterGetServiceFunction, getUrlToScrap, t_str_nextPage, getUrlToScrapItem, t_str_save_serviceFunction } from "./types.js"
 import { createSubJsonFromArrRegex, deepCloneJson, getSubsetKeysFromArrRegex } from "@shared/m_json.js"
 import { getRootPropFromResValue, getRootPropFromValue, isGetValue, str_json_value, t_resValue } from "@/utils/scraping/PageParsing/Tree/TreeComponent.js"
@@ -27,6 +27,7 @@ import { t_req_any, t_res_any } from "@/controller/scraping-services/class/const
 import { t_strRegex } from "@shared/_regexp.js"
 import { getBodyUrlAndParamsReq } from "@shared/validate-url/functions.js"
 import { t_url } from "@shared/validate-url/_types.js"
+import { enum_prisma_op } from "@/database/scraping-services/utils/prisma.js"
 
 //TODO-IMP refactor
 
@@ -209,7 +210,7 @@ implements t_IAHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassN
                 await mpage.goto(url_toScrap.slice(0,url_toScrap.length-2))
                 await time.timer(3000);
                 await mpage.goto(url_toScrap)
-                mpage.cur_url = url_toScrap
+                mpage.setCurUrl(url_toScrap);
             }
             
 
@@ -399,7 +400,7 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
                     let url = mpage.cur_url
                     const urls = Object.values(json_attribute_url)
                     for(let i = 0 ; i<urls.length && !success_goto;i++){
-                        url = urls[i]
+                        url = urls[i].startsWith(char_join_pathRoutes) ? mpage.base_url + urls[i] : urls[i]
                         success_goto = await mpage.goto(url).then(()=>true).catch(()=>false)
                     }
                     if(success_goto) {//throw new Error(`No url found for ${nodeComponentValue.description}`)
@@ -449,7 +450,7 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
                 rows:rows,
             }
         }
-
+        //TODO : allow array , atm on peut pas array sur sqlite car c purement relationnel donc il faut créer une relation , il faut modifier cette fonction pour que quand elle detecte que c'est un array elle creer tous les samples dans la remote database en le likant a l'objet courant 
         static async _save_serviceFunction <TSample extends IJson ,TDbName extends string , TColId extends keyof TSample , TColDate extends keyof TSample >(param : t_AHA_Service_ParamSavePage<TSample , TDbName , TColId , TColDate>){
                         
             const {prismaClient,name:database_name ,id:strId} = param.database
@@ -481,23 +482,35 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
             
             let createAndUpdateArr: {update:TSample[],create:TSample[]} = {update:[],create:[]}
 
+            const fct_shortCut_nested = (sample , op : enum_prisma_op ) => Object.keys(sample).reduce((acc,key_sample)=>{
+                const cur = sample[key_sample] 
+                acc[key_sample]= isArray(cur) ? isNullArray(cur) ? null : {[op] : cur} : cur
+                if(acc[key_sample] === null)delete acc[key_sample]
+                return acc
+            },{})
+
             createAndUpdateArr = rows.reduce((_createAndUpdateArr,sample) => {
                 const existingSample = existingSamples[sample[strId]]
                 if(existingSample ){
                     if(_isNullOrUndefined(period) || existingSample[strDate] + period >= sample[strDate] ){
-                        _createAndUpdateArr["update"].push(sample)
+                        _createAndUpdateArr["update"].push(fct_shortCut_nested(sample,enum_prisma_op["update"]) as TSample)
                     }
                 }else {
-                    _createAndUpdateArr["create"].push(sample)
+                    _createAndUpdateArr["create"].push(fct_shortCut_nested(sample,enum_prisma_op["create"]) as TSample)
                 }
                 return _createAndUpdateArr
             },createAndUpdateArr)
 
-            const promise_create = [
+            const promise_create = 
                 createAndUpdateArr["create"].length ? 
-                prismaClient[database_name].createMany({data: createAndUpdateArr["create"]}) 
-                : Promise.resolve()
-            ]
+                //prismaClient[database_name].createMany({data: createAndUpdateArr["create"]}) 
+                createAndUpdateArr["create"].map((sample)=>
+                    prismaClient[database_name].create({
+                            data: sample,
+                    })
+                ) 
+                : [Promise.resolve()]
+            
 
             const promise_update = createAndUpdateArr["update"].length ? createAndUpdateArr["update"].map((sample)=>
                 prismaClient[database_name].update({

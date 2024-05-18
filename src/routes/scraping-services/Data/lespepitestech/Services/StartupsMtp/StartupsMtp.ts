@@ -25,8 +25,11 @@ import { embedCapturingGroupStrOrRegex, getUnionNonMatchingGroups } from "@share
 const _arr_classNameType_lespepitestech_startupsMtp = [
     rootClassName,"ContainerGrid","Grid",
     "ContainerPagination","Pagination","SelectedPagination","NextPagination",
-    "Item","Type"
-] as const  
+    "Item",
+        "Type","ItemSummary","ItemContentBottom",
+            "ItemLink","ItemCategories",
+                "ItemCategory",
+] as const   
 
 export const arr_classNameType_lespepitestech_startupsMtp = buildArrClassNameType(str_StartupsMtp,_arr_classNameType_lespepitestech_startupsMtp)
 export type t_arr_classNameType_lespepitestech_startupsMtp = typeof arr_classNameType_lespepitestech_startupsMtp
@@ -52,8 +55,13 @@ export const arr_lespepitestech_startupsMtp  =
         getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,7>(arr_classNameType_lespepitestech_startupsMtp,7),
         getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,2,[3]>(arr_classNameType_lespepitestech_startupsMtp,2,[3]),
         getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,3,[8]>(arr_classNameType_lespepitestech_startupsMtp,3,[8]),
-        getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,8,[9]>(arr_classNameType_lespepitestech_startupsMtp,8,[9]),
+        getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,8,[9,10,11]>(arr_classNameType_lespepitestech_startupsMtp,8,[9,10,11]),
         getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,9>(arr_classNameType_lespepitestech_startupsMtp,9),
+        getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,10>(arr_classNameType_lespepitestech_startupsMtp,10),
+        getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,11,[12,13]>(arr_classNameType_lespepitestech_startupsMtp,11,[12,13]),
+        getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,12>(arr_classNameType_lespepitestech_startupsMtp,12),
+        getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,13,[14]>(arr_classNameType_lespepitestech_startupsMtp,13,[14]),
+        getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,14>(arr_classNameType_lespepitestech_startupsMtp,14),
     ] as const
 
 export type t_arr_lespepitestech_startupsMtp = typeof arr_lespepitestech_startupsMtp
@@ -81,8 +89,7 @@ const lespepitestech_startupsMtp_helpers = getLespepitestechHelpers<t_classNameT
 const __IJsonComponents_leaf_lespepitestech_startupsMtp : _IJsonComponents<t_classNameType_leaf_lespepitestech_startupsMtp> = {
  
     [arr_classNameType_lespepitestech_startupsMtp[6]]:{
-        childs_selectors : Component.df[str_childs_selectors],
-        value_validation_strRegex : embedCapturingGroupStrOrRegex("\\S[\\S ]+\\S",true)
+        childs_selectors : Component.df[str_childs_selectors]
     },
     [arr_classNameType_lespepitestech_startupsMtp[7]]:{
         childs_selectors : Component.df[str_childs_selectors],
@@ -90,6 +97,18 @@ const __IJsonComponents_leaf_lespepitestech_startupsMtp : _IJsonComponents<t_cla
     },
     [arr_classNameType_lespepitestech_startupsMtp[9]]:{
         childs_selectors : Component.df[str_childs_selectors],
+    },
+    [arr_classNameType_lespepitestech_startupsMtp[10]]:{
+        childs_selectors : Component.df[str_childs_selectors],
+    },
+    [arr_classNameType_lespepitestech_startupsMtp[12]]:{
+        childs_selectors : Component.df[str_childs_selectors],
+        [str_value_init] : nil_value,
+        childs_attributes : [{[str_attribute_name] : "href"}],
+    },
+    [arr_classNameType_lespepitestech_startupsMtp[14]]:{
+        childs_selectors : Component.df[str_childs_selectors],
+        value_validation_strRegex : embedCapturingGroupStrOrRegex("\\S[\\S ]+\\S",true)
     }
 }
 
@@ -107,7 +126,7 @@ const __IJsonComponents_lespepitestech_startupsMtp : _IJsonComponents<t_union_cl
                                     [[
                                             {selector:Selector.cst_onePropAndTagg(classProp,'row',"ol",containOp)}
                                     ],[
-                                            {selector:Selector.cst_onePropAndTagg(classProp,'u-grid',"article",containOp)}
+                                            {selector:Selector.cst_onePropAndTagg(classProp,'view-content',"div",containOp)}
                                     ]],
 
                                     [[
@@ -126,7 +145,7 @@ const __IJsonComponents_lespepitestech_startupsMtp : _IJsonComponents<t_union_cl
     StartupsMtpContainerGrid:{
         childs_selectors : 
             [
-                [Selector.cst_onePropAndTagg(classProp,'row',"ol",containOp).toString(),Selector.cst_onePropAndTagg(classProp,'u-grid',"article",containOp).toString()]
+                [Selector.cst_onePropAndTagg(classProp,'row',"ol",containOp).toString(),Selector.cst_onePropAndTagg(classProp,'view-content',"div",containOp).toString()]
             ]
 
     },
@@ -134,23 +153,49 @@ const __IJsonComponents_lespepitestech_startupsMtp : _IJsonComponents<t_union_cl
         childs_selectors : [...lespepitestech_startupsMtp_helpers.arr_selector_join_arrArr(
             [
                 [[
-                        {selector:Selector.cst_onePropAndTagg("",'',"li")},
-                        {selector:Selector.cst_onePropAndTagg(classProp,'product_pod',"article",containOp)}
+                        {selector:Selector.cst_onePropAndTagg(classProp,'startup-entry',"article",containOp)},
                 ],[
                         {selector:Selector.cst_onePropAndTagg(classProp,'card-product',"div",containOp)}
                 ]]
             ],
-            (arr:string[])=>arr.join(char_child)
+            (arr:string[])=>Selector.cst_onePropAndTagg("",'',"div").toString() + char_child + arr.join(char_child)
         )]
     },
-    StartupsMtpItem:{
-        childs_selectors : [
+    StartupsMtpItem : {
+        childs_selectors :  [...lespepitestech_startupsMtp_helpers.arr_selector_join_arrArr(
             [
-                Selector.cst_onePropAndTagg("",'',"h3").toString(), 
-                Selector.cst_onePropAndTagg(classProp,'card-product-container',"article",containOp).toString()
-            ]
+                [[
+                    {selector:Selector.cst_onePropAndTagg(classProp,'s-e-title',"div",containOp)},
+                    {selector:Selector.cst_onePropAndTagg(classProp,'s-e-title-c',"div",containOp)},
+                    {selector:Selector.cst_onePropAndTagg("",'',"h3")}
+                ]],[[
+                    {selector:Selector.cst_onePropAndTagg(classProp,'s-u-summary',"div",containOp)}
+                ]],[[
+                    {selector:Selector.cst_onePropAndTagg(classProp,'lpt-card-bottom',"div",containOp)},
+                ]]
             
-        ]
+            ],(arr:string[])=>Selector.cst_onePropAndTagg(classProp,'s-e-content',"div",containOp).toString() + char_child + arr.join(char_child)) ]
+    },
+
+    StartupsMtpItemContentBottom: {
+        childs_selectors :  [...lespepitestech_startupsMtp_helpers.arr_selector_join_arrArr(
+            [
+                [[
+                    {selector:Selector.cst_onePropAndTagg(classProp,'s-e-link',"div",containOp)},
+                    {selector:Selector.cst_onePropAndTagg("",'',"a")}
+                ]],
+                [[
+                    {selector:Selector.cst_onePropAndTagg(classProp,'lpt-dropdown-counter',"div",containOp)},
+                    {selector:Selector.cst_onePropAndTagg(classProp,'lpt-dropdown-all-categories',"ul",containOp)},
+                ]]
+            ],(arr:string[])=>arr.join(char_child)) ]
+    },
+
+    StartupsMtpItemCategories : {
+        childs_selectors : 
+            [
+                [Selector.cst_onePropAndTagg(classProp,'leaf',"li",containOp).toString() + fct_mod_hasDirectChild("a")]
+            ]
     },
 
     StartupsMtpContainerPagination :{
@@ -218,7 +263,7 @@ export type t_json_lespepitestech_startupsMtp = typeof json_lespepitestech_start
 
 export const id_field = `${str_StartupsMtp}Type` as const 
 const required_field = [] as const 
-const optional_field = [] as const
+const optional_field = ["StartupsMtpSummary", "StartupsMtpLink","StartupsMtpCategory"] as const
 
 const arr_pathId = [id_field,...required_field,...optional_field,...pagination_field] as const 
 type t_arr_pathId =  typeof arr_pathId
@@ -235,6 +280,10 @@ const _mapRegexPathIds_lespepitestech_startupsMtp = [
     [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerGrid","StartupsMtpGrid","StartupsMtpItem",["StartupsMtpType"]],["StartupsMtpType"]],
     [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerPagination","StartupsMtpPagination",["StartupsMtpNextPagination"]],[pagination_field[0]]],
     [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerPagination","StartupsMtpPagination",["StartupsMtpSelectedPagination"]],[pagination_field[1]]],
+    [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerGrid","StartupsMtpGrid","StartupsMtpItem",["StartupsMtpItemSummary"]],["StartupsMtpSummary"]],
+    [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerGrid","StartupsMtpGrid","StartupsMtpItem","StartupsMtpItemContentBottom",["StartupsMtpItemLink"]],["StartupsMtpLink"]],
+    [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerGrid","StartupsMtpGrid","StartupsMtpItem","StartupsMtpItemContentBottom","StartupsMtpItemCategories",["StartupsMtpItemCategory"]],["StartupsMtpCategory"]],
+
  ] as const 
 
 //t_mapRegexToIdPath< UnionRegex,UnionIdPath ,ArrUnionClassNameType

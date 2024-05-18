@@ -136,8 +136,16 @@ class HA_LespepitestechServiceStartupsMtp  extends  AHA_Service<t_serviceName_le
 
         const url_toScrap = req.header.url_toScrap || req.header.url
         let json = AHA_Service.embedItems(_json,url_toScrap,this.getIdRequiredField(item_field))
+        let json_item = json["StartupsMtpItem"]
+        json_item = Object.keys(json_item).reduce((acc:any,curr_key:any)=>{
+            let curr_json = json_item[curr_key]
+            curr_json = { ...curr_json, StartupsMtpItemCategory : curr_json["StartupsMtpItemCategory"] ||[]}//?.map((_elm)=>_elm["StartupsMtpCategory"])||[]}
+            acc[curr_key] = curr_json
+            return acc
+        },{})
+        json["StartupsMtpItem"] = json_item
         res.body.result[url_toScrap] = {...res.body?.result?.[url_toScrap] || {},...json}
-        res.body.nexts=AHA_Service._bodyNextsJson(res.body.result,this.getIdRequiredField(pagination_field[0]),this.getIdRequiredField(pagination_field[1]))
+        res.body.nexts=AHA_Service._bodyNextsJson(json,this.getIdRequiredField(pagination_field[0]),this.getIdRequiredField(pagination_field[1]))
         return [req,res]as ReqAndResType<req_startupsMtp , res_startupsMtp>
 
     }

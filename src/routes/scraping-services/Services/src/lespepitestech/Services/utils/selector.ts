@@ -28,7 +28,7 @@ export function waitForLespepitestechPageFullLoading (page:t_pageOrElementHN , m
    return pageLespepitestech_fct_waitForPageFullLoading(page,maxTime,sz_epoch)
 }
 
-export const lespepitestech_mainComponent_selectors = [Selector.cst_onePropAndTagg(classProp,'page_inner',"div",containOp).toString(),] as const  //TODO extract in Data config file type.ts
+export const lespepitestech_mainComponent_selectors = [/*Selector.cst_onePropAndTagg(classProp,'page_inner',"div",containOp).toString(),*/Selector.cst_onePropAndTagg(classProp,'view-content',"div",containOp).toString()] as const  //TODO extract in Data config file type.ts
 
 const pageLespepitestech_fct_getMainComponent = page_fct_getMainComponent(lespepitestech_mainComponent_selectors)
 
@@ -48,7 +48,8 @@ const lespepitestech_loaded_selectors : selectors = [
         [
             {selector:Selector.cst_oneProp(classProp,'page_inner',containOp)},
             {selector:Selector.cst_oneProp(classProp,'row',containOp)},
-            {selector:Selector.cst_oneProp(classProp,'col',containOp)}
+            {selector:Selector.cst_oneProp(classProp,'col',containOp)},
+            {selector:Selector.cst_oneProp(classProp,'view-content',containOp)}
         ]
     ),
 ] 

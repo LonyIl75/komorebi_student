@@ -27,6 +27,7 @@ import { _IJsonComponents } from '../PageParsing/Schema/FunctionalWrapperJsonCom
 import { removeCommentRegex, import_str_regex, getExportedFunctionNameRegex, getExportedClassNameRegex, getVariableNameRegex, getNameOfExportedSet } from '@shared/m_regex_comment.js';
 import { t_strRegex } from '@shared/_regexp.js';
 import { embedBeginOfLineStrOrRegex } from '@shared/m_regex_prefixAndSuffix.js';
+import { getProtocolAndDomain } from '@shared/validate-url/functions.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -81,6 +82,7 @@ T extends _IJsonComponents<unionClassNameType>,
 > {
     page : Page ;
     cur_url : string ;
+    base_url : string ;
 
     scriptsPath : Set<string> = new Set<string>();
     scriptsTagMap : Map<string , FrameAddScriptTagOptions> ;
@@ -108,6 +110,7 @@ T extends _IJsonComponents<unionClassNameType>,
 
     constructor (json:IJsonWithScrapingComponents<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>){
         this.cur_url  =""
+        this.base_url= undefined
         this.scriptsTagMap =   new Map<string , FrameAddScriptTagOptions>(...json.scriptsTagMap)
         this.scriptObjectMap = new ExposedMap<t_exposeObject<any> ,ExposeObject<any>>(...json.scriptObjectMap);
         this.scriptFunctionMap =  new ExposedMap<Function,ExposeFunction>(...json.scriptFunctionMap);
@@ -115,9 +118,17 @@ T extends _IJsonComponents<unionClassNameType>,
        
     }
 
+    setCurUrl(url:string){
+        this.cur_url = url;
+        if(!url.startsWith(this.base_url)) {
+            const {protocolUrl,domainUrl} = getProtocolAndDomain(url);
+            this.base_url = protocolUrl+domainUrl;
+        }
+    }
+
     async goto(url:string){
         await this.page.goto(url);
-        this.cur_url = url;
+        this.setCurUrl(url);
     }
 
     async setEssentialScripts(){

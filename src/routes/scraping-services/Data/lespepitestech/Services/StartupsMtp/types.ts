@@ -31,8 +31,8 @@ export const lespepitestech_startupsMtp_mainOfComponents: IComponent<t_rootClass
         [
             [[
                 {selector:Selector.cst_onePropAndTagg("",'',"html")},
-                {selector:Selector.cst_onePropAndTagg(classProp,'container-fluid page',"div",containOp)},
-                {selector:Selector.cst_onePropAndTagg(classProp,'page_inner',"div",containOp)}
+                {selector:Selector.cst_onePropAndTagg(classProp,'container-fluid',"div",containOp)},
+                {selector:Selector.cst_onePropAndTagg(classProp,'region-content',"div",containOp)}
             ]],
         ],(arr:string[])=>arr.join(" ")
         ),

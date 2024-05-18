@@ -12,4 +12,14 @@ model StartupsMtp {
   id String  @id @default(auto()) @map("_id") @db.ObjectId
   date Int
   StartupsMtpType String @unique
+  StartupsMtpSummary String?
+  StartupsMtpLink_href String?
+  StartupsMtpItemCategory Category[] @relation("StartupsMtp_Category")
+}
+
+model Category {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  StartupsMtpCategory String
+  StartupsMtpId String @db.ObjectId
+  StartupsMtp StartupsMtp @relation("StartupsMtp_Category",fields: [StartupsMtpId], references: [id])
 }

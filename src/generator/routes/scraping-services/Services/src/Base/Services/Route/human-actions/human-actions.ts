@@ -114,7 +114,7 @@ export class HABaseServiceRoute<SN extends string , R extends string , t_str_arr
             let json = ${this.extends.id}.embedItems(_json,url_toScrap,this.getIdRequiredField(item_field))
             res.body.result[url_toScrap] = {...res.body?.result?.[url_toScrap] || {},...json}
             else res.body.result = json
-            res.body.nexts=${this.extends.id}._bodyNextsJson(res.body.result,this.getIdRequiredField(pagination_field[0]),this.getIdRequiredField(pagination_field[1]))
+            res.body.nexts=${this.extends.id}._bodyNextsJson(json,this.getIdRequiredField(pagination_field[0]),this.getIdRequiredField(pagination_field[1]))
             return [req,res]as ReqAndResType<req_${this._routeName} , res_${this._routeName}>
         }` as const 
     }

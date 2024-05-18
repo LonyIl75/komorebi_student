@@ -57,6 +57,14 @@ export const getServicePathClientPrisma = <T extends string> (service_name : T ,
     return joinFilePath(getPathServiceClientPrisma(service_name,isLocal,isDev ),"index.js")
 }
 
+
+export enum enum_prisma_op{
+    "create" = "create",
+    "update" = "update",
+    "delete" = "delete",
+} 
+
+
 type t_arr_leaf_client = readonly ["output"]
 type t_val_leaf_client = t_arr_leaf_client[number]
 type t_arr_leaf_db = readonly ["url","provider"]
@@ -116,13 +124,14 @@ const base_json_replace : t_json_replaceOrStrRegex = {
         }
     }
 
-// A FAIRE ; refactor regex
+// A FAIRE ; refactor regex with jsonRegex
 namespace jsonReplace {
-    export const  getRegexModel = (_key_1 :string , _key_2 :string )=> {
-        const debRegex = [_key_1+" ",_key_2+" ","{"]
+    export const  getRegexModel = (_key_1 :string|RegExp , _key_2 :string|RegExp )=> {
+        const fct = (key :string|RegExp) => key instanceof RegExp ? key.source : convertStrToRegexStr(key)
+        const debRegex = [fct(_key_1)+" ",fct(_key_2)+" ","{"]
         const midRegex = ["([^}]+)"]//getContent
         const endRegex = ["}"]
-        return [...debRegex,...midRegex,...endRegex].reduce((acc,val,index)=>[...acc,debRegex.length==index ? val : convertStrToRegexStr(val)],[]).join("\\s*")
+        return [...debRegex,...midRegex,...endRegex].join("\\s*")
     }
 
     export const joinKey1Key2 = <K1 extends string , K2 extends string > (_key_1 :K1 , _key_2 :K2 ) => {
@@ -195,13 +204,27 @@ const changedSchemas = <SN extends string,TKJV extends   SN|t_JoinChar_underscor
 
 }
 
-const getSingleModel = (str : string , idRoute : string) => {
-    const getModelRegex = jsonReplace.getRegexModel("model",majFirstChar(idRoute))
+const getSingleModel = (str : string , idRoute ?: string ) : null |[string,number,string] => {
+    const reg_modelName = idRoute ? majFirstChar(idRoute) : /([A-Z]\S*)/
+    const getModelRegex = jsonReplace.getRegexModel("model",reg_modelName)
     let content_model = str.match(new RegExp(getModelRegex,"sm"))
-    if(content_model == null) throw new Error("content_model is null")
-    return content_model[0]
-
+    if(content_model == null) return null
+    return idRoute ? [content_model[0],content_model.index,idRoute] : [content_model[0],content_model.index,content_model[0+1]]
 }
+
+
+const getMultipleModel = (str : string , idRoute : string) => {
+    let tmp = getSingleModel(str,idRoute)
+    if(tmp == null) throw new Error(`content_model ${idRoute} is null`)
+    let res = []
+    while(tmp){
+        res.push(tmp)
+        str = str.substring(tmp[1]+tmp[0].length)
+        tmp = getSingleModel(str)
+    }
+    return res
+}
+    
 
 export type t_jsonReplaceValue<SN extends string,TKJV extends SN|t_JoinChar_underscore<[SN,string]> =  SN|t_JoinChar_underscore<[SN,string]> ,TK1 extends t_arr_key_1[number]=t_arr_key_1[number] >  = {[k in TKJV]:t_json_replaceOrStrRegex<-1,TK1>}
 
@@ -326,8 +349,7 @@ const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb
             else {
                 content = mreadFile(getFilePath_prismaFile(service_name,idRoute,df_isLocal,true_isDev))
                 let provider = (content.match(new RegExp(datasource_regex,"sm"))?.[1])?.match(new RegExp(provider_regex,"sm"))?.[2]
-                content = getSingleModel(content, idRoute)
-                
+                content = getMultipleModel(content, idRoute).reduce((acc,_elm)=>`${acc}\n${_elm[0]}`,"")
                 provider = providerDbToType(provider)
                 if(!isDatabaseMeta_type(provider)) throw new Error(`provider ${provider} is not a valid provider`)
 
@@ -336,7 +358,7 @@ const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb
 
                 content = changeModelContent(content,provider,atm_provider)
             }
-            str_tmp = getSingleModel(content, idRoute)
+            str_tmp = getMultipleModel(content, idRoute).reduce((acc,_elm)=>`${acc}\n${_elm[0]}`,"")
             // str_tmp = replacePipeline_model(str_tmp)
             str_tail += "\n"+str_tmp
         }
