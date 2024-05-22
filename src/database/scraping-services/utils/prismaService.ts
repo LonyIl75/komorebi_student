@@ -28,7 +28,8 @@ JV extends t_jsonReplaceValue<SN,TKJV,TK1> = t_jsonReplaceValue<SN,TKJV,TK1> >
 (service_name:SN ,isLocal:boolean,isDev:boolean,renames_prismaFile ?: TKJV[] , json_value ?:IJson, json_replace_value ?:JR ){
     const idRoutes = json_ConfigService[service_name][str_idRoutes]
     let idRoute_home = json_ConfigService[service_name][str_idRoute_home]
-    const nw_idRoutes = idRoutes.reduce((acc,idRoute) =>[...acc, transformRootIdIfAny(idRoute ,idRoute_home)],[] )
+    //@ts-ignore //ts bug 
+    const nw_idRoutes : string[] = idRoutes.reduce((acc,idRoute) =>[...acc, transformRootIdIfAny(idRoute ,idRoute_home)],[]) 
     return writeMergedSchema<SN,TKJV,TK1,TK2,V,isRegex,JR,JV>(service_name ,isLocal,isDev,nw_idRoutes,renames_prismaFile , json_value,json_replace_value)
 }
 

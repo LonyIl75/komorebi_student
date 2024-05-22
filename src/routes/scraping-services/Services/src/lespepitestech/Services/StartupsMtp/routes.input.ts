@@ -1,4 +1,4 @@
-import { AServiceRequest, ServiceRequestBodyBase, ServiceRequestHeaderBase, t_st_AServiceRequest } from "@/routes/scraping-services/class/utils/Data/ServiceRoute.js";
+import { AServiceRequest, ServiceRequestBodyBase, ServiceRequestHeaderBase, buildSaved, t_st_AServiceRequest } from "@/routes/scraping-services/class/utils/Data/ServiceRoute.js";
 import { EmptyInit, AHaveSerializer, haveSerializerAndEmptyInit } from "@shared/m_json.js";
 import { IJson } from "@shared/m_object.js";
 import { t_verifyStatic } from "@shared/type.js";
@@ -17,7 +17,7 @@ import { t_verifyStatic } from "@shared/type.js";
     
     isTypeof = _req_startupsMtp.isTypeof
 
-    constructor(header : ServiceRequestHeaderBase= new ServiceRequestHeaderBase(),body : ServiceRequestBodyBase = new ServiceRequestBodyBase()) {
+    constructor(header : ServiceRequestHeaderBase= new ServiceRequestHeaderBase(),body : ServiceRequestBodyBase = ServiceRequestBodyBase.fromJson({...ServiceRequestBodyBase.df,saved:buildSaved()})) {
         super(header,body,_req_startupsMtp.fromJson);
     }
 

@@ -97,7 +97,7 @@ Promise<t_moded_execution_selectors<mode_of_executionSelector.t_sequential, FSel
     } ))//{selector: selector, element: element};
 }
 
-export async function getElmFromArrSelector (page : t_pageOrElementHN , arr_selector : selectors[] ){
+export async function getElmFromArrSelector (page : t_pageOrElementHN , arr_selector : selectors[]){
     type t_rien = null
     const rien :t_rien  = null 
     const isRien = _isNullOrUndefined

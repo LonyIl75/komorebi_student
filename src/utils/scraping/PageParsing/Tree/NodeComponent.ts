@@ -89,7 +89,7 @@ export class NodeComponentValue extends haveSerializerAndEmptyInit<NodeComponent
     }
 
     static getElmOfNodeComponentValue=(nodeComponentValue : INodeComponentValue ,page:Page)=>{
-        const description :selectors[] = nodeComponentValue.description
+        const {description} = nodeComponentValue
         return getElmFromArrSelector(page,description)
     }
 
@@ -132,6 +132,7 @@ export class NodeComponentValue extends haveSerializerAndEmptyInit<NodeComponent
         const value_init = component[str_value_init]
         let p_str_content_element =  Promise.resolve(value_init) 
         if(!isNilValue(value_init)){
+            //TODO : extract (see TreeParsing function)
             const validation_strRegex = component[str_value_validation_strRegex]
             if(!isEmptyStrRegex(validation_strRegex)){
                 p_str_content_element = ((validation_regex : RegExp )=> getTextContent(element,selectors).then((text:string)=> {
@@ -143,7 +144,7 @@ export class NodeComponentValue extends haveSerializerAndEmptyInit<NodeComponent
         }
         
         const n_arr_selectors = selectors ? [...arr_selectors,selectors] : arr_selectors 
-        console.log("text ", await element.evaluate((e:any)=>e.outerHTML))
+        //console.log("text ", await element.evaluate((e:any)=>e.outerHTML))
         return p_str_content_element.then((str_content_element)=>new NodeComponentValue(str_content_element, str_content_element ,n_arr_selectors,element.remoteObject().objectId))
     }
 

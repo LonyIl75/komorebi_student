@@ -64,10 +64,7 @@ export function notPatternLookahead(str_regex:string){
 }
 
 
-
-export const regexToStr = (regex:RegExp) => regex.source
-
-export const fct_escape =<T extends string > ( str : T )=> {
+export const fct_escape =<T extends string =""> ( str : T ="" as T)=> {
   return `\\${str}` as const 
 }
 export interface FnEscape extends Fn<[string],string> {
@@ -77,7 +74,7 @@ type _fnEscape<Args extends [string] > = ReturnType<typeof fct_escape<Args[0]>>
 
 export type t_convertStrToRegexStr <T extends string> = t_strApplyFnIfExtends<T,t_specialChar_regex,FnEscape>
 
-export const convertStrToRegexStr = <T extends string >(paramStr :T ) => paramStr?.replace(ju_escapeRegex, "\\$&") as t_convertStrToRegexStr<T>
+export const convertStrToRegexStr = <T extends string >(paramStr :T ) => paramStr?.replace(ju_escapeRegex, fct_escape("$&")) as t_convertStrToRegexStr<T>
 
 export const createRegex_from_str = <T extends string , F extends t_regexpFlags = undefined > (paramStr:T, strFlags_for_RegexCst : F/*validateIsRegexFlags<T>*/  = undefined) => 
   new MRegExp(convertStrToRegexStr(paramStr), strFlags_for_RegexCst)

@@ -6,9 +6,13 @@ import { concatNameModuleAndDebug } from "./str_debug.js";
 const name_module :string = "m_promise"
 
 import {IJson, IVoid, getEmptyJson} from "./m_object.js"
-import { Enumerate, NestedArray, isInRange, t_function, t_functionPromise } from "./type.js";
+import {  NestedArray, isInRange, t_function, t_functionPromise } from "./type.js";
 import { t_InterArr_pipeline, t_OInterArr_pipeline, t_pipeline, t_pipeline_env_var, t_str_noneOp, t_union_id_env_var_op } from "./m_pipeline.js";
 
+export const _getAwaitedEmptyPromise = () : undefined => undefined
+export const getEmptyPromise = () : Promise<undefined> => Promise.resolve(_getAwaitedEmptyPromise())
+export const isEmptyPromise = <T extends Promise<any>> (promise:T) => promise.then((res)=>res==_getAwaitedEmptyPromise())
+export const isAwaitedEmptyPromise = <T extends any> (awaited_promise:T) => awaited_promise==_getAwaitedEmptyPromise()
 
 export function promiseAlltoPromise (arr_promise:Promise<any>[] , resolve_function ?: (value: any[]) => any[] , reject_function ?: (reason: any) => any   ){//(value: any[]) => any[]  = (_:any[])=>_ , reject_function ?: (reason: any) => any  = (_:any)=>_
   let prom = Promise.all(arr_promise) ; 

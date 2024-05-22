@@ -160,9 +160,9 @@ TServiceF extends t_service_functions<SN,_R,T1> = t_service_functions<SN,_R,T1>
         req.header.client_id = getDfClientIdIfUndefined()
         //A FAIRE req.header.url != default  req.header.url better then logical op checking
         req.header.url = req.header.url || createAddress([this.getAddress()],req.header.url);res.header.url = req.header.url;//TODO test 
-        res.body.result = incorrect_cookie() 
-        console.log("res_local",res.body.result)
-        if(isIncorrect_cookie(res.body.result )) await this.process_serviceFunction( req,res)
+        const local_result = incorrect_cookie() 
+        if(isIncorrect_cookie(local_result))await this.process_serviceFunction( req,res)
+        else req.body.result = {...req.body.result,...local_result}
     }
 
     abstract getJsonScraping() : t_ScrapingComponent_any

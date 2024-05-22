@@ -3,6 +3,7 @@ import { df_config_routes_pipeline } from "@/routes/scraping-services/class/Conf
 
 export const json_lespepitestechConfigPipeline = {
     [idRoutes_lespepitestech[0]]:{...df_config_routes_pipeline} ,
-    [idRoutes_lespepitestech[1]]:{...df_config_routes_pipeline}
+    [idRoutes_lespepitestech[1]]:{...df_config_routes_pipeline},
+    [idRoutes_lespepitestech[2]]:{...df_config_routes_pipeline},
 
 } as const 

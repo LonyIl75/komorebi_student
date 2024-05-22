@@ -214,7 +214,9 @@ const df_t_merge_dfTe = {
         //@ts-ignore
         if(!val.hasOwnProperty("fctEmbed")) val.fctEmbed = this.df["fctEmbed"]
       }
-      if(!this.value.every((e)=> !isComposite(e)||isValidComposite(e))) throw new Error("CompositeRegexp : invalid composite")
+      if(!this.value.every((e)=> !isComposite(e)||isValidComposite(e))) {
+        throw new Error("CompositeRegexp : invalid composite")
+      }
     }
   
   

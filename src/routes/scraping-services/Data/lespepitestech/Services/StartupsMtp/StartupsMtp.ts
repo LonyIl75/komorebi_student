@@ -1,8 +1,8 @@
 
 import { buildArrClassNameType, getChildArr, rootClassName, t_getLeaf } from "@/utils/scraping/PageParsing/types.js";
-import { MapRegexToIdPath, pagination_field, t_mapRegexToIdPathFromArrArr } from "@shared/m_regexMapping.js";
+import { MapRegexToIdPath, item_field, pagination_field, str_Pagination, t_mapRegexToIdPathFromArrArr } from "@shared/m_regexMapping.js";
 import { arrToUnion, ApplyGetElementNumberIArrArr, addSuffix, removePrefix } from "@shared/type.js";
-import { lespepitestech_startupsMtp_rootClassName, lespepitestech_startupsMtp_mainOfComponents, str_StartupsMtp, t_str_StartupsMtp } from "./types.js";
+import { lespepitestech_startupsMtp_rootClassName, lespepitestech_startupsMtp_mainOfComponents, str_StartupsMtp, t_str_StartupsMtp, embedName } from "./types.js";
 import { ScrapingComponent, getTypesFromImportedComponentAndFct } from "@/utils/scraping/PageParsing/ComponentObject.js";
 import { Component } from "@/utils/scraping/PageParsing/Schema/Component/Component.js";
 import {FunctionalWrapperJsonComponentConfig, IFunctionalWrapperJsonComponent}from "@/utils/scraping/PageParsing/Schema/FunctionalWrapperJsonComponents/IFunctionalWrapperJsonComponents.js";
@@ -21,14 +21,17 @@ import { str_value_init } from "@/utils/scraping/PageParsing/Schema/_Component/V
 import { strRegexPrice, strRegexPricePerUnit, strRegexQuantity } from "@shared/m_regex_product.js";
 import { embedCapturingGroupStrOrRegex, getUnionNonMatchingGroups } from "@shared/m_regex_prefixAndSuffix.js";
 
+export const _id_field = "Type" as const
+const _id_item = item_field 
+const _optional_field = ["Summary", "Link","Category"] as const 
 
 const _arr_classNameType_lespepitestech_startupsMtp = [
     rootClassName,"ContainerGrid","Grid",
-    "ContainerPagination","Pagination","SelectedPagination","NextPagination",
-    "Item",
-        "Type","ItemSummary","ItemContentBottom",
-            "ItemLink","ItemCategories",
-                "ItemCategory",
+    `Container${str_Pagination}`,str_Pagination,...pagination_field,
+    _id_item,
+        _id_field,`${_id_item}${_optional_field[0]}`,`${_id_item}ContentBottom`,
+            `${_id_item}${_optional_field[1]}`,`${_id_item}Categories`,
+                `${_id_item}${_optional_field[2]}`,
 ] as const   
 
 export const arr_classNameType_lespepitestech_startupsMtp = buildArrClassNameType(str_StartupsMtp,_arr_classNameType_lespepitestech_startupsMtp)
@@ -50,7 +53,7 @@ export const arr_lespepitestech_startupsMtp  =
         getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,0,[1]>(arr_classNameType_lespepitestech_startupsMtp,0,[1]),
         getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,1,[2,4]>(arr_classNameType_lespepitestech_startupsMtp,1,[2,4]),
         getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,4,[5]>(arr_classNameType_lespepitestech_startupsMtp,4,[5]),
-        getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,5,[6,7]>(arr_classNameType_lespepitestech_startupsMtp,5,[6,7]),
+        getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,5,[7,6]>(arr_classNameType_lespepitestech_startupsMtp,5,[7,6]),
         getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,6>(arr_classNameType_lespepitestech_startupsMtp,6),
         getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,7>(arr_classNameType_lespepitestech_startupsMtp,7),
         getChildArr<t_arr_classNameType_lespepitestech_startupsMtp,2,[3]>(arr_classNameType_lespepitestech_startupsMtp,2,[3]),
@@ -261,9 +264,10 @@ export type t_configJson_lespepitestech_startupsMtp = typeof configJson_lespepit
 export const json_lespepitestech_startupsMtp  = fjson_lespepitestech_startupsMtp["toJson"]()
 export type t_json_lespepitestech_startupsMtp = typeof json_lespepitestech_startupsMtp
 
-export const id_field = `${str_StartupsMtp}Type` as const 
+export const id_field = embedName(_id_field)
+export const id_item = embedName(_id_item)
 const required_field = [] as const 
-const optional_field = ["StartupsMtpSummary", "StartupsMtpLink","StartupsMtpCategory"] as const
+const optional_field = _optional_field.map(embedName)
 
 const arr_pathId = [id_field,...required_field,...optional_field,...pagination_field] as const 
 type t_arr_pathId =  typeof arr_pathId
@@ -277,12 +281,12 @@ export type t_resParsing = {
 }
 
 const _mapRegexPathIds_lespepitestech_startupsMtp = [
-    [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerGrid","StartupsMtpGrid","StartupsMtpItem",["StartupsMtpType"]],["StartupsMtpType"]],
+    [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerGrid","StartupsMtpGrid",id_item,["StartupsMtpType"]],[id_field]],
     [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerPagination","StartupsMtpPagination",["StartupsMtpNextPagination"]],[pagination_field[0]]],
     [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerPagination","StartupsMtpPagination",["StartupsMtpSelectedPagination"]],[pagination_field[1]]],
-    [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerGrid","StartupsMtpGrid","StartupsMtpItem",["StartupsMtpItemSummary"]],["StartupsMtpSummary"]],
-    [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerGrid","StartupsMtpGrid","StartupsMtpItem","StartupsMtpItemContentBottom",["StartupsMtpItemLink"]],["StartupsMtpLink"]],
-    [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerGrid","StartupsMtpGrid","StartupsMtpItem","StartupsMtpItemContentBottom","StartupsMtpItemCategories",["StartupsMtpItemCategory"]],["StartupsMtpCategory"]],
+    [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerGrid","StartupsMtpGrid",id_item,["StartupsMtpItemSummary"]],["StartupsMtpSummary"]],
+    [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerGrid","StartupsMtpGrid",id_item,"StartupsMtpItemContentBottom",["StartupsMtpItemLink"]],["StartupsMtpLink"]],
+    [[rootClassName,lespepitestech_startupsMtp_rootClassName,"StartupsMtpContainerGrid","StartupsMtpGrid",id_item,"StartupsMtpItemContentBottom","StartupsMtpItemCategories",["StartupsMtpItemCategory"]],["StartupsMtpCategory"]],
 
  ] as const 
 

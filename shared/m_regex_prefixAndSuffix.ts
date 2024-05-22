@@ -1,5 +1,7 @@
-import MRegExp, { get_FFromMRegExp, get_SFromMRegExp, t_regexpFlags, validateIsRegexFlags } from "./_regexp.js"
-import { regex_charUnionStr, sourceRegexToStrRegex, str_beginOfLine_regex, str_endOfLine_regex, t_regex_charUnionStr, transformRegexOrStr } from "./m_regex.js"
+import MRegExp, { get_FFromMRegExp, get_SFromMRegExp, ju_escapeRegex, ju_escapeRegexStr, t_regexpFlags, validateIsRegexFlags } from "./_regexp.js"
+import { enumerate, getPermutation, splitArr } from "./m_array.js"
+import { convertStrToRegexStr, fct_escape, getRegexG, regex_charUnionStr, sourceRegexToStrRegex, str_beginOfLine_regex, str_endOfLine_regex, t_regex_charUnionStr, transformRegexOrStr } from "./m_regex.js"
+import { joinCapitalize } from "./m_string.js"
 import { Apply, ApplyFnToArr, Args, Fn as _Fn, char_join_pipe, t_JoinChar_pipe, t_function, t_functionFn } from "./type.js"
 
 export class PrefixAndSuffix< P extends string =string, S extends string =""> {
@@ -72,6 +74,16 @@ export const joinRegexWithJoinStr =
 
     return res as t_joinRegexWithJoinStr<JoinChar,F,ArrReg>
 }
+
+export const convertStrRegexToStr = <T extends string >(paramStr :T ) => {
+    const _PAS = new PrefixAndSuffix<"",typeof ju_escapeRegexStr>("",ju_escapeRegexStr)
+    const _str = convertStrToRegexStr(fct_escape()) 
+    const _regStr = addStrToRegexOrStr<true,typeof _str,typeof _PAS,"",typeof ju_escapeRegexStr>(_str,_PAS)
+    return paramStr.replace(new RegExp(_regStr,"g"), "$1") //TODO typing
+  }
+  
+export const regexToStr = (regex:RegExp) => regex.source
+  
 
 export const unionRegex = <ArrReg extends readonly MRegExp<string,string>[],  JoinChar extends string = t_regex_charUnionStr,F extends  t_regexpFlags = undefined > (arr_regex : ArrReg , joinStr:JoinChar = regex_charUnionStr as JoinChar,flags : F= undefined as any ) => {
     return joinRegexWithJoinStr(arr_regex,joinStr,flags)
@@ -238,7 +250,7 @@ export const embedOptionalStrOrRegex = <B extends boolean,_T extends (B extends 
 
 
 export const embedOptCapturingGroupStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   >(param_regexOrStr: _T, isStr : B ) => {
-    const tmp = _getFctEmbedEmbeddingPAS(EmbeddingPAS[EmbeddingPASGroup.name])<B,_T,_S,_F>(param_regexOrStr, isStr)
+    const tmp = embedCapturingGroupStrOrRegex<B,_T,_S,_F>(param_regexOrStr, isStr)
     type _t = typeof tmp
     type _t_s = _t extends MRegExp<string,string> ?  get_SFromMRegExp<_t> : undefined
     type _t_f = _t extends MRegExp<string,string> ?   get_SFromMRegExp<_t>: undefined
@@ -246,7 +258,7 @@ export const embedOptCapturingGroupStrOrRegex = <B extends boolean,_T extends (B
 }
 
 export const embedOptNonCapturingGroupStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   >(param_regexOrStr: _T, isStr : B ) => {
-    const tmp = _getFctEmbedEmbeddingPAS(EmbeddingPAS[EmbeddingPASNonCapturingGroup.name])<B,_T,_S,_F>(param_regexOrStr, isStr)
+    const tmp = embedNonCapturingGroupStrOrRegex<B,_T,_S,_F>(param_regexOrStr, isStr)
     type _t = typeof tmp
     type _t_s = _t extends MRegExp<string,string> ?  get_SFromMRegExp<_t> : undefined
     type _t_f = _t extends MRegExp<string,string> ?   get_FFromMRegExp<_t>: undefined
@@ -261,7 +273,7 @@ export function unionRegexs< T extends readonly string[] = string[]> (...str_reg
   
   export function getUnionNonMatchingGroups < T extends readonly string[] = string[]> (...str_regex:T){
     type _fn = ReturnType<typeof _getFnEmbeddingPAS<typeof EmbeddingPASNonCapturingGroup.name,typeof EmbeddingPASNonCapturingGroup>>
-    const tmp = str_regex.map((_str)=>_getFctEmbedEmbeddingPAS(EmbeddingPAS[EmbeddingPASNonCapturingGroup.name])(_str,true)) as ApplyFnToArr<_fn,T>
+    const tmp = str_regex.map((_str)=>embedNonCapturingGroupStrOrRegex(_str,true)) as ApplyFnToArr<_fn,T>
     return unionRegexs<typeof tmp>(...tmp) 
   }
   
@@ -269,7 +281,7 @@ export function unionRegexs< T extends readonly string[] = string[]> (...str_reg
  
   export function getGroupUnionStrRegex< T extends readonly string[] = string[]> (str_regex:T){
     const tmp = unionRegexs<T>(...str_regex)
-    return _getFctEmbedEmbeddingPAS(EmbeddingPAS[EmbeddingPASGroup.name])<true,typeof tmp>(tmp,true)
+    return embedCapturingGroupStrOrRegex<true,typeof tmp>(tmp,true)
   }
 
 
@@ -304,3 +316,46 @@ export const isBeginWith = <T extends string , B extends boolean,_T extends (B e
 //see : t_isBeginWith<"gcxd",false,MRegExp<"g">,"g"> != t_isBeginWith<"gcxd",false,MRegExp<"g">> because _S become undefined
 
 
+export const idxOfChars = (name,arr_chars )=> {
+    let _name = name 
+    const regStr = getUnionNonMatchingGroups(arr_chars)
+  
+    const fct_index = (_str)=>getRegexG(embedCapturingGroupStrOrRegex(regStr,true)).exec(_str)?.index
+    let idx = fct_index(name)
+    let idx_split = []
+    let beg_idx = 0 
+    while(idx){
+        idx_split.push(beg_idx+idx)
+        beg_idx = idx
+        _name = _name.substring(idx+1)
+        idx = fct_index(_name)
+    }
+    return idx_split
+  }
+  
+  
+  export const generateName = (name,join_chars =["_",".","-"] ,_split_chars =  [" "]) : string[]=>{
+      
+      
+    const split_chars = [..._split_chars ,...join_chars]
+    const idx_split = idxOfChars(name,split_chars)
+    const split_arr =  splitArr(name,idx_split)
+    
+    const arr_fct_join_fct = [...join_chars.map((elm)=>(..._str)=> _str.join(elm)),joinCapitalize]
+    
+    
+    const permutation : any[] = getPermutation(enumerate(arr_fct_join_fct.length-1),split_arr.length-1)
+  
+    let res = []
+    for (const perm of permutation){
+        const tmp = perm.reduce((acc,nb,idx)=>arr_fct_join_fct[nb](acc,split_arr[idx+1]),split_arr[0])
+        
+        res.push(tmp)
+        
+        
+    }
+    
+    return res 
+    
+    
+  }

@@ -57,7 +57,7 @@ TServiceF extends t_service_functions<SN,_R,T1> = t_service_functions<SN,_R,T1>
 > extends BAService<SN,R,T1,_R,Addr,TServiceF> implements IAService_1<SN,_R,R,T1,Addr,TServiceF> , IBAService< SN,R,T1,_R,Addr,TServiceF>
 {
     getJsonScraping() {
-        return json_scrapingJsonType[this.getService().serviceName][this.routeName]
+        return json_scrapingJsonType[this.getService().serviceName][this.routeName] as any //TODO to fix .//TODO IMP //IMP 
     }
 } 
 

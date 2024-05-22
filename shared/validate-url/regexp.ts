@@ -10,29 +10,32 @@
 import { CompositeRegexp, t_CompositeRegexp_getJsonFctEmbeds } from "@shared/m_regexpComposite.js";
 import { str_head_http_https, str_sld, str_subdomain, str_tld ,str_domain, str_bodyUrl, str_paramsUrl, t_str_domain, t_str_bodyUrl, t_str_paramsUrl} from "./_types.js";
 import { char_headQuery, char_join_paramAssign, str_http, str_https, str_join_protocol } from "./types.js";
-import { getUnionNonMatchingGroups } from "@shared/m_regex_prefixAndSuffix.js";
+import { embedNonCapturingGroupStrOrRegex, getUnionNonMatchingGroups } from "@shared/m_regex_prefixAndSuffix.js";
 import { convertStrToRegexStr } from "@shared/m_regex.js";
 
 const protocols = [str_http,str_https] as const
-const regex_head_http_https = getUnionNonMatchingGroups(...protocols) ;
-const regex_subdomain = "[-a-zA-Z0-9@:%_\\+~#=]{1,256}\." as const
-const regex_sld = "[-a-zA-Z0-9@:%_\\+~#=]{1,256}"  as const
-const regex_domain_tld = "[a-zA-Z0-9()]{1,6}" as const ;
+//TODO redo : regex_head_http_https
+export const regex_head_http_https = embedNonCapturingGroupStrOrRegex(getUnionNonMatchingGroups(...protocols),true) ;
+export const regex_join_domain = "\\." as const
+export const regex_subdomain = `[-a-zA-Z0-9@:%_\\+~#=]{1,256}${regex_join_domain}` as const
+export const regex_sld = "[-a-zA-Z0-9@:%_\\+~#=]{1,256}"  as const
+export const regex_domain_tld = "[a-zA-Z0-9()]{1,10}" as const ;
 
 const arrKeys_domain = [str_subdomain,str_sld,str_tld] as const
 const regex_schema_domain   = [
-    {regex:regex_subdomain,name: arrKeys_domain[0],op:"?"},
+    {regex:regex_subdomain,name: arrKeys_domain[0],operator:"?"},
     {regex:regex_sld,name: arrKeys_domain[1],joinChar:""},
-    {regex:regex_domain_tld,name: arrKeys_domain[2],joinChar:"\\."}
+    {regex:regex_domain_tld,name: arrKeys_domain[2],joinChar:regex_join_domain}
 ] as const
 
 const regex_domain = new CompositeRegexp<t_str_domain,typeof arrKeys_domain,typeof regex_schema_domain >(str_domain , regex_schema_domain , arrKeys_domain)
 
 const arrKeys_protocolAndDomain = [str_head_http_https/*,"www"*/,str_domain] as const
 
+export const regex_head_http_https_complete = `${regex_head_http_https}${convertStrToRegexStr(str_join_protocol)}` as const 
 const regex_schema_protocolAndDomain = [
-    {regex:`${regex_head_http_https}${convertStrToRegexStr(str_join_protocol)}`,name: arrKeys_protocolAndDomain[0]},
-    //{regex:`${regex_www}\\.`,name : arrKeys_wwwsDomain[1] ,operator:"?"},
+    {regex:regex_head_http_https_complete,name: arrKeys_protocolAndDomain[0]},
+    //{regex:`${regex_www}${regex_join_domain}`,name : arrKeys_wwwsDomain[1] ,operator:"?"},
     {regex:regex_domain}] as const 
 
   
@@ -41,11 +44,13 @@ export type t_str_protocolAndDomain = typeof str_protocolAndDomain
 const regex_protocolAndDomain = new CompositeRegexp<t_str_protocolAndDomain , typeof arrKeys_protocolAndDomain,typeof regex_schema_protocolAndDomain  >(str_protocolAndDomain , regex_schema_protocolAndDomain , arrKeys_protocolAndDomain)
 
 
+
 const regex_str_url = "[-a-zA-Z0-9%_\.~]+" as const 
 const regex_param_body = regex_str_url
 
 const arrKeys_regex_params_body =["param_1","param_i"] as const
-const regex_schema_params_body = [{
+const regex_schema_params_body = [
+    {
         regex:regex_param_body,
         name:"param_1"
     },{
@@ -54,16 +59,26 @@ const regex_schema_params_body = [{
         operator:"*"
     }
 ] as const
+
+
 const str_params_body = "params_body" as const
 type t_str_params_body = typeof str_params_body 
-const regex_params_body = new CompositeRegexp<t_str_params_body, typeof arrKeys_regex_params_body,typeof regex_schema_params_body >(str_params_body , regex_schema_params_body , arrKeys_regex_params_body)
+const regex_params_body = new CompositeRegexp<t_str_params_body, typeof arrKeys_regex_params_body,typeof regex_schema_params_body >(str_params_body, regex_schema_params_body , arrKeys_regex_params_body)
 
-const arrKeys_regex_bodyUrl =[str_protocolAndDomain,str_params_body] as const
+const arrKeys_regex_bodyUrl =[str_protocolAndDomain,"_",str_params_body] as const
 const regex_schema_bodyUrl = [{
         regex:regex_protocolAndDomain,
+        name:str_protocolAndDomain
+    },{
+        regex:"\\/",
+        joinChar:"",
+        name:"_",
+        operator:"?"
     },{
         regex:regex_params_body,
-        joinChar:"\\/"
+        name:str_params_body,
+        joinChar:"",
+        operator:"?"
     }
 ] as const 
 

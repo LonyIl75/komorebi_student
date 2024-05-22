@@ -90,6 +90,10 @@ export const cst_entry = <K extends t_indexable_key , V > (key:K,val:V) :t_Entry
     return [key,val]
 }
 
+export const getFristEntryFromJson = <T extends IJson>(json : T) : t_Entry <keyof T , T[keyof T]> => {
+    const key = Object.keys(json)[0]
+    return cst_entry(key,json[key])
+}
 
 export type t_createJsonFromEntries< t_entries extends (readonly (t_Entry<K,V>)[])|nullOrUndefined   , K extends t_indexable_key = t_entries extends nullOrUndefined ? t_indexable_key : t_EntryGetKey<t_entries[number]>, V = t_entries extends nullOrUndefined ?  any:t_EntryGetValue<t_entries[number]> >=
 t_entries extends nullOrUndefined  ? IVoid : number  extends t_entries["length"] ?IJson<K,V> : jsonFromArrArr<K,t_entries,V>

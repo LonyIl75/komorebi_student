@@ -7,8 +7,9 @@ import { concatNameModuleAndDebug } from "./str_debug.js";
 const name_module :string = "m_array"
 
 
-import { NestedArray, filterNotNullOrUndefinedArr, t_JoinChar, t_booleanFunction,t_getLastElementArr} from "./type.js"
+import { AllPermutation, Enumerate, NestedArray, PermutationNb, PermutationU, UnionToArray, filterNotNullOrUndefinedArr, t_JoinChar, t_booleanFunction,t_getLastElementArr} from "./type.js"
 import { _isNullOrUndefined } from "./m_primitives.js";
+import _ from "lodash";
 
 export const compareArray  = ( array1:any[] , array2 :any[]) => { return array1.length === array2.length && array1.every((value, index) => value === array2[index]) } 
 
@@ -31,6 +32,10 @@ export const convertToArray = <T>(arg :T | T[]) => {
     return Array.isArray(arg) ? arg : [arg]
 }
 
+export function arrayIsEqual(a1,a2) {
+    return _.isEqual(a1, a2)
+}
+
 //A FAIRE : typing :
 export const arrayToString = (arr :NestedArray<any> , separator :string = ",") => {
     return isNullArray(arr) ? undefined : "["+arr.join(separator)+"]"
@@ -41,26 +46,6 @@ export const joinArray_with_char = <T extends readonly string [], JoinChar exten
     let _paramArr  = paramArr.filter((elm) => elm) as filterNotNullOrUndefinedArr<T>
     return _paramArr.join(paramChar) as t_JoinChar <typeof _paramArr,JoinChar>
 }
-
-export const permutator = (inputArr) => {
-    let result = [];
-  
-    const permute = (arr, m = []) => {
-      if (arr.length === 0) {
-        result.push(m)
-      } else {
-        for (let i = 0; i < arr.length; i++) {
-          let curr = arr.slice();
-          let next = curr.splice(i, 1);
-          permute(curr.slice(), m.concat(next))
-       }
-     }
-   }
-  
-   permute(inputArr)
-  
-   return result;
-  }
 
 export const concatArraysAndRemoveDuplicates = <T> (...argsArrays:T[]) => Array.from(new Set(argsArrays.reduce((acc, elm) => acc.concat(elm), [])))
 
@@ -99,3 +84,90 @@ export const applyFunctionElmToDeepArr = <T>(funct :(arg:T)=>any , arr_elements 
         else return funct(elem)
         })
     }
+
+
+export function getPermutation <T extends readonly any[], SZ extends number = 0> (list :T, maxLen:SZ  = 0 as SZ) {
+
+        var perm = list.map(function(val) {
+            return [val];
+        });
+
+        var generate = function(perm, maxLen, currLen) {
+
+            if (currLen === maxLen) {
+                return perm;
+            }
+
+            for (var i = 0, len = perm.length; i < len; i++) {
+                var currPerm = perm.shift();
+                for (var k = 0; k < list.length; k++) {
+                    perm.push(currPerm.concat(list[k]));
+                }
+            }
+            return generate(perm, maxLen, currLen + 1);
+        };
+
+        return generate(perm, maxLen, 1) as  PermutationNb<T,SZ>
+    };
+
+export function enumerate <End extends number, Beg extends number = 0 > ( end :End,beg :Beg= 0 as Beg){
+    let result = [] 
+    for(let i = beg ; i <= end ; i++) result.push(i)
+    return result as Enumerate<End,Beg>
+}
+
+
+
+//credits : @M Oehm
+
+export function getPermutationAll<T extends readonly any[]>(array:T) {
+
+    function xpermute_rec(res, sub, array) {
+        if (array.length == 0) {
+            if (sub.length > 0) permute_rec(res, "", sub);
+        } else {
+            xpermute_rec(res, sub, array.slice(1));
+            xpermute_rec(res, sub.concat(array[0]), array.slice(1));
+        }
+    }
+
+    function swap(array, i, j) {
+        if (i != j) {
+            var swap = array[i];
+            array[i] = array[j];
+            array[j] = swap;
+        }
+    }
+    
+    function permute_rec(res, str, array) {
+        if (array.length == 0) {
+            res.push(str);
+        } else {
+            for (var i = 0; i < array.length; i++) {
+                swap(array, 0, i);
+                permute_rec(res, str + array[0], array.slice(1));
+                swap(array, 0, i);
+            }
+        }
+    }
+    
+    var res = [];
+
+    xpermute_rec(res, [], array);
+    return res as  AllPermutation<T>
+}
+
+
+export const splitArr = (arr,idxSplits) => {
+    
+    let res = [arr.slice(0,idxSplits[0])]
+    
+    res= [...res,...idxSplits.slice(1).reduce((acc,idxSplit,num)=>{
+    return       [...acc,arr.slice(idxSplits[num]+(num+1),idxSplit)]
+}
+    ,[])]
+    
+    res = [...res,arr.slice(idxSplits[idxSplits.length-1]+idxSplits.length)]
+
+    return res 
+}

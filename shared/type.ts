@@ -140,9 +140,12 @@ export type _Enumerate<N extends number, Acc extends number[] = []> = Acc['lengt
   : _Enumerate<N, [...Acc, Acc['length']]>
 
 
-  export type Enumerate<N extends number> = 
-  _Enumerate<N> extends infer A ? A extends readonly number[] ? A[number] :never :never
 
+  export type Enumerate<End extends number , Beg extends number =  0 > = 
+  _Enumerate<Beg> extends infer BegArr ? BegArr extends readonly number[] ?
+  _Enumerate<End,[...BegArr]> extends infer A ? A extends readonly number[] ? A :never :never:never:never
+
+export type EnumerateUnion <End extends number , Beg extends number =  0 > = Enumerate<End,Beg>[number]
 
 export type isRepetitivePatternStr < T extends string , pattern extends string , joinChar extends string =""> = 
   T extends "" ? false : T extends `${pattern}${joinChar}${infer R}` ? 
@@ -153,7 +156,7 @@ export type isRepetitivePatternStr < T extends string , pattern extends string ,
 export type isRepetitiveUnion <  T extends string, pattern extends string , joinChar extends string ="" > = isRepetitivePatternStr<T,pattern,joinChar> extends true ? true : false 
 
 
-type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
+type IntRange<F extends number, T extends number> = Exclude<EnumerateUnion<T>, EnumerateUnion<F>>
 
 export type isInRange<x extends number ,bot extends number , top extends number > = x extends IntRange<bot, top> ? true : false 
 
@@ -618,11 +621,18 @@ export type t_JoinChar_pipe < T extends readonly string[] > = t_JoinChar<T,t_joi
 
 
 
-export  type t_joinCapitalize< Arr extends readonly string[]> = Arr extends readonly [infer A ,... infer B] ? 
+type _t_joinCapitalize< Arr extends readonly string[]> = Arr extends readonly [infer A ,... infer B] ? 
 A extends string ? 
-        B extends readonly string[]? `${Capitalize<A>}${t_joinCapitalize<B>}`:`${Capitalize<A>}`
+        B extends readonly string[]? `${Capitalize<A>}${_t_joinCapitalize<B>}`:`${Capitalize<A>}`
 : never
 : ""
+
+export  type t_joinCapitalize< Arr extends readonly string[]> = Arr extends readonly [infer A ,... infer B] ? 
+A extends string ? 
+      B extends readonly string[]? `${A}${_t_joinCapitalize<B>}` : never 
+: never
+: ""
+
 
 export type t_joinUnderscore_to_joinMaj<T extends string> = t_joinChar_to_joinMaj<T,t_join_underscore>
 
@@ -638,7 +648,7 @@ export type isCharNumber <T extends string> = T extends `${t_char_number}` ? tru
 
 export type majCuttingRetArr<T extends string , Buff extends string =""> =
   T extends `${infer A}${infer Rest}` ?
-    A extends Capitalize<A> ? 
+    A extends t_alphabetMaj ? 
       Buff extends "" ? 
         majCuttingRetArr<Rest,`${Lowercase<A>}`> 
         : isStrNumber<A> extends true ? 
@@ -906,18 +916,25 @@ export type t_filter< T extends any[]> = t_filter_elemOfArr <isInferior <T['leng
 export  type t_filter_arrType <T extends any[]> = Exclude<T,t_emptyNDArray/*never[]|[[]]|[][]*/>|[]
 
 
-export type Permutation<T, K=T> =
+type _Permutation <U , Arr extends readonly any[], K = U , Acc = []> =  Arr extends readonly [any, ... infer R] ?  IsUnion<U> extends false ?
+R extends [] ? [U] : never  :
+  K extends K ? [K,..._Permutation<Exclude<U,K>,R>] :never: []
+
+export type PermutationArr < U , Arr extends readonly any[] > = _Permutation<U,Arr>
+export type PermutationNb < U , N extends number > = _Permutation<U,Enumerate<N>>
+export type PermutationU<T, K=T> =
 [T] extends [never]
   ? []
   : K extends K
-    ? [K, ...Permutation<Exclude<T, K>>]
+    ? [K, ...PermutationU<Exclude<T, K>>]
     : never
 
 type _AllPermutation <T , K=T> = 
 IsUnion<T> extends false ? never :
-K extends K ? Permutation<Exclude<T, K>>|_AllPermutation<Exclude<T, K>> : [] 
+K extends K ? PermutationU<Exclude<T, K>>|_AllPermutation<Exclude<T, K>> : [] 
   
-export type AllPermutation <T> = Permutation<T> | _AllPermutation<T>
+//TODO : to securized if to large 
+export type AllPermutation <T> = PermutationU<T> | _AllPermutation<T>
 
 export type validateStrIsInAllPermutation <V extends string , U extends string > = stringToArray<V> extends AllPermutation<U> ? V : never 
 

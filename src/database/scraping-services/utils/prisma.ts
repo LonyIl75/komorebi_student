@@ -17,7 +17,7 @@ import { convertStrToRegexStr, getRegexGM, notSpaceStrRegex, spaceStrRegexWithou
 import { majFirstChar, join_dot, join_underscore, majAllStr, join_hyphen } from '@shared/m_string.js';
 import { t_indexable_key, t_JoinChar_hyphen, Substring, t_JoinChar_underscore, t_JoinChar } from '@shared/type.js';
 import { isDatabaseMeta_type, providerDbToType, t_DatabaseMeta_type } from '@shared/m_database.js';
-import { convertToArray, permutator } from '@shared/m_array.js';
+import { convertToArray, getPermutation } from '@shared/m_array.js';
 import { rFact } from '@shared/m_math.js';
 import { embedCapturingGroupStrOrRegex, embedNonCapturingGroupStrOrRegex, embedOptCapturingGroupStrOrRegex } from '@shared/m_regex_prefixAndSuffix.js';
 
@@ -250,7 +250,7 @@ const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb
         const grouped_annotations = annotations.map((_annotation,idx)=>{
             const annotation =convertStrToRegexStr(_annotation) 
             return optIndices.includes(idx) ? embedOptCapturingGroupStrOrRegex(annotation,true) :embedCapturingGroupStrOrRegex(annotation,true) })
-        return fct_map_join_join(permutator(grouped_annotations),reqSpaceoptWordSpace,(str)=>str)
+        return fct_map_join_join(getPermutation(grouped_annotations),reqSpaceoptWordSpace,(str)=>str)
     }
 
     type t_trad_annotations < TArrMongoDB extends readonly string [] , TArrSqlite extends readonly string []> = 

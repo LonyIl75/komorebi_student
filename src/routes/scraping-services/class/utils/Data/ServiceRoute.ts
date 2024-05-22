@@ -3,7 +3,16 @@ import { hours } from "@shared/hours.js"
 import { t_configObject, EmptyInit, AHaveSerializer, haveSerializerAndEmptyInit, getReqOrResJsonFromTConfigObj, t_j, t_st_configObject } from "@shared/m_json.js"
 import { IJson } from "@shared/m_object.js"
 import { df_pipeline_json, t_pipeline_json } from "@shared/m_pipeline.js"
+import { _isNullOrUndefined } from "@shared/m_primitives.js"
 import { removeLastArray, t_function_staticToMember, t_verifyStatic } from "@shared/type.js"
+
+export type t_saved<TSample extends IJson =IJson> =  {create:TSample[],update:TSample[]}
+export const buildSaved = <TSample extends IJson>(create:TSample[]=[],update:TSample[]=[]) => {
+    return {create,update}
+}
+export const mergeSaved = <TSample extends IJson>(saved1:t_saved<TSample>,saved2:t_saved<TSample>) => {
+    return buildSaved([...saved1?.create||[],...saved2?.create||[]],[...saved1?.update||[],...saved2?.update||[]])
+}
 
 export class ServiceRequestBodyBase extends t_configObject<ServiceRequestBodyBase>{
 
@@ -13,15 +22,30 @@ export class ServiceRequestBodyBase extends t_configObject<ServiceRequestBodyBas
     nexts ?: any[]
     result : IJson
     pipeline : t_pipeline_json
+    fk : IJson 
+    saved ?: t_saved
+
+    static df = {
+        pipeline : df_pipeline_json,
+        fk : {},
+        optionsScraping : OptionScraping.df,
+        nexts : undefined,
+        browserId : undefined,
+        targetId : undefined,
+        result : {},
+        saved : undefined
+    }
     
-    constructor(pipeline : t_pipeline_json = {...df_pipeline_json} , optionsScraping : IOptionScraping =  OptionScraping.df ,nexts?: any[] , browserId ?: t_browserId  , targetId ?: t_targetId ,  result : IJson = {}) {
+    constructor(pipeline : t_pipeline_json = {...ServiceRequestBodyBase.df.pipeline} ,fk:IJson =  {...ServiceRequestBodyBase.df.fk} ,  optionsScraping : IOptionScraping =  {...ServiceRequestBodyBase.df.optionsScraping} ,nexts: any[] = ServiceRequestBodyBase.df.nexts , browserId : t_browserId  =ServiceRequestBodyBase.df.browserId , targetId : t_targetId = ServiceRequestBodyBase.df.targetId ,  result : IJson = {...ServiceRequestBodyBase.df.result},saved : t_saved = ServiceRequestBodyBase.df.saved) {
         super({toJson:ServiceRequestBodyBase.toJson , fromJson:ServiceRequestBodyBase.fromJson});
         this.optionsScraping = optionsScraping
         this.result = result
         this.pipeline = pipeline
+        this.fk = fk
         if(nexts)this.nexts = nexts
         if(browserId)this.browserId = browserId
         if(targetId)this.targetId = targetId
+        if(saved)this.saved = saved
         
     }
     static getEmptyInit: () =>ServiceRequestBodyBase= () => {
@@ -46,11 +70,12 @@ export class ServiceRequestBodyBase extends t_configObject<ServiceRequestBodyBas
         if(obj?.nexts)probablyUndefined.nexts = obj.nexts
         if(obj?.browserId)probablyUndefined.browserId = obj.browserId
         if(obj?.targetId)probablyUndefined.targetId = obj.targetId
-        return {pipeline  :obj.pipeline, optionsScraping :obj.optionsScraping , result : obj.result,...probablyUndefined} as const 
+        if(obj?.saved)probablyUndefined.saved = obj.saved
+        return {pipeline  :obj.pipeline,fk:obj.fk, optionsScraping :obj.optionsScraping , result : obj.result,...probablyUndefined} as const 
     }
 
     static fromJson = (json: IJson) : ServiceRequestBodyBase => {
-        return new ServiceRequestBodyBase(json.pipeline , json.optionsScraping,json?.nexts,json?.browserId,json?.targetId,json.result)
+        return new ServiceRequestBodyBase(json.pipeline,json.fk , json.optionsScraping,json?.nexts,json?.browserId,json?.targetId,json.result,json?.saved)
     }
 
     
@@ -62,6 +87,7 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
 
     privacy : ServiceRequestHeaderBase.enum_privacy
     url : string  
+    sld_name : string 
     routeName : string
     serviceName : string 
     client_id : t_clientId
@@ -75,6 +101,7 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
     static df = {
         //TODO incorrect serviceName & routeName  
         serviceName : null,
+        sld_name : null,
         routeName:null,
         client_id : df_client_id,
         url :"",
@@ -83,7 +110,7 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
         //privacy //TODO ?  
         is_streaming: false 
     }
-    constructor(serviceName : string = ServiceRequestHeaderBase.df.serviceName , routeName : string = ServiceRequestHeaderBase.df.routeName, client_id : t_clientId =  ServiceRequestHeaderBase.df.client_id , url : string = ServiceRequestHeaderBase.df.url,url_toScrap:string = undefined , privacy:ServiceRequestHeaderBase.enum_privacy = ServiceRequestHeaderBase.getDefault(),is_streaming :boolean = ServiceRequestHeaderBase.df.is_streaming,needUpdate :ReturnType<typeof hours.getTimeNow> = ServiceRequestHeaderBase.df.needUpdate) {
+    constructor(serviceName : string = ServiceRequestHeaderBase.df.serviceName , routeName : string = ServiceRequestHeaderBase.df.routeName, client_id : t_clientId =  ServiceRequestHeaderBase.df.client_id , url : string = ServiceRequestHeaderBase.df.url,url_toScrap:string = undefined , privacy:ServiceRequestHeaderBase.enum_privacy = ServiceRequestHeaderBase.getDefault(),is_streaming :boolean = ServiceRequestHeaderBase.df.is_streaming,needUpdate :ReturnType<typeof hours.getTimeNow> = ServiceRequestHeaderBase.df.needUpdate,sld_name : string = ServiceRequestHeaderBase.df.sld_name) {
         super({toJson:ServiceRequestHeaderBase.toJson , fromJson:ServiceRequestHeaderBase.fromJson});
         this.serviceName = serviceName
         this.routeName = routeName
@@ -93,6 +120,7 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
         this.url_toScrap = url_toScrap
         this.is_streaming = is_streaming
         this.needUpdate = this.is_streaming ? undefined : needUpdate
+        this.sld_name = sld_name
 
         this.setIsPrivate()
         this.setIsStreaming()
@@ -118,11 +146,11 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
 
     static toJson = (obj:ServiceRequestHeaderBase)  =>
     {
-        return {serviceName : obj.serviceName ,routeName: obj.routeName,client_id :obj.client_id ,url : obj.url,url_toScrap :obj.url_toScrap,privacy:obj.privacy ,isStreaming : obj.isStreaming, needUpdate : obj.needUpdate} as const 
+        return {serviceName : obj.serviceName ,routeName: obj.routeName,client_id :obj.client_id ,url : obj.url,url_toScrap :obj.url_toScrap,privacy:obj.privacy ,isStreaming : obj.isStreaming, needUpdate : obj.needUpdate , sld_name : obj.sld_name} as const 
     }
 
     static fromJson = (json: IJson) : ServiceRequestHeaderBase => {
-        return new ServiceRequestHeaderBase(json.serviceName ,json.routeName ,json.client_id ,json.url,json.url_toScrap,json.privacy,json.isStreaming,json.needUpdate)
+        return new ServiceRequestHeaderBase(json.serviceName ,json.routeName ,json.client_id ,json.url,json.url_toScrap,json.privacy,json.isStreaming,json.needUpdate,json.sld_name)
     }
 
     setIsPrivate(){

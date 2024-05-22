@@ -4,7 +4,7 @@ import { _isNullOrUndefined, t_noReturnValue } from "@shared/m_primitives.js"
 import { convertStrToRegexStr} from "@shared/m_regex.js"
 import { NestedArray, arrToUnion, arr_url_attributeName, getIndexOfElement, joinCharKeyJson, removePrefix, reshapeObject, t_arr_url_attributeName, t_function, t_join_underscore, t_notFoundIdx } from "@shared/type.js"
 import { ReqAndResType } from "../../../utils/Data/ReqResRoute.js"
-import { AServiceRequest } from "../../../utils/Data/ServiceRoute.js"
+import { AServiceRequest, buildSaved, t_saved } from "../../../utils/Data/ServiceRoute.js"
 import { getBrowsers, BrowsersPool, t_browserId, t_targetId } from "@/utils/browser/BrowsersPool.js"
 import { getElmFromArrSelector, trySelectors_any, trySelectors_any_all, waitSelectors } from "@/utils/scraping/DOMElements/Selector/main.js"
 import { base_getParsingTree, _buildParsingTree } from "@/utils/scraping/PageParsing/TreeParsing.js"
@@ -18,7 +18,7 @@ import { MapRegexToIdPath, date_field, pagination_field, t_pagination_field, t_r
 import { char_join_pathRoutes, t_agreg_path, unjoin_pathRoutes } from "@shared/routePath.js"
 import { NodeComponentValue, str_attributes } from "@/utils/scraping/PageParsing/Tree/NodeComponent.js"
 import { f_clicking } from "@/utils/scraping/primitives/human_actions.js"
-import { arrayOnlyIndices, convertToArray, isArray, isNullArray, isStrictArray } from "@shared/m_array.js"
+import { arrayIsEqual, arrayOnlyIndices, convertToArray, isArray, isNullArray, isStrictArray } from "@shared/m_array.js"
 import { t_df_arr_fct_name, str_getNextPage, t_str_getNextPage, str_transformAfterGetNextPage, str_nextPage, str_transformAfterNextPage, str_getLocalFunction, str_getServiceFunction, str_save_serviceFunction, str_transformAfterGetServiceFunction, getUrlToScrap, t_str_nextPage, getUrlToScrapItem, t_str_save_serviceFunction } from "./types.js"
 import { createSubJsonFromArrRegex, deepCloneJson, getSubsetKeysFromArrRegex } from "@shared/m_json.js"
 import { getRootPropFromResValue, getRootPropFromValue, isGetValue, str_json_value, t_resValue } from "@/utils/scraping/PageParsing/Tree/TreeComponent.js"
@@ -28,6 +28,8 @@ import { t_strRegex } from "@shared/_regexp.js"
 import { getBodyUrlAndParamsReq } from "@shared/validate-url/functions.js"
 import { t_url } from "@shared/validate-url/_types.js"
 import { enum_prisma_op } from "@/database/scraping-services/utils/prisma.js"
+import { _getAwaitedEmptyPromise, getEmptyPromise } from "@shared/m_promise.js"
+import { getTextContent } from "@/utils/scraping/primitives/misc.js"
 
 //TODO-IMP refactor
 
@@ -141,7 +143,7 @@ export type t_AHA_Service_FctLoadingGetTree={
 
 export type t_AHA_Service_ParamNextPage<SN extends string ,R extends string> = t_AHA_Service_Param<SN,R> & {result:IJson , nexts:any[]}
 
-type t__ParamSavePage<TSample extends IJson ,TDbName extends string , TColId extends keyof TSample , TColDate extends keyof TSample > = {
+type t__ParamSavePage<TSample extends IJson ,TDbName extends string , TColId extends keyof TSample , TColDate extends keyof TSample , FK extends IJson<keyof TSample>|IVoid = IVoid > = {
     database:{
         prismaClient: any,
         name: TDbName,
@@ -151,10 +153,11 @@ type t__ParamSavePage<TSample extends IJson ,TDbName extends string , TColId ext
         date: TColDate,
         period: number
     },
-    rows:TSample[]
+    rows:TSample[],
+    fk : FK 
 }
 
-export type t_AHA_Service_ParamSavePage<TSample extends IJson ,TDbName extends string , TColId extends keyof TSample , TColDate extends keyof TSample >  =  t__ParamSavePage<TSample , TDbName , TColId , TColDate> //t_AHA_Service_Param &
+export type t_AHA_Service_ParamSavePage<TSample extends IJson ,TDbName extends string , TColId extends keyof TSample , TColDate extends keyof TSample , FK extends IJson<keyof TSample>|IVoid = IVoid >  =  t__ParamSavePage<TSample , TDbName , TColId , TColDate, FK> //t_AHA_Service_Param &
 
 export abstract class AHA_ServiceBase<SN extends string ,R extends string , Req extends t_req_any , Res extends t_res_any,UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
 ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>,arr_HA_df_fct_name extends readonly string[] =t_df_arr_fct_name,arr_restFct extends readonly string[] =[] > 
@@ -206,16 +209,17 @@ implements t_IAHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassN
         //TODO : extract in browserPage gotoPage and load
             if(!mpage.cur_url){
                 await mpage.goto(url_toScrap)
-                await time.timer(3000);
-                await mpage.goto(url_toScrap.slice(0,url_toScrap.length-2))
-                await time.timer(3000);
-                await mpage.goto(url_toScrap)
-                mpage.setCurUrl(url_toScrap);
+                //await mpage.goto(url_toScrap.slice(0,url_toScrap.length-2))
+                /*await mpage.goto(url_toScrap)
+                mpage.setCurUrl(url_toScrap);*/
+                await time.timer(10000)
             }
             
 
+            await take_screenshot(page,"content_debug.png",2)
             //if(!this.isLoaded)
                 await page.mouse.move(0, 0);
+                //await time.timer(10000)
 
                 console.log( `waiting for first load : ${url_toScrap}` ) ;
                 await fct_loading.waitForPageLoading(page)
@@ -225,6 +229,7 @@ implements t_IAHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassN
 
                 await take_screenshot(page,"content_debug.png",1)
                 await trySelectors_any(page,param.prop_base_selectors)
+                await take_screenshot(page,"content_debug.png",3)
                 //toggle(this.isLoaded)
 
         //TODO : Verify with hasexpose :
@@ -410,10 +415,18 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
                     }
                 }   
                 if(nodeComponentValue.description.length>0 && nodeComponentValue.description[0].length>0){
-                    const elements :t_ElementHN[] = await NodeComponentValue.getElmOfNodeComponentValue(nodeComponentValue,page)
-                    if(elements.length>0){
+                    const elements :t_ElementHN[] = await NodeComponentValue.getElmOfNodeComponentValue(nodeComponentValue,page)//\d+
+                    let element =  await Promise.any (elements.map((_element)=> {
+                        return getTextContent(_element).then((text)=>{
+                            if(nodeComponentValue.proper_value != text) throw Error(`text ${text} is not equal to proper_value ${nodeComponentValue.proper_value}`)
+                            else return _element
+                            })
+                    })).then((element)=>element).catch(()=>null)
+                    
+                    
+                    if(element){
                         const url = mpage.cur_url
-                        await f_clicking(elements[0])
+                        await f_clicking(element)
                         const url_toScrap = getUrlToScrap(url,param.result)
                         res_nextPagenextPage = {nexts:[],nextCategory :nextCategories[1],url,url_toScrap}//A FAIRE : nexts:nexts.pop()
                         break
@@ -435,7 +448,7 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
             - jsonMain for each service 
         */
        //static getSavePageParam <Req extends t_req_any , Res extends t_res_any>(req:Req , res : Res):t_AHA_Service_ParamSavePage
-        static getSavePageParam<TSample extends IJson ,TDbName extends string , TColId extends keyof TSample , TColDate extends keyof TSample >(db_prismaClient : any , db_name : TDbName ,db_id : TColId , time_db_date :TColDate , rows: TSample[] , time_period : ReturnType<typeof  hours.getTimeNow> ):t_AHA_Service_ParamSavePage<TSample , TDbName , TColId , TColDate>{
+        static getSavePageParam<TSample extends IJson ,TDbName extends string , TColId extends keyof TSample , TColDate extends keyof TSample, FK extends IJson<keyof TSample> |IVoid = IVoid >(db_prismaClient : any , db_name : TDbName ,db_id : TColId , time_db_date :TColDate , rows: TSample[] ,fk : FK, time_period : ReturnType<typeof  hours.getTimeNow> ):t_AHA_Service_ParamSavePage<TSample , TDbName , TColId , TColDate,FK>{
             return {
                 //...this.getServiceParam(req,res),
                 database:{
@@ -448,14 +461,15 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
                     period:time_period 
                 },
                 rows:rows,
+                fk:fk
             }
         }
         //TODO : allow array , atm on peut pas array sur sqlite car c purement relationnel donc il faut créer une relation , il faut modifier cette fonction pour que quand elle detecte que c'est un array elle creer tous les samples dans la remote database en le likant a l'objet courant 
-        static async _save_serviceFunction <TSample extends IJson ,TDbName extends string , TColId extends keyof TSample , TColDate extends keyof TSample >(param : t_AHA_Service_ParamSavePage<TSample , TDbName , TColId , TColDate>){
-                        
+        static async _save_serviceFunction <TSample extends IJson ,TDbName extends string , TColId extends keyof TSample , TColDate extends keyof TSample , FK extends IJson = IVoid >(param : t_AHA_Service_ParamSavePage<TSample , TDbName , TColId , TColDate,FK>){
+                
             const {prismaClient,name:database_name ,id:strId} = param.database
             const {date:strDate,period} = param.time
-            const {rows} = param
+            const {rows,fk} = param
 
             type T_id = TSample[TColId] 
             const arr_productType = rows.map((sample)=>sample[strId]) as T_id[] 
@@ -471,7 +485,7 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
             // For a quick lookup
             let existingSamples : {[k in T_id]:TSample}=  {} as any 
             
-            arr_existingSamples.reduce((_existingSamples,_existingSample) => 
+            existingSamples = arr_existingSamples.reduce((_existingSamples,_existingSample) => 
             { 
                 const id : string = _existingSample[strId]
                 if(!_existingSamples.hasOwnProperty(id))_existingSamples[id]=_existingSample
@@ -480,7 +494,7 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
             }
             ,existingSamples)
             
-            let createAndUpdateArr: {update:TSample[],create:TSample[]} = {update:[],create:[]}
+            let createAndUpdateArr: t_saved<TSample> = buildSaved()
 
             const fct_shortCut_nested = (sample , op : enum_prisma_op ) => Object.keys(sample).reduce((acc,key_sample)=>{
                 const cur = sample[key_sample] 
@@ -501,7 +515,12 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
                 return _createAndUpdateArr
             },createAndUpdateArr)
 
-            const promise_create = 
+
+            const _getEmptyArrPromiseAwaited = () => [_getAwaitedEmptyPromise()]
+            const _getEmptyArrPromise = () => _getEmptyArrPromiseAwaited().map((e)=>Promise.resolve(e))
+            const _isEmptyAwaitedPromise = (arr) => arr.length === 1 && arrayIsEqual(arr,_getEmptyArrPromiseAwaited()) ? true : false
+
+            createAndUpdateArr["create"] = 
                 createAndUpdateArr["create"].length ? 
                 //prismaClient[database_name].createMany({data: createAndUpdateArr["create"]}) 
                 createAndUpdateArr["create"].map((sample)=>
@@ -509,19 +528,31 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
                             data: sample,
                     })
                 ) 
-                : [Promise.resolve()]
-            
+                : _getEmptyArrPromise()
 
-            const promise_update = createAndUpdateArr["update"].length ? createAndUpdateArr["update"].map((sample)=>
+                createAndUpdateArr["update"] = createAndUpdateArr["update"].length ? createAndUpdateArr["update"].map((sample)=>
                 prismaClient[database_name].update({
                         where: {
                             [strId]: sample[strId],
                         },
                         data: sample,
                     })
-            ) : [Promise.resolve()]
+            ) : _getEmptyArrPromise()
+
+            createAndUpdateArr['create'].map((_e)=>_e.catch((e)=>{
+                console.log("create EEE3",e)
+ 
+             }))
+             createAndUpdateArr['update'].map((_e)=>_e.catch((e)=>{
+                console.log("update EEE3",e)
+ 
+             }))
             //TODO-IMP createMany dont work in SQLite 
-            return Promise.all([...promise_create,...promise_update])
+            return Promise.all([Promise.all(createAndUpdateArr['create']),Promise.all(createAndUpdateArr['update'])]).then((_arr)=>{
+
+                const arr = _arr.map((elm)=>_isEmptyAwaitedPromise(elm) ? [] : elm)
+                return buildSaved(...arr)
+            })
 
         }
 

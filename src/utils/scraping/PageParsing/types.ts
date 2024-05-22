@@ -46,8 +46,8 @@ export type t_component_any =  t_component<string,string>
 export const getRootComponent = <T extends string > (childRoot: T) : readonly [t_rootClassName, readonly [T]] => [rootClassName , [childRoot]] as const
 export type isComponentEmptyChilds < A extends t_component_any> = A[idx_componentChildType] extends t_component_empty_childs ? true : false 
 
-export type t_concatRouteNameClassName<N extends string , C extends string  > =  t_joinCapitalize<[N,C]>
-export const concatRouteNameClassName = <N extends string , C extends string >(routeName:N,className:C) :t_concatRouteNameClassName<N,C> => joinCapitalize(routeName,className)
+export type t_concatRouteNameClassName<N extends string , C extends string  > =  Capitalize<t_joinCapitalize<[N,C]>>
+export const concatRouteNameClassName = <N extends string , C extends string >(routeName:N,className:C) :t_concatRouteNameClassName<N,C> => majFirstChar(joinCapitalize(routeName,className))
 
 export type t_removeConcatRouteNameClassName<N extends string , S extends string  > =  removePrefix<t_concatRouteNameClassName<N,"">,S>
 

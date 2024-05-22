@@ -28,6 +28,7 @@ import { removeCommentRegex, import_str_regex, getExportedFunctionNameRegex, get
 import { t_strRegex } from '@shared/_regexp.js';
 import { embedBeginOfLineStrOrRegex } from '@shared/m_regex_prefixAndSuffix.js';
 import { getProtocolAndDomain } from '@shared/validate-url/functions.js';
+import { time } from '@shared/hours.js';
 
 
 const __filename = fileURLToPath(import.meta.url);

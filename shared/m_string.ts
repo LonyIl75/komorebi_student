@@ -62,7 +62,7 @@ export const minAllStr = <Z extends string > (str:Z) : Lowercase<Z> => str.toLow
 export const minFirstChar = <Z extends string > (str:Z) : Uncapitalize<Z> => str.charAt(0).toLowerCase() + str.slice(1) as Uncapitalize<Z>  ;
 
 export const joinCapitalize = <T extends readonly string[]>(...args:T) => {
-    return args.reduce((_str,elm) => `${_str}${majFirstChar(elm)}`,"") as t_joinCapitalize<T>
+    return args.slice(1).reduce((_str,elm) => `${_str}${majFirstChar(elm)}`,args[0]) as t_joinCapitalize<T>
 }
   
 export const str_validation_strRegex = "validation_strRegex" as const

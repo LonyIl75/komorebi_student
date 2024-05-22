@@ -1,21 +1,21 @@
 
 import { t_idRouteUnion_lespepitestech, t_idRoutes_lespepitestech, idRoutes_lespepitestech } from "@/controller/scraping-services/Services/Config/lespepitestech/config.js";
+import { scrapingComponent_lespepitestech_login } from "@/routes/scraping-services/Data/lespepitestech/Services/Login/Login.js";
+import { scrapingComponent_lespepitestech_main } from "@/routes/scraping-services/Data/lespepitestech/Services/Main/Main.js";
 import { scrapingComponent_lespepitestech_startupsMtp, t_scrapingComponent_lespepitestech_startupsMtp } from "@/routes/scraping-services/Data/lespepitestech/Services/StartupsMtp/StartupsMtp.js"
 import { getPairedElementValue } from "@shared/type.js";
 
 
-const lespepitestech_ScrapingJsonTypeHome = {} as any;//main
-type t_lespepitestech_ScrapingJsonTypeHome = {} ;
+const lespepitestech_ScrapingJsonTypeHome = scrapingComponent_lespepitestech_main
+type t_lespepitestech_ScrapingJsonTypeHome =  typeof lespepitestech_ScrapingJsonTypeHome;
 
 
 
 const arrOfScrapingJsonType_baseService_lespepitestechRoute = [
-   {} as any //login
+   scrapingComponent_lespepitestech_login
 ]  as const;
 
-type t_arrOfScrapingJsonType_baseService_lespepitestechRoute = [
-   {}
-] ;
+type t_arrOfScrapingJsonType_baseService_lespepitestechRoute = typeof arrOfScrapingJsonType_baseService_lespepitestechRoute;
 
 
 const arrOfScrapingJsonType_only_lespepitestechRoute = [scrapingComponent_lespepitestech_startupsMtp] as const 

@@ -10,7 +10,7 @@ const debug_pageParsing_treeParsing : Debugger = debug(name_module)
 
 
 import {INodeComponent, NodeComponent, NodeComponentValue, err_function_retPromfEmptyNodeComponent, t_nodeComponent_values} from "./Tree/NodeComponent.js"
-import {IJson,cst_entry, pop_map, t_Entry} from "@shared/m_object.js";
+import {IJson,cst_entry, entryGetValue, getFristEntryFromJson, pop_map, t_Entry} from "@shared/m_object.js";
 import { XOR, arrToUnion, reshapeObject} from "@shared/type.js"
 import { TypeChilds, err_function_retPromNullTypeChild, t_emptyTypeChilds} from "./TypeChilds/TypeChilds.js"
 import { rootClassName, t_arr_component, t_getChildTypeFromArrComponent, t_getClassNameTypeFromArrComponent, t_rootClassName} from "./types.js"
@@ -32,7 +32,9 @@ import { MapRegexToIdPath } from '@shared/m_regexMapping.js';
 import { t_strRegex } from '@shared/_regexp.js';
 import { noneChildType } from './TypeChilds/types.js';
 import { ChildAttributeTypeValue } from './Schema/_Component/ChildAttributeType/ChildAttributeTypeValue.js';
-import { str_value, str_value_init } from './Schema/_Component/ValTextContent/types.js';
+import { str_joinChar_group, str_value, str_value_init, str_value_validation_strRegex } from './Schema/_Component/ValTextContent/types.js';
+import { getRegexGS, isEmptyStrRegex } from '@shared/m_regex.js';
+import { getMatchAndPosFromRegexMatchingInterval } from '@shared/m_regex_matchObject.js';
 
 
 const parent_component_color = "red"
@@ -71,8 +73,21 @@ export const getAttributesValues  = async (page_or_element : t_pageOrElementHN ,
                     [attribute_name_all]: df_fct_attribute_name(attributeValue)
                   }
                 }
-                const val = await ChildAttributeTypeValue.execFunctionAttributeName<t_function_attribute_name_super, t_obj> (attributeValue,fs, _node,attributeValue?.args_setting) 
-                return {[str_value]:val}
+                let value = await ChildAttributeTypeValue.execFunctionAttributeName<t_function_attribute_name_super, t_obj> (attributeValue,fs, _node,attributeValue?.args_setting) 
+                
+                //TODO : to extract + refactor (see NodeComponent function)
+                
+                let res = {[str_value]:value}
+                if( !_isNullOrUndefined(attributeValue?.[str_value_validation_strRegex]) && !isEmptyStrRegex(attributeValue[str_value_validation_strRegex])){
+                  let [name,text] = getFristEntryFromJson(value) // assume that only one attribute per execFunctionAttributeName
+                  const value_init = attributeValue[str_value_init]
+                  const validation_regex = getRegexGS(attributeValue[str_value_validation_strRegex])
+                  const arr_matching_regex = getMatchAndPosFromRegexMatchingInterval(text,validation_regex,[1]).reduce((_acc,_el)=>_el?._match ? [..._acc,_el._match] : _acc ,[])
+                  const arr_res = value_init ? ([value_init,...arr_matching_regex]) : arr_matching_regex
+                  text =  (arr_res).join(attributeValue[str_joinChar_group] ?? Component.df[str_joinChar_group] )
+                  res = text ? {[str_value]:{[name]:text}} : null 
+                }
+                return res
               }
 
               
@@ -80,7 +95,7 @@ export const getAttributesValues  = async (page_or_element : t_pageOrElementHN ,
 
                 const key = _attr_1[str_type]
                 const _attr_2 = await getCurValueOfNode(_attr_1,_node)
-
+                if(_attr_2 === null) return getInvalidValueGetAttributesValues_elem()
                 let new_value :ChildAttributeTypeValue =  ChildAttributeTypeValue.cst_fromValueAndChildAttributeType(_attr_2[str_value],_attr_1) 
                 
                 return cst_entry(new_value[str_config_value][key]  ,new_value) as t_ret_getAttributesValues_elem_awaited //TODO 

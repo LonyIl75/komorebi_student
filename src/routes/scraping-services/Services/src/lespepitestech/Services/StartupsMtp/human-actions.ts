@@ -20,24 +20,26 @@ import { AService } from "@/routes/scraping-services/class/Services/AService.js"
 import { AHA_Service, t_AHA_Service_ArgsGetTree, t_AHA_Service_Param, t_AHA_Service_ParamGetTree, t_IAHA_Service, t_ha_res} from "@/routes/scraping-services/class/Config/Pipeline/HA/Pipeline.js";
 import { hours } from "@shared/hours.js";
 import { waitForLespepitestechPageLoading, waitForLespepitestechPageFullLoading } from "../utils/selector.js";
-import { t_unionIdPath_mapRegex_lespepitestech_startupsMtp, t_arrClassName_startupsMtp, t_unionClassName_startupsMtp, t_arrChilds_startupsMtp, t_unionRegex_mapRegex_lespepitestech_startupsMtp, t_IJsonComponent_startupsMtp, id_field} from "@/routes/scraping-services/Data/lespepitestech/Services/StartupsMtp/StartupsMtp.js";
+import { t_unionIdPath_mapRegex_lespepitestech_startupsMtp, t_arrClassName_startupsMtp, t_unionClassName_startupsMtp, t_arrChilds_startupsMtp, t_unionRegex_mapRegex_lespepitestech_startupsMtp, t_IJsonComponent_startupsMtp, id_field, id_item} from "@/routes/scraping-services/Data/lespepitestech/Services/StartupsMtp/StartupsMtp.js";
 import { root_startupsMtpPage_child_selectors, t_lespepitestech_startupsMtp_rootClassName } from "@/routes/scraping-services/Data/lespepitestech/Services/StartupsMtp/types.js";
 import { req_startupsMtp, res_startupsMtp } from "./routes.input.js";
 import { IsUnion, NestedArray, PopUnion, arrToUnion, reshapeObject} from "@shared/type.js";
 import { ReqAndResType, t_getReq, t_getRes } from "@/routes/scraping-services/class/utils/Data/ReqResRoute.js";
-import { concatRouteNameClassName, rootClassName, t_arr_component, t_concatRouteNameClassName, t_removeConcatRouteNameClassName, t_rootClassName } from "@/utils/scraping/PageParsing/types.js";
+import { rootClassName, t_arr_component, t_concatRouteNameClassName, t_removeConcatRouteNameClassName, t_rootClassName } from "@/utils/scraping/PageParsing/types.js";
 import { _IJsonComponents } from "@/utils/scraping/PageParsing/Schema/FunctionalWrapperJsonComponents/_JsonComponents/_JsonComponents.js";
 import { _isNullOrUndefined } from "@shared/m_primitives.js";
 import { BrowsersPool, getBrowsers } from "@/utils/browser/BrowsersPool.js";
 import { deepCloneJson, deepCloneJsonIfIsObject } from "@shared/m_json.js";
 import { t_df_arr_fct_name_withNextPage, df_arr_fct_name_withNextPage } from "@/routes/scraping-services/class/Config/Pipeline/config_actionNext.js";
 import { getUrlToScrapItem, str_getLocalFunction, str_getServiceFunction, t_str_getNextPage, t_str_getServiceFunction, t_str_nextPage } from "@/routes/scraping-services/class/Config/Pipeline/HA/types.js";
-import { IJson, isNotEmptyJson, t_getAllMethodsOfObject } from "@shared/m_object.js";
+import { IJson, isNotEmptyJson, s_getProp, t_getAllMethodsOfObject } from "@shared/m_object.js";
 import { date_field, item_field, pagination_field, t_union_required_field } from "@shared/m_regexMapping.js";
 import regex_url, { t_regex_url_fctEmbeds } from "@shared/validate-url/regexp.js";
 import { EmbeddingPASGroup, embedCapturingGroupStrOrRegex } from "@shared/m_regex_prefixAndSuffix.js";
 import { getBodyUrlAndParamsReq, joinEndParamUrlIfNotEmpty } from "@shared/validate-url/functions.js";
 import { joinBegParamUrl, joinReqUrl } from "@shared/validate-url/types.js";
+import { mergeSaved } from "@/routes/scraping-services/class/utils/Data/ServiceRoute.js";
+import { convertToArray } from "@shared/m_array.js";
 
 type t_args_getTree < BaseElement extends t_unionClassName_startupsMtp=t_rootClassName>= t_AHA_Service_ArgsGetTree<t_serviceName_lespepitestech,t_str_startupsMtp ,BaseElement,t_unionRegex_mapRegex_lespepitestech_startupsMtp ,t_unionIdPath_mapRegex_lespepitestech_startupsMtp , t_arrClassName_startupsMtp,t_unionClassName_startupsMtp ,t_arrChilds_startupsMtp ,  t_IJsonComponent_startupsMtp>
 
@@ -127,7 +129,7 @@ class HA_LespepitestechServiceStartupsMtp  extends  AHA_Service<t_serviceName_le
         const mpage = await getBrowsers().then((brwsrsP:BrowsersPool)=>brwsrsP.getMPageFromTargetIdx(req.body.browserId,req.body.targetId))
         const scrapingComponent  = mpage.getScrapingComponent()
         let json = tree.getJsonValue(scrapingComponent.getMapPathPatternToId())
-        json = json.res_childs as any
+        json = {...json?.res_childs||{},...req.body.fk} as any
         return {[url_toScrap]:json,[date_field]:_date}
     }
    
@@ -136,14 +138,18 @@ class HA_LespepitestechServiceStartupsMtp  extends  AHA_Service<t_serviceName_le
 
         const url_toScrap = req.header.url_toScrap || req.header.url
         let json = AHA_Service.embedItems(_json,url_toScrap,this.getIdRequiredField(item_field))
-        let json_item = json["StartupsMtpItem"]
+        let json_item = json[id_item]
         json_item = Object.keys(json_item).reduce((acc:any,curr_key:any)=>{
             let curr_json = json_item[curr_key]
-            curr_json = { ...curr_json, StartupsMtpItemCategory : curr_json["StartupsMtpItemCategory"] ||[]}//?.map((_elm)=>_elm["StartupsMtpCategory"])||[]}
+            if(curr_json.hasOwnProperty("StartupsMtpCategory")){
+                curr_json = { ...curr_json, StartupsMtpItemCategory :  [{StartupsMtpCategory:curr_json["StartupsMtpCategory"]}]}
+                delete curr_json["StartupsMtpCategory"]
+            }
+            else curr_json = { ...curr_json, StartupsMtpItemCategory : s_getProp(curr_json,"StartupsMtpItemCategory",[])}//?.map((_elm)=>_elm["StartupsMtpCategory"])||[]}
             acc[curr_key] = curr_json
             return acc
         },{})
-        json["StartupsMtpItem"] = json_item
+        json[id_item] = json_item
         res.body.result[url_toScrap] = {...res.body?.result?.[url_toScrap] || {},...json}
         res.body.nexts=AHA_Service._bodyNextsJson(json,this.getIdRequiredField(pagination_field[0]),this.getIdRequiredField(pagination_field[1]))
         return [req,res]as ReqAndResType<req_startupsMtp , res_startupsMtp>
@@ -162,8 +168,8 @@ class HA_LespepitestechServiceStartupsMtp  extends  AHA_Service<t_serviceName_le
                     type TSample = (IJson & {[id_field]:string} & {[date_field]:string})
                     const rows :TSample[] = Object.values(result[this.getIdRequiredField(item_field)])//.map((row)=>applyFctToObjectKeys(row,(k:string)=>k.replace(/^StartupsMtp/,"")))
 
-                    const param = AHA_Service.getSavePageParam(prismaClient , str_startupsMtp ,id_field, date_field , rows , req.header.needUpdate )
-                    await AHA_Service._save_serviceFunction(param)
+                    const param = AHA_Service.getSavePageParam(prismaClient , str_startupsMtp ,id_field, date_field , rows ,res.body.fk, req.header.needUpdate )
+                    res.body.saved = mergeSaved(res.body.saved,await AHA_Service._save_serviceFunction(param))
                 }   
             }    
     }

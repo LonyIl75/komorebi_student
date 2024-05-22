@@ -19,7 +19,7 @@ class RouteData<SN extends string , R extends string > implements IRouteData<SN,
         return `const _arr_classNameType_${this._serviceName}_${this._routeName} = [
             rootClassName,"ContainerGrid","Grid",
             "ContainerPagination","Pagination","SelectedPagination","NextPagination",
-            "Item","Type"
+            _id_item,"Type"
         ] as const  
         
         export const arr_classNameType_${this._serviceName}_${this._routeName} = buildArrClassNameType(str_${majFirstChar(this._routeName)},_arr_classNameType_${this._serviceName}_${this._routeName})

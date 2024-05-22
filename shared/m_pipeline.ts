@@ -318,4 +318,6 @@ export class PipelineBuilder<AllCategory extends string  ,KCategory extends AllC
 }
 
 export type t_pipeline_json<Fct extends string = string , T extends readonly Fct[] = readonly Fct[] , EnvJson extends IJson =IVoid  ,Op extends t_union_id_env_var_op = t_str_noneOp > = {body: T, op :Op, initEnv:t_pipeline_env_var_op[Op] & EnvJson}
+export type t_pipeline_json_any<Fct extends string = string , T extends readonly Fct[] = readonly Fct[] , EnvJson extends IJson =IJson  ,Op extends t_union_id_env_var_op = t_union_id_env_var_op > = {body: T, op :Op, initEnv:t_pipeline_env_var_op[Op] & EnvJson}
+
 export const df_pipeline_json : t_pipeline_json = {body:[],op:str_noneOp,initEnv:getEmptyJson()}

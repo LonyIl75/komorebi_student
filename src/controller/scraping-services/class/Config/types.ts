@@ -72,6 +72,7 @@ export type t_df_RootRepertoryName = typeof df_RootRepertoryName
 
 export const df_idRoute_home  = "_"  as const ;
 export type t_df_idRoute_home = typeof df_idRoute_home ;
+export const isNotIdRouteHome = <T extends string >(key:T) => (key !== df_idRoute_home)  as T extends t_df_idRoute_home ? false : true ;
 
 export const str_idRoutes = "idRoutes" as const ;
 export type t_str_idRoutes = typeof str_idRoutes ;

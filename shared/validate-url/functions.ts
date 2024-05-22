@@ -1,6 +1,6 @@
 import { EmbeddingPASGroup } from "@shared/m_regex_prefixAndSuffix.js"
 import regex_url, { str_protocolAndDomain } from "./regexp.js"
-import { str_bodyUrl, str_domain, str_head_http_https, str_paramsUrl } from "./_types.js"
+import { str_bodyUrl, str_domain, str_head_http_https, str_paramsUrl, str_sld, str_subdomain } from "./_types.js"
 import { joinEndParamUrl, t_end_paramUrl } from "./types.js"
 import { filterNotElmArr, removeFirstArray } from "@shared/type.js"
 import { nullOrUndefined, t__isNullOrUndefined } from "@shared/m_primitives.js"
@@ -45,6 +45,33 @@ export const getProtocolAndDomain= <T extends string>(url:T)=> {
     const [_protocol,_domain] = [match_protocolAndDomain[1],match_protocolAndDomain[2]]
     return {protocolUrl:_protocol,domainUrl:_domain}
 }
+
+export const getSubDomainAndSld= <T extends string>(url:T)=> {
+    const strRegex_match_protocolAndDomain = regex_url.buildGroupRegexp({
+        [str_bodyUrl]: { 
+            childs:{
+                [str_protocolAndDomain ]:{
+                    childs: {
+                        [str_domain]:{
+                            childs : {
+                                [str_subdomain]:{
+                                    _:EmbeddingPASGroup.name
+                                },
+                                [str_sld]:{
+                                    _:EmbeddingPASGroup.name
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    } as const )
+    const match_protocolAndDomain = url.match(new RegExp(strRegex_match_protocolAndDomain))
+    const [subdomain,sld] = [match_protocolAndDomain[1],match_protocolAndDomain[2]]
+    return {subdomainUrl : subdomain , sldUrl:sld}
+}
+
 
 type _t_joinEndParamUrlIfNotEmpty  <Params extends readonly string[], Acc extends string = ""> = 
 Params extends readonly [infer A ,...infer R] ? R extends readonly string[] ? A extends string ?

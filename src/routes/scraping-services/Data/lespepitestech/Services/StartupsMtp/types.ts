@@ -15,6 +15,8 @@ export type t_str_startupsMtp = typeof str_startupsMtp
 export const str_StartupsMtp = majFirstChar(str_startupsMtp)
 export type t_str_StartupsMtp = typeof str_StartupsMtp
 
+export const embedName = <T extends string>(_str:T)=> `${str_StartupsMtp }${_str}` as const 
+
 export const lespepitestech_startupsMtp_rootClassName = `${str_StartupsMtp}${rootClassName}` as const
 export type t_lespepitestech_startupsMtp_rootClassName = typeof lespepitestech_startupsMtp_rootClassName
 export const rootStartupsMtpLespepitestechChildType = StrChildType.compClassnameToChildType(lespepitestech_startupsMtp_rootClassName)
