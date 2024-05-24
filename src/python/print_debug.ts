@@ -32,7 +32,7 @@ export type json_messages = {
     [key in keyof typeof Prefix]:Array<string>
 }
 
-export const print_debug= (name_module:string , messages:json_messages) => {
+export const print_debug= (name_module:string , messages:json_messages) =>{ 
     let cur_arr_mssg : Array<string> = []
     let debug_message : {feature_name:string , feature_value:string} = {feature_name:"",feature_value:""}
     let map_debug_function : Map<string , Debugger> =  new Map<string , Debugger>()
@@ -42,7 +42,7 @@ export const print_debug= (name_module:string , messages:json_messages) => {
     for (const [key, value] of Object.entries(messages)) {
         cur_arr_mssg = value as Array<string>
         console.log("message",cur_arr_mssg ,value )
-        for (const message of cur_arr_mssg ) {
+        for (const message of cur_arr_mssg ) { 
             console.log("message",message)
             arr_buff=message.split(feature_sep,1)
             console.log("arr_buff",arr_buff)
@@ -50,7 +50,7 @@ export const print_debug= (name_module:string , messages:json_messages) => {
             debug_message = {feature_name:arr_buff[0] , feature_value:arr_buff[1]}
             console.log("debug_message",debug_message)
 
-            if((cur_debug_function=map_debug_function.get(debug_message.feature_name)) == undefined) {
+            if((cur_debug_function=map_debug_function.get(debug_message.feature_name)) == undefined) { 
                 cur_debug_function=debug(concatNameModuleAndDebug(name_module ,debug_message.feature_name))
                 map_debug_function.set(debug_message.feature_name,cur_debug_function)
             }   

@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { CodeGenerator } from "@/generator/utils/types.js"
 import { IVoid } from "@shared/m_object.js"
 
@@ -7,7 +8,7 @@ class TypeHABaseServiceRoute<SN extends string , R extends string  >  implements
     _routeName :R 
     _serviceName :SN
 
-    constructor(routeName :R , serviceName :SN){
+    constructor(routeName :R , serviceName :SN){ 
         this._routeName = routeName;
         this._serviceName = serviceName;
     }

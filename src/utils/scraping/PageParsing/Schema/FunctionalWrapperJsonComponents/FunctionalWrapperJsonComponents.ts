@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import {FunctionalWrapperJson, getConfigPropName, setConfig, setJson, getJson, getConfig } from "@shared/m_json.js"
 import { IVoid, createJsonFromMap, createMapFromArrArr, getEmptyJson, revertMap } from "@shared/m_object.js"
 import { isNotFoundIdx } from "@shared/m_primitives.js"
@@ -47,13 +48,13 @@ extends FunctionalWrapperJson < IJsonComponents<ArrUnionClassNameType,unionClass
         return this[str_map_compoIdToChildIds] 
     }
 
-    [str_set_jsonArr_component_json](_jsonArr_component_json:T){
+    [str_set_jsonArr_component_json](_jsonArr_component_json:T){ 
         this[setConfig](str_jsonArr_component_json,_jsonArr_component_json)
     }
-    [str_set_arrClassNameAndChildsComponents](_arrClassNameAndChildsComponents : ArrArr ){
+    [str_set_arrClassNameAndChildsComponents](_arrClassNameAndChildsComponents : ArrArr ){ 
         this[setConfig](str_arrClassNameAndChildsComponents,_arrClassNameAndChildsComponents)
     }
-    [str_set_arrClassName](_arrClassName : ArrUnionClassNameType){
+    [str_set_arrClassName](_arrClassName : ArrUnionClassNameType){ 
         this[setConfig](str_arrClassName,_arrClassName)
     }
 
@@ -68,7 +69,7 @@ extends FunctionalWrapperJson < IJsonComponents<ArrUnionClassNameType,unionClass
     rootClassName:t_rootClassName
     
     [str_map_compoIdToChildIds] : t_map_compoIdToChildIds<unionClassNameType>
-    [str_set_map_compoIdToChildIds](_map_compoIdToChildIds:t_map_compoIdToChildIds<unionClassNameType>){
+    [str_set_map_compoIdToChildIds](_map_compoIdToChildIds:t_map_compoIdToChildIds<unionClassNameType>){ 
         this[str_map_compoIdToChildIds] = _map_compoIdToChildIds
     }
     [str_map_compoIdToChildIds_toJson](){
@@ -89,7 +90,7 @@ extends FunctionalWrapperJson < IJsonComponents<ArrUnionClassNameType,unionClass
         this[setJson](iJsonComponent)
 
         let _ma = createMapFromArrArr<readonly (StrChildType.t_childType<unionClassNameType>|undefined)[],ArrArr,unionClassNameType,unionClassNameType>(this[str_get_arrClassNameAndChildsComponents](),
-            (key:any,val:any)=>{
+            (key:any,val:any)=>{ 
                 return val? val[0] !== undefined ? val.map((_val)=>StrChildType._childTypeToCompClassname<StrChildType.t_childType<unionClassNameType>>(_val)) : val :val 
                 }
              )
@@ -104,12 +105,12 @@ extends FunctionalWrapperJson < IJsonComponents<ArrUnionClassNameType,unionClass
 
         if(_rootClassName== undefined) _rootClassName=this.rootClassName
         if(isInvalidClassName(_rootClassName))throw new Error(`rootClassName ${_rootClassName} is invalidClassName`)
-        const recur = (id_comp_toFind : unionClassNameType ,rootClassName : unionClassNameType|t_rootClassName , path : string ="") => { 
+        const recur = (id_comp_toFind : unionClassNameType ,rootClassName : unionClassNameType|t_rootClassName , path : string ="") =>{  
             const n_path = createAddressBis<string,string,unionClassNameType>(id_comp_toFind,path as any )
             if(id_comp_toFind === rootClassName) return  createAddressBis<typeof n_path , typeof n_path , t_char_join_pathRoutes> (char_join_pathRoutes,n_path) //this.arrClassName[0] === rootClassName
             const parents_found = this[str_get_map_compoIdToChildIds]().get(id_comp_toFind)  
             if(parents_found === undefined) return undefined
-            return (Array.isArray(parents_found)? parents_found : [parents_found]).map((parent_found)=>{
+            return (Array.isArray(parents_found)? parents_found : [parents_found]).map((parent_found)=>{ 
                     return recur(parent_found,rootClassName,n_path)
             })
             
@@ -122,16 +123,16 @@ extends FunctionalWrapperJson < IJsonComponents<ArrUnionClassNameType,unionClass
         
     }
 
-    getSelectorAndAttributeComponentFromPaths(paths_to_nextComponent :  t_ret_findPathOfIdComponent<ArrUnionClassNameType,unionClassNameType>){
+    getSelectorAndAttributeComponentFromPaths(paths_to_nextComponent :  t_ret_findPathOfIdComponent<ArrUnionClassNameType,unionClassNameType>){ 
 
         type _t = {class_name : unionClassNameType , selectors:selectors,attributes?:Array<ChildAttributeType>}
 
         let arrArrSelector : (_t [])[] = []
 
-        for( const path_to_nextComponent of paths_to_nextComponent){
+        for( const path_to_nextComponent of paths_to_nextComponent){ 
             const componentsIds = unjoin_pathRoutes<unionClassNameType>(path_to_nextComponent)
             let _arrArrSelector : _t [] = []
-            for( let i =0 ;i < componentsIds.length ; i++){
+            for( let i =0 ;i < componentsIds.length ; i++){ 
                 const componentId = componentsIds[i]
                 const childId  =  StrChildType.compClassnameToChildType(componentsIds[i+1]) 
                 const idx_child = i+1 == componentsIds.length ? 0 : Component.getIndexOfChildClassName(this[getJson]()[componentId],childId)
@@ -145,7 +146,7 @@ extends FunctionalWrapperJson < IJsonComponents<ArrUnionClassNameType,unionClass
         return arrArrSelector
     }
 
-    getSelectorAndAttributeComponentFromId(_id_component : unionClassNameType,_rootClassName ?: unionClassNameType|t_rootClassName){
+    getSelectorAndAttributeComponentFromId(_id_component : unionClassNameType,_rootClassName ?: unionClassNameType|t_rootClassName){ 
         const paths_to_nextComponent = this.findPathOfIdComponent(_id_component,_rootClassName)
         return this.getSelectorAndAttributeComponentFromPaths(paths_to_nextComponent)
     }
@@ -162,7 +163,7 @@ extends FunctionalWrapperJson < IJsonComponents<ArrUnionClassNameType,unionClass
         let element : t_union_IComponent<unionClassNameType , unionChilds> = {} as  t_union_IComponent<unionClassNameType, unionClassNameType>
         let idx_element :number  = _notFoundIdx()
 
-        for (let idx = 0 ; idx < arr_path_className.length -1 ; idx++) {
+        for (let idx = 0 ; idx < arr_path_className.length -1 ; idx++) { 
             key = arr_path_className[idx]
             element = this[getJson]()[key]
             idx_element = Component.getIndexOfChildClassName(element,StrChildType.compClassnameToChildType(arr_path_className[idx+1]))
@@ -201,9 +202,9 @@ extends FunctionalWrapperJson < IJsonComponents<ArrUnionClassNameType,unionClass
 
     {
 
-        /*if(listOfComponent.length == 0) {
-            return  new FunctionalWrapperJsonComponent<ArrUnionClassNameType_2,never,[],IVoid>(listOfComponent,[],getEmptyJson()) as any // as t_subJsonComponent<ArrUnionClassNameType ,unionClassNameType ,[], ArrArr > 
-        }*/
+        //if(listOfComponent.length == 0) { 
+            //return  new FunctionalWrapperJsonComponent<ArrUnionClassNameType_2,never,[],IVoid>(listOfComponent,[],getEmptyJson()) as any // as t_subJsonComponent<ArrUnionClassNameType ,unionClassNameType ,[], ArrArr > 
+        //}
 
         type unionClassNameType_2 = arrToUnion<ArrUnionClassNameType_2>
         type ArrArr_2 = getSubArrComponent<ArrUnionClassNameType,ArrUnionClassNameType_2,ArrArr>    
@@ -211,14 +212,14 @@ extends FunctionalWrapperJson < IJsonComponents<ArrUnionClassNameType,unionClass
 
         
 
-        const fct_getMonoClassNameAndChildsComponents = (idx : number , fct_test: (className : unionClassNameType)=> boolean )=>{
+        const fct_getMonoClassNameAndChildsComponents = (idx : number , fct_test: (className : unionClassNameType)=> boolean )=>{ 
             let cur   = this[str_get_arrClassNameAndChildsComponents]()[idx] 
             let curClassName = cur[getIdxComponentClassName]
             if(fct_test(curClassName)) return {className : curClassName, arrChilds : cur }
             else return _notFoundIdx()
         }
 
-        const fct_getMonoJsonArrComponent = (curClassName : unionClassNameType)=>{
+        const fct_getMonoJsonArrComponent = (curClassName : unionClassNameType)=>{ 
             return this[getJson]()[curClassName]
         }       
 
@@ -256,9 +257,9 @@ extends FunctionalWrapperJson < IJsonComponents<ArrUnionClassNameType,unionClass
     ArrArr_2 extends t_arr_component<unionClassNameType_2> ,
     T_2 extends _IJsonComponents< unionClassNameType_2>,
     t_subsetList extends readonly unionClassNameType_2[] >
-    ( listOfComponent : t_subsetList,jsonComponentBis : FunctionalWrapperJsonComponent <ArrUnionClassNameType_2,unionClassNameType_2 , ArrArr_2,  T_2> ){
+    ( listOfComponent : t_subsetList,jsonComponentBis : FunctionalWrapperJsonComponent <ArrUnionClassNameType_2,unionClassNameType_2 , ArrArr_2,  T_2> ){ 
             let t_subJsonComponent : t_subJsonComponent<ArrUnionClassNameType_2, unionClassNameType_2, t_subsetList, ArrArr_2> = jsonComponentBis.getSubJsonComponent<t_subsetList>(listOfComponent)
-            if(t_subJsonComponent) {
+            if(t_subJsonComponent) { 
                 let res = this.getAddedJsonComponent(t_subJsonComponent)
                 return res 
             }

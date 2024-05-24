@@ -18,7 +18,7 @@ const debug_scrapL_startupsMtp :Debugger  = debug(name_module)
 
 import { AService } from "@/routes/scraping-services/class/Services/AService.js";
 import { AHA_Service, t_AHA_Service_ArgsGetTree, t_AHA_Service_Param, t_AHA_Service_ParamGetTree, t_IAHA_Service, t_ha_res} from "@/routes/scraping-services/class/Config/Pipeline/HA/Pipeline.js";
-import { hours } from "@shared/hours.js";
+import { hours, time } from "@shared/hours.js";
 import { waitForLespepitestechPageLoading, waitForLespepitestechPageFullLoading } from "../utils/selector.js";
 import { t_unionIdPath_mapRegex_lespepitestech_startupsMtp, t_arrClassName_startupsMtp, t_unionClassName_startupsMtp, t_arrChilds_startupsMtp, t_unionRegex_mapRegex_lespepitestech_startupsMtp, t_IJsonComponent_startupsMtp, id_field, id_item} from "@/routes/scraping-services/Data/lespepitestech/Services/StartupsMtp/StartupsMtp.js";
 import { root_startupsMtpPage_child_selectors, t_lespepitestech_startupsMtp_rootClassName } from "@/routes/scraping-services/Data/lespepitestech/Services/StartupsMtp/types.js";
@@ -32,7 +32,7 @@ import { BrowsersPool, getBrowsers } from "@/utils/browser/BrowsersPool.js";
 import { deepCloneJson, deepCloneJsonIfIsObject } from "@shared/m_json.js";
 import { t_df_arr_fct_name_withNextPage, df_arr_fct_name_withNextPage } from "@/routes/scraping-services/class/Config/Pipeline/config_actionNext.js";
 import { getUrlToScrapItem, str_getLocalFunction, str_getServiceFunction, t_str_getNextPage, t_str_getServiceFunction, t_str_nextPage } from "@/routes/scraping-services/class/Config/Pipeline/HA/types.js";
-import { IJson, isNotEmptyJson, s_getProp, t_getAllMethodsOfObject } from "@shared/m_object.js";
+import { IJson, isEmptyJson, isNotEmptyJson, s_getProp, t_getAllMethodsOfObject } from "@shared/m_object.js";
 import { date_field, item_field, pagination_field, t_union_required_field } from "@shared/m_regexMapping.js";
 import regex_url, { t_regex_url_fctEmbeds } from "@shared/validate-url/regexp.js";
 import { EmbeddingPASGroup, embedCapturingGroupStrOrRegex } from "@shared/m_regex_prefixAndSuffix.js";
@@ -76,7 +76,7 @@ class HA_LespepitestechServiceStartupsMtp  extends  AHA_Service<t_serviceName_le
         return AService.df_localFunction()
     }
 
-    static getDfArgsGetTree :()=> t_args_getTree = ()=>{return {
+    static getDfArgsGetTree :()=> t_args_getTree = ()=>{ return {
         params:{
             serviceName : serviceName_lespepitestech,
             routeName:str_startupsMtp,
@@ -90,7 +90,7 @@ class HA_LespepitestechServiceStartupsMtp  extends  AHA_Service<t_serviceName_le
 
     }}
 
-    getNextPageParam(req:req_startupsMtp , res : res_startupsMtp){
+    getNextPageParam(req:req_startupsMtp , res : res_startupsMtp){ 
         return AHA_Service.getNextPageParam<t_serviceName_lespepitestech,t_str_startupsMtp,req_startupsMtp,res_startupsMtp>(req,res)
     }
 
@@ -117,29 +117,48 @@ class HA_LespepitestechServiceStartupsMtp  extends  AHA_Service<t_serviceName_le
         return [param,fct_loading]
     }
 
-    getTree< BaseElement extends unionClassNameType  ,  UnionRegex  extends t_1  ,UnionIdPath  extends t_2 , ArrUnionClassNameType extends t_3 ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> & t_5  ,  T extends _IJsonComponents< unionClassNameType> & t_6  >(req:req_startupsMtp , res : res_startupsMtp,_args:reshapeObject< t_AHA_Service_ArgsGetTree<t_serviceName_lespepitestech,t_str_startupsMtp, BaseElement,UnionRegex ,UnionIdPath , ArrUnionClassNameType,unionClassNameType ,ArrArr ,  T>>= {}  ){
+    getTree< BaseElement extends unionClassNameType  ,  UnionRegex  extends t_1  ,UnionIdPath  extends t_2 , ArrUnionClassNameType extends t_3 ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> & t_5  ,  T extends _IJsonComponents< unionClassNameType> & t_6  >(req:req_startupsMtp , res : res_startupsMtp,_args:reshapeObject< t_AHA_Service_ArgsGetTree<t_serviceName_lespepitestech,t_str_startupsMtp, BaseElement,UnionRegex ,UnionIdPath , ArrUnionClassNameType,unionClassNameType ,ArrArr ,  T>>= {}  ){ 
         const params = this.getTreeParam(req,res,_args)
+        console.log("STARTUPS MTP")
         return AHA_Service._getTree<t_serviceName_lespepitestech, t_str_startupsMtp,  BaseElement,t_unionRegex_mapRegex_lespepitestech_startupsMtp ,t_unionIdPath_mapRegex_lespepitestech_startupsMtp , t_arrClassName_startupsMtp,t_unionClassName_startupsMtp ,t_arrChilds_startupsMtp ,  t_IJsonComponent_startupsMtp>(...params)
     }
 
     async [str_getServiceFunction]  (req:req_startupsMtp , res : res_startupsMtp): t_ha_res{
         const url_toScrap =  req.header.url_toScrap || req.header.url  //A FAIRE : extract
-        const tree = await this.getTree<t_lespepitestech_startupsMtp_rootClassName,t_unionRegex_mapRegex_lespepitestech_startupsMtp ,t_unionIdPath_mapRegex_lespepitestech_startupsMtp , t_arrClassName_startupsMtp,t_unionClassName_startupsMtp ,t_arrChilds_startupsMtp ,  t_IJsonComponent_startupsMtp>(req,res)
-        const _date = hours.getTimeNow()
         const mpage = await getBrowsers().then((brwsrsP:BrowsersPool)=>brwsrsP.getMPageFromTargetIdx(req.body.browserId,req.body.targetId))
         const scrapingComponent  = mpage.getScrapingComponent()
-        let json = tree.getJsonValue(scrapingComponent.getMapPathPatternToId())
-        json = {...json?.res_childs||{},...req.body.fk} as any
+        let json = null
+        let _date = null
+        const max_retry = 4
+        let retry = 0
+        while(retry < max_retry && isEmptyJson(json)){
+            console.log("RETRY",retry)
+            try {
+                const tree = await this.getTree<t_lespepitestech_startupsMtp_rootClassName,t_unionRegex_mapRegex_lespepitestech_startupsMtp ,t_unionIdPath_mapRegex_lespepitestech_startupsMtp , t_arrClassName_startupsMtp,t_unionClassName_startupsMtp ,t_arrChilds_startupsMtp ,  t_IJsonComponent_startupsMtp>(req,res)
+                 _date = hours.getTimeNow()
+                json = tree.getJsonValue(scrapingComponent.getMapPathPatternToId())
+                json = {...json?.res_childs||{},...req.body.fk} as any
+            }
+            catch(e){
+                json = null
+                await time.timer(retry*1500)
+                retry++
+            }
+        }
+        if(retry === max_retry) {
+            console.log("Cannot ERROR")
+            throw new Error("Cannot get json")
+        }
         return {[url_toScrap]:json,[date_field]:_date}
     }
    
 
-    transformAfterGetServiceFunction(req:req_startupsMtp , res : res_startupsMtp, _json:Awaited<ReturnType< typeof HA_LespepitestechServiceStartupsMtp.provider[t_str_getServiceFunction]>> )  {
+    transformAfterGetServiceFunction(req:req_startupsMtp , res : res_startupsMtp, _json:Awaited<ReturnType< typeof HA_LespepitestechServiceStartupsMtp.provider[t_str_getServiceFunction]>> )  { 
 
         const url_toScrap = req.header.url_toScrap || req.header.url
         let json = AHA_Service.embedItems(_json,url_toScrap,this.getIdRequiredField(item_field))
         let json_item = json[id_item]
-        json_item = Object.keys(json_item).reduce((acc:any,curr_key:any)=>{
+        json_item = Object.keys(json_item).reduce((acc:any,curr_key:any)=>{ 
             let curr_json = json_item[curr_key]
             if(curr_json.hasOwnProperty("StartupsMtpCategory")){
                 curr_json = { ...curr_json, StartupsMtpItemCategory :  [{StartupsMtpCategory:curr_json["StartupsMtpCategory"]}]}
@@ -156,8 +175,8 @@ class HA_LespepitestechServiceStartupsMtp  extends  AHA_Service<t_serviceName_le
 
     }
 
-    async save_serviceFunction ( req:req_startupsMtp , res : res_startupsMtp  )  {
-            if(!req.header.isStreaming){
+    async save_serviceFunction ( req:req_startupsMtp , res : res_startupsMtp  )  { 
+            if(!req.header.isStreaming){ 
 
                 const prismaClient = this.getDatabaseLocalAndRemote()[AService.getPropsDBFromHeader(req)].getConnection()
 
@@ -179,7 +198,7 @@ class HA_LespepitestechServiceStartupsMtp  extends  AHA_Service<t_serviceName_le
     }
 
 
-    transformAfterGetNextPage(req:req_startupsMtp , res : res_startupsMtp, json:Awaited<ReturnType< typeof HA_LespepitestechServiceStartupsMtp.provider[t_str_getNextPage]>> )  {
+    transformAfterGetNextPage(req:req_startupsMtp , res : res_startupsMtp, json:Awaited<ReturnType< typeof HA_LespepitestechServiceStartupsMtp.provider[t_str_getNextPage]>> )  { 
 
         const url_toScrap = req.header.url_toScrap || req.header.url
         res.body.nexts = AHA_Service._bodyNextsJson(json[url_toScrap],this.getIdRequiredField(pagination_field[0]),this.getIdRequiredField(pagination_field[1]))
@@ -187,12 +206,12 @@ class HA_LespepitestechServiceStartupsMtp  extends  AHA_Service<t_serviceName_le
         return [req,res]as ReqAndResType<req_startupsMtp , res_startupsMtp>
     }
 
-    async nextPage(req:req_startupsMtp , res : res_startupsMtp )  {
+    async nextPage(req:req_startupsMtp , res : res_startupsMtp )  { 
         return AHA_Service._nextPage(this.getNextPageParam(req,res))
 
     }
 
-    transformAfterNextPage(req:req_startupsMtp , res : res_startupsMtp, json:Awaited<ReturnType< typeof HA_LespepitestechServiceStartupsMtp.provider[t_str_nextPage]>> )  { 
+    transformAfterNextPage(req:req_startupsMtp , res : res_startupsMtp, json:Awaited<ReturnType< typeof HA_LespepitestechServiceStartupsMtp.provider[t_str_nextPage]>> )  {  
         res.body.nexts = json.nexts 
         let new_req = deepCloneJson(req)
         new_req.header.url = json.url

@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { ServiceConfig } from "@/controller/scraping-services/class/Config/ServiceConfig.js";
 import config_lespepitestech, { t_serviceName_lespepitestech, t_remoteAddress_lespepitestech, t_idRoute_home_lespepitestech, t_idRoutes_lespepitestech, t_idRouteAndRemoteAddresss_lespepitestech, t_idRouteUnion_lespepitestech, serviceName_lespepitestech } from "../../Config/lespepitestech/config.js";
 import {  t_str_doProcessFunctionName } from "@/controller/scraping-services/class/Config/types.js";
@@ -11,8 +12,8 @@ export const  LespepitestechMainService =   MainService.cst<t_serviceName_lespep
 export type lespepitestech_doProcessFunctionName = typeof ServiceConfig.df[t_str_doProcessFunctionName];
 
 export const doServiceLespepitestech : t_doServiceFunction<t_serviceName_lespepitestech,t_remoteAddress_lespepitestech , t_idRoute_home_lespepitestech,t_idRoutes_lespepitestech,t_idRouteAndRemoteAddresss_lespepitestech>
-= async (id_route : t_idRouteUnion_lespepitestech , functionName : string  ,  ...args:any[]) => {   
-    return  LespepitestechMainService.then(  async (obj ) => {   
+= async (id_route : t_idRouteUnion_lespepitestech , functionName : string  ,  ...args:any[]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/   
+    return  LespepitestechMainService.then(  async (obj ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/   
         return  await MainService.doServiceFunction(obj,id_route , functionName , ...args);
     })
 }

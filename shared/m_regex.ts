@@ -45,13 +45,13 @@ export const ordinalSuffixRegex = veryShortWordStrRegex
 
 //TODO replace by prefix and suffix
 
-export function getRegexGM(str_regex:string){
+export function getRegexGM(str_regex:string){ 
     return new RegExp(str_regex,"gm")
 }
-export function getRegexG(str_regex:string){
+export function getRegexG(str_regex:string){ 
   return new RegExp(str_regex,"g")
 }
-export function getRegexGS(str_regex:string){
+export function getRegexGS(str_regex:string){ 
   return new RegExp(str_regex,"gs")
 }
 
@@ -59,12 +59,12 @@ export function getRegexGS(str_regex:string){
 export const isAssignationRegex = `[^;]*?=\\s+`
 
 
-export function notPatternLookahead(str_regex:string){
+export function notPatternLookahead(str_regex:string){ 
     return `(?!${str_regex})` as const 
 }
 
 
-export const fct_escape =<T extends string =""> ( str : T ="" as T)=> {
+export const fct_escape =<T extends string =""> ( str : T ="" as T)=>{ 
   return `\\${str}` as const 
 }
 export interface FnEscape extends Fn<[string],string> {
@@ -86,11 +86,11 @@ export type t_transformRegexOrStr <B extends boolean,_T extends (B extends true 
 _T extends string ? Apply<_Fn,[_T]> : MRegExp<Apply<_Fn,[S]>,F extends undefined ? _F : F >
 
 export const transformRegexOrStr = 
-<B extends boolean,_T extends (B extends true ? string : MRegExp<S,F>),_Fn extends Fn<[string],string> , Fct extends t_functionFn<_Fn>, S extends string = undefined , F extends t_regexpFlags = undefined  , _F extends t_regexpFlags = undefined >(param_regexOrStr : _T, isStr :B , fct_transform_str : Fct , flags :_F = undefined) => {
+<B extends boolean,_T extends (B extends true ? string : MRegExp<S,F>),_Fn extends Fn<[string],string> , Fct extends t_functionFn<_Fn>, S extends string = undefined , F extends t_regexpFlags = undefined  , _F extends t_regexpFlags = undefined >(param_regexOrStr : _T, isStr :B , fct_transform_str : Fct , flags :_F = undefined) =>{ 
   
   let res : any 
 
-  if(isStr){
+  if(isStr){ 
     const c_pram_regexOrStr = param_regexOrStr as string
     res = fct_transform_str(c_pram_regexOrStr)
   }else {
@@ -122,7 +122,7 @@ export const regex_charUnionStr  = "|" as const
 export type t_regex_charUnionStr = typeof regex_charUnionStr 
 export const deleteMatchedStr = (str : string , regex:RegExp) => str.replace(regex, "")
 
-export const replaceIfMatched = (str : string , regex:RegExp, replace_str : string = "") :[string,boolean]=> {
+export const replaceIfMatched = (str : string , regex:RegExp, replace_str : string = "") :[string,boolean]=>{ 
   let matched = str.match(regex)
   if(!matched) return [str,false] 
   else {

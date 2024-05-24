@@ -1,4 +1,4 @@
-
+import getCurrentLine from "get-current-line"
 import { ExposeFunction } from "../PageEvaluate/ExposeFunction.js"
 import { UnionToArray, arrToUnion, getElementNumberI, insArray, isEqual, removePrefix, t_JoinChar_underscore, t_joinCapitalize } from "@shared/type.js"
 import { arrID_to_selector, node_to_arrID, node_to_selector } from "./utils.js"
@@ -62,7 +62,7 @@ isEqual<ArrClassNameType,t_ArrClassNameType<ArrClassNameType>> extends true ?
 export const buildArrClassNameType = <N extends string , ArrClassNameType extends readonly string[]>(name:N,_arrClassNameType:ArrClassNameType)=>
 {
   let res : any[]= [rootClassName]  
-  for ( const _classNameType of _arrClassNameType){
+  for ( const _classNameType of _arrClassNameType){ 
     res.push(concatRouteNameClassName(name,_classNameType))
    }
    return res as t_builtArrClassNameType<N,ArrClassNameType>
@@ -85,7 +85,7 @@ export type t_getLeaf <  T extends string , ArrComponent extends t_arr_component
 
 
 
-export const getChildArr = <arrClassName extends readonly string[] ,  t_idx extends  number , t_childs_idx extends number[] =[] ,t_arr_ext extends readonly string [] = readonly [], _unionClassName extends arrToUnion<arrClassName> =arrToUnion<arrClassName> >(arr_component:arrClassName, idx:t_idx,childs_idx : t_childs_idx =[] as t_childs_idx , arr_ext : t_arr_ext = [] as any  ) => { 
+export const getChildArr = <arrClassName extends readonly string[] ,  t_idx extends  number , t_childs_idx extends number[] =[] ,t_arr_ext extends readonly string [] = readonly [], _unionClassName extends arrToUnion<arrClassName> =arrToUnion<arrClassName> >(arr_component:arrClassName, idx:t_idx,childs_idx : t_childs_idx =[] as t_childs_idx , arr_ext : t_arr_ext = [] as any  ) =>{  
   
   type t_childs = t_childs_idx[number] extends never ? undefined : arrClassName[t_childs_idx[number]] extends infer A ? A extends _unionClassName ? A : never : never
   type t_isUndefined = t_arr_ext[number] extends undefined ? t_childs extends undefined ? true : false :false
@@ -112,7 +112,7 @@ export type t_IArrComponents<componentClassName extends string > ={
 }
 
 //TODO : TO MOVE OR DELETE : 
-const components_function : ExposeFunction[] = [node_to_selector, node_to_arrID ,arrID_to_selector].map((exposeFunction:Function) => { 
+const components_function : ExposeFunction[] = [node_to_selector, node_to_arrID ,arrID_to_selector].map((exposeFunction:Function) =>{  
     return new ExposeFunction(exposeFunction)
   })
 

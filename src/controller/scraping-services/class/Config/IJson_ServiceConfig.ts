@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { IJson } from "@shared/m_object.js";
 import { _validateServiceName, _validateRemoteAddress, _validateIdHome, _validateRoute, _validateRouteAndAddress } from "../constraints.js";
 import { df_idRoute_home, df, str_rootRepertoryName, t_df_idRoute_home, t_base_id_serviceRoutes, getPatternArrRouteIdAndRemoteAddress, str_remoteAddress, str_mainAddress, str_idRoute_home, str_idRoutes, str_idRouteAndRemoteAddresss, str_doProcessFunctionName, initMap, t_str_rootRepertoryName } from "./types.js";
@@ -37,7 +38,7 @@ RA extends _validateRouteAndAddress<SN,R,T1>
 
 export type t_transformRootIdIfAny <T extends string , T2 extends string =t_df_idRoute_home>= T extends T2 ? typeof df[t_str_rootRepertoryName] : T
 //TODO incorporate [str_rootRepertoryName] : RootRep in IJson_ServiceConfig generic type and remove this : 
-export const transformRootIdIfAny = <T extends string , T2 extends string =t_df_idRoute_home> (idRoute : T,idRoute_home:T2 = df_idRoute_home as T2) :t_transformRootIdIfAny<T,T2>=> {
+export const transformRootIdIfAny = <T extends string , T2 extends string =t_df_idRoute_home> (idRoute : T,idRoute_home:T2 = df_idRoute_home as T2) :t_transformRootIdIfAny<T,T2>=>{ 
     //@ts-ignore
     return (idRoute !== idRoute_home ? idRoute:df[str_rootRepertoryName]) 
 }

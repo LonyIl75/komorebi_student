@@ -19,6 +19,6 @@ const extensionDb =  "db" as const
 export const concatExtensionDb = <T extends string  > (str:T) => concatExtension(str,extensionDb)
 
 
-export const getPathServiceSqliteDatabase = <T extends string> (service_name:T,isLocal:boolean = true ) =>{
+export const getPathServiceSqliteDatabase = <T extends string> (service_name:T,isLocal:boolean = true ) =>{ 
     return toPrefixFile(joinFilePath(getPathServiceLocalDb(isLocal? getLocalName(service_name):service_name),concatExtensionDb<T>(service_name)))
 }

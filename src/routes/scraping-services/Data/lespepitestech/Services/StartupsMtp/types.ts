@@ -33,10 +33,14 @@ export const lespepitestech_startupsMtp_mainOfComponents: IComponent<t_rootClass
         [
             [[
                 {selector:Selector.cst_onePropAndTagg("",'',"html")},
-                {selector:Selector.cst_onePropAndTagg(classProp,'container-fluid',"div",containOp)},
-                {selector:Selector.cst_onePropAndTagg(classProp,'region-content',"div",containOp)}
+                {selector:Selector.cst_onePropAndTagg("",'',"body")},
+                {selector:Selector.cst_onePropAndTagg(classProp,'main-container container-fluid',"div",containOp)},
+                {selector:Selector.cst_onePropAndTagg(classProp,'container',"div",containOp)},
+                {selector:Selector.cst_onePropAndTagg(classProp,'row',"div",containOp)},
+                {selector:Selector.cst_onePropAndTagg(classProp,'col',"section",containOp)},
+                {selector:Selector.cst_onePropAndTagg(classProp,'region region-content',"div",containOp)}
             ]],
-        ],(arr:string[])=>arr.join(" ")
+        ],(arr:string[])=>arr.join(">")
         ),
     ],
     isScoped : false ,

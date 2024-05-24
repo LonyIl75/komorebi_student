@@ -15,7 +15,7 @@ export abstract class Message {
     name_module :string
     message :string
     value :string
-    constructor( type : t_resp_message , name_module:string , message :string , value :string ){
+    constructor( type : t_resp_message , name_module:string , message :string , value :string ){ 
         this.type = type
         this.name_module = name_module
         this.message = message

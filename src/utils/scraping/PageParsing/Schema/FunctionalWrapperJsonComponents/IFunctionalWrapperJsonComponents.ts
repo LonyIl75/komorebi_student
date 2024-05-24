@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { IFunctionalWrapperIJson, getConfig, t_IFunctionalWrapperIJson_getConfig } from "@shared/m_json.js"
 import { t_agreg_path } from "@shared/routePath.js"
 import { arrToUnion, NestedArray, t_function, t_function_staticToMember, t_this_get_function, t_this_set_function } from "@shared/type.js"
@@ -152,7 +153,7 @@ ArrArr extends t_arr_component<unionClassNameType,string> , T extends _IJsonComp
     arrClassName : ArrUnionClassNameType 
     arrClassNameAndChildsComponents : ArrArr
  
-    constructor(arrClassName : ArrUnionClassNameType ,arrClassNameAndChildsComponents : ArrArr,jsonArr_component_json:T){
+    constructor(arrClassName : ArrUnionClassNameType ,arrClassNameAndChildsComponents : ArrArr,jsonArr_component_json:T){ 
         this.arrClassName = arrClassName
         this.arrClassNameAndChildsComponents =arrClassNameAndChildsComponents 
         this.jsonArr_component_json =jsonArr_component_json

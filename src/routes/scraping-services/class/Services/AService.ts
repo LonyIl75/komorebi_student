@@ -138,7 +138,7 @@ TServiceF extends t_service_functions<SN,_R,T1> = t_service_functions<SN,_R,T1>
         return this.getNamesOfPipelineFunction().includes(key)
     }
 
-    constructor(routeName : _R , address :Addr , databaseLocalAndRemote : DatabaseLocalAndRemote<SN> ,optionsScraping: IOptionScraping ={} as any   ) {
+    constructor(routeName : _R , address :Addr , databaseLocalAndRemote : DatabaseLocalAndRemote<SN> ,optionsScraping: IOptionScraping ={} as any   ) { 
         //@ts-ignore
         this.address = address ;
         this.optionsScraping = {...optionsScraping,...OptionScraping.df};
@@ -147,15 +147,15 @@ TServiceF extends t_service_functions<SN,_R,T1> = t_service_functions<SN,_R,T1>
         
     }
 
-    setOptionsScraping(optionsScraping: IOptionScraping) {
+    setOptionsScraping(optionsScraping: IOptionScraping) { 
         this.optionsScraping = {...this.optionsScraping,...optionsScraping};
     }
 
-    initIfNotSetOptionsScraping(optionsScraping: IOptionScraping) {
+    initIfNotSetOptionsScraping(optionsScraping: IOptionScraping) { 
         return  {...this.optionsScraping,...(optionsScraping||{})};
     }
 
-    async process( req:Parameters<TServiceF[t_str_process]>[0] & t_req_any ,res:Parameters<TServiceF[t_str_process]>[1] & t_res_any ) { 
+    async process( req:Parameters<TServiceF[t_str_process]>[0] & t_req_any ,res:Parameters<TServiceF[t_str_process]>[1] & t_res_any ) {  
         req.body.optionsScraping = this.initIfNotSetOptionsScraping(req.body?.optionsScraping)
         req.header.client_id = getDfClientIdIfUndefined()
         //A FAIRE req.header.url != default  req.header.url better then logical op checking
@@ -171,14 +171,14 @@ TServiceF extends t_service_functions<SN,_R,T1> = t_service_functions<SN,_R,T1>
 
     async process_serviceFunction( req:Parameters<TServiceF[t_str_process]>[0] & t_req_any ,res:Parameters<TServiceF[t_str_process]>[1] & t_res_any ) :Promise<t_connectionCookie> {
         type TF = any //TODO : Pipeline
-        return ((args_4:TF)=>{
+        return ((args_4:TF)=>{ 
                         return fillfctWithOptionScraping(
-                                (...args_3:t_optionsScraping ) =>{
+                                (...args_3:t_optionsScraping ) =>{ 
                                     req.body.optionsScraping = OptionScraping.cst_optionScraping(args_3)
-                                    return ((...args_34 :[t_optionsScraping[t_jsonScrapIdx],TF])=>{
-                                        return ((...args_2:[clientIdOrBrowserId]) => {
-                                            return this.getService().function_serviceName((...args_12:[clientIdOrBrowserId,string])=>{
-                                                const fct_change_args = (res_page : t_mpageTargetIdBrowserId ,...args:any[])=>{//ICI _mpageTargetIdBrowserId
+                                    return ((...args_34 :[t_optionsScraping[t_jsonScrapIdx],TF])=>{ 
+                                        return ((...args_2:[clientIdOrBrowserId]) =>{ 
+                                            return this.getService().function_serviceName((...args_12:[clientIdOrBrowserId,string])=>{ 
+                                                const fct_change_args = (res_page : t_mpageTargetIdBrowserId ,...args:any[])=>{ //ICI _mpageTargetIdBrowserId
                                                     args[0].body.browserId = res_page.browserId
                                                     args[0].body.targetId = res_page.targetId
                                                     return args 
@@ -229,7 +229,7 @@ TServiceF extends t_service_functions<SN,_R,T1> = t_service_functions<SN,_R,T1>
 export class _AService<SN extends _validateServiceName=  _validateServiceName > {
 
     serviceName : SN ;
-    constructor(serviceName : SN) {
+    constructor(serviceName : SN) { 
         this.serviceName = serviceName;
     }
 
@@ -240,9 +240,7 @@ export class _AService<SN extends _validateServiceName=  _validateServiceName > 
     _req extends readonly any [] = _reqAndOpt[0],
      _subReq  extends readonly  any[]   = getDescSubArray<_req,1> 
     //ArrArgs extends (_ArrArgs[_desc['length']] extends SN ? _desc : [])  = (_ArrArgs[_desc['length']] extends SN ?_desc : [] )
-    >(funct: t_function<any,[..._subReq ,SN]> ,...args:[..._subReq])  {
-        console.log("function",funct)
-        console.log("function_serviceName serviceName",this.serviceName)
+    >(funct: t_function<any,[..._subReq ,SN]> ,...args:[..._subReq])  { 
         return funct(...args , this.serviceName)//,name_page ?: string,debug_options?:DebuggingOptions )
     }
 
@@ -258,12 +256,12 @@ export class _ALoginService  {
 
     cookie_name : string ;
 
-    constructor(cookie_name:string){
+    constructor(cookie_name:string){ 
         this.cookie_name = cookie_name;
     }
 
 
-    function_cookieName (funct: Function,...args:any[])  {
+    function_cookieName (funct: Function,...args:any[])  { 
         return funct(...args, this.cookie_name)//,name_page ?: string,debug_options?:DebuggingOptions )
     }
 
@@ -282,9 +280,9 @@ export class _ALoginService  {
 
     }
 
-    [str_getLocalFunction]( req:req_login<_passAndEmail>   )  { //ICI 18
+    [str_getLocalFunction]( req:req_login<_passAndEmail>   )  {  //ICI 18
 
-        return ((client_id:t_clientId , login_data :_passAndEmail) => async(service_name ):Promise<t_connectionCookie> => {
+        return ((client_id:t_clientId , login_data :_passAndEmail) => async(service_name ):Promise<t_connectionCookie> =>{ 
                 const json_cookiesArr = await _ALoginService.getCookieFromFile(client_id,service_name) 
                 return this.getLoginCookieValue(  login_data.user , json_cookiesArr )
 

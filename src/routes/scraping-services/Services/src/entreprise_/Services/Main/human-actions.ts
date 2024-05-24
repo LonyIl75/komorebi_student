@@ -19,7 +19,7 @@ const debug_scrapL_main :Debugger  = debug(name_module)
 
 import { AService } from "@/routes/scraping-services/class/Services/AService.js";
 import { AHA_Service, t_AHA_Service_ArgsGetTree, t_AHA_Service_Param, t_AHA_Service_ParamGetTree, t_IAHA_Service, t_ha_res} from "@/routes/scraping-services/class/Config/Pipeline/HA/Pipeline.js";
-import { hours } from "@shared/hours.js";
+import { hours, time } from "@shared/hours.js";
 import { waitForEntreprise_PageLoading, waitForEntreprise_PageFullLoading } from "../utils/selector.js";
 import { t_unionIdPath_mapRegex_entreprise__main, t_arrClassName_main, t_unionClassName_main, t_arrChilds_main, t_unionRegex_mapRegex_entreprise__main, t_IJsonComponent_main, arr_classNameType_entreprise__main, t_union_socials, id_field} from "@/routes/scraping-services/Data/entreprise_/Services/Main/Main.js";
 import { root_mainPage_child_selectors, t_entreprise__main_rootClassName } from "@/routes/scraping-services/Data/entreprise_/Services/Main/types.js";
@@ -75,7 +75,7 @@ class HA_Entreprise_ServiceMain  extends  AHA_Service<t_serviceName_entreprise_,
         return AService.df_localFunction()
     }
 
-    static getDfArgsGetTree :()=> t_args_getTree = ()=>{return {
+    static getDfArgsGetTree :()=> t_args_getTree = ()=>{ return {
         params:{
             serviceName : serviceName_entreprise_,
             routeName:str_main,
@@ -89,7 +89,7 @@ class HA_Entreprise_ServiceMain  extends  AHA_Service<t_serviceName_entreprise_,
 
     }}
 
-    getNextPageParam(req:req_main , res : res_main){
+    getNextPageParam(req:req_main , res : res_main){ 
         return AHA_Service.getNextPageParam<t_serviceName_entreprise_,t_str_main,req_main,res_main>(req,res)
     }
 
@@ -116,28 +116,47 @@ class HA_Entreprise_ServiceMain  extends  AHA_Service<t_serviceName_entreprise_,
         return [param,fct_loading]
     }
 
-    getTree< BaseElement extends unionClassNameType  ,  UnionRegex  extends t_1  ,UnionIdPath  extends t_2 , ArrUnionClassNameType extends t_3 ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> & t_5  ,  T extends _IJsonComponents< unionClassNameType> & t_6  >(req:req_main , res : res_main,_args:reshapeObject< t_AHA_Service_ArgsGetTree<t_serviceName_entreprise_,t_str_main, BaseElement,UnionRegex ,UnionIdPath , ArrUnionClassNameType,unionClassNameType ,ArrArr ,  T>>= {}  ){
+    getTree< BaseElement extends unionClassNameType  ,  UnionRegex  extends t_1  ,UnionIdPath  extends t_2 , ArrUnionClassNameType extends t_3 ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> & t_5  ,  T extends _IJsonComponents< unionClassNameType> & t_6  >(req:req_main , res : res_main,_args:reshapeObject< t_AHA_Service_ArgsGetTree<t_serviceName_entreprise_,t_str_main, BaseElement,UnionRegex ,UnionIdPath , ArrUnionClassNameType,unionClassNameType ,ArrArr ,  T>>= {}  ){ 
         const params = this.getTreeParam(req,res,_args)
+        console.log("MAIN")
         return AHA_Service._getTree<t_serviceName_entreprise_, t_str_main,  BaseElement,t_unionRegex_mapRegex_entreprise__main ,t_unionIdPath_mapRegex_entreprise__main , t_arrClassName_main,t_unionClassName_main ,t_arrChilds_main ,  t_IJsonComponent_main>(...params)
     }
 
     async [str_getServiceFunction]  (req:req_main , res : res_main): t_ha_res{
         const url_toScrap =  req.header.url_toScrap || req.header.url  //A FAIRE : extract
-        const tree = await this.getTree<t_entreprise__main_rootClassName,t_unionRegex_mapRegex_entreprise__main ,t_unionIdPath_mapRegex_entreprise__main , t_arrClassName_main,t_unionClassName_main ,t_arrChilds_main ,  t_IJsonComponent_main>(req,res)
-        const _date = hours.getTimeNow()
         const mpage = await getBrowsers().then((brwsrsP:BrowsersPool)=>brwsrsP.getMPageFromTargetIdx(req.body.browserId,req.body.targetId))
         const scrapingComponent  = mpage.getScrapingComponent()
-        let json = tree.getJsonValue(scrapingComponent.getMapPathPatternToId())
-        json = json.res_childs as any
+        let json = null
+        let _date = null
+        const max_retry = 4
+        let retry = 0
+        while(retry < max_retry && isEmptyJson(json)){
+            console.log("RETRY",retry)
+            try {
+                const tree = await this.getTree<t_entreprise__main_rootClassName,t_unionRegex_mapRegex_entreprise__main ,t_unionIdPath_mapRegex_entreprise__main , t_arrClassName_main,t_unionClassName_main ,t_arrChilds_main ,  t_IJsonComponent_main>(req,res)
+                 _date = hours.getTimeNow()
+                json = tree.getJsonValue(scrapingComponent.getMapPathPatternToId())
+                json ={...json?.res_childs||{},...req.body.fk} as any
+            }
+            catch(e){
+                json = null
+                await time.timer(retry*1500)
+                retry++
+            }
+        }
+        if(retry === max_retry) {
+            console.log("Cannot ERROR")
+            throw new Error("Cannot get json")
+        }
         return {[url_toScrap]:json,[date_field]:_date}
     }
    
 
-    transformAfterGetServiceFunction(req:req_main , res : res_main, _json:Awaited<ReturnType< typeof HA_Entreprise_ServiceMain.provider[t_str_getServiceFunction]>> )  {
+    transformAfterGetServiceFunction(req:req_main , res : res_main, _json:Awaited<ReturnType< typeof HA_Entreprise_ServiceMain.provider[t_str_getServiceFunction]>> )  { 
 
         let tmp_json = {} as any 
         const url_toScrap = req.header.url_toScrap || req.header.url
-        const json = _json[url_toScrap][arr_classNameType_entreprise__main[2]].reduce((acc,attribute)=>{
+        const json = _json[url_toScrap][arr_classNameType_entreprise__main[2]].reduce((acc,attribute)=>{ 
             if(attribute?.hasOwnProperty("AllLinks_href") /*!== null*/ ){
                 const attribute_value = attribute["AllLinks_href"]
                 const idx_split = attribute_value.lastIndexOf(attribute_value[str_joinChar_group] || ChildAttributeType.df[str_joinChar_group])
@@ -165,8 +184,8 @@ class HA_Entreprise_ServiceMain  extends  AHA_Service<t_serviceName_entreprise_,
 
     }
 
-    async save_serviceFunction ( req:req_main , res : res_main  )  {
-            if(!req.header.isStreaming){
+    async save_serviceFunction ( req:req_main , res : res_main  )  { 
+            if(!req.header.isStreaming){ 
 
                 const prismaClient = this.getDatabaseLocalAndRemote()[AService.getPropsDBFromHeader(req)].getConnection()
 

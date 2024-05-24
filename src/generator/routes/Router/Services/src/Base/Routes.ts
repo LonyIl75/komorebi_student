@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { getIdxIdHomeRoute, getIdxIdLoginRoute, validIdRoutesOrThrow } from "@/controller/scraping-services/class/Config/types.js"
 import { CodeGenerator } from "@/generator/utils/types.js"
 import { IVoid } from "@shared/m_object.js"
@@ -10,7 +11,7 @@ class BaseRoutes<SN extends string , T1 extends readonly string[]> implements IB
     _serviceName :SN
     idRoutes: T1
 
-    constructor(_serviceName:SN,idRoutes:T1){
+    constructor(_serviceName:SN,idRoutes:T1){ 
         this._serviceName = _serviceName
         validIdRoutesOrThrow(idRoutes)
         this.idRoutes = idRoutes

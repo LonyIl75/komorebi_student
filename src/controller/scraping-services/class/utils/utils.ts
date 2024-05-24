@@ -14,12 +14,12 @@ export const str_Service  = majFirstChar(str_service)
 export const str_Services = `${str_Service}s` as const
 export const str_src = "src" as const
 
-export const getNameModuleService = <SN extends string , PN extends string >(serviceName:SN , page_name:PN) => {
+export const getNameModuleService = <SN extends string , PN extends string >(serviceName:SN , page_name:PN) =>{ 
     return getNameModule(serviceName,page_name,str_service)
 }
 
 const str_serviceCommander = str_service + "Commander"
 
-export const getNameModuleServiceCommander = <SN extends string , PN extends string >(serviceName:SN , page_name:PN) => {
+export const getNameModuleServiceCommander = <SN extends string , PN extends string >(serviceName:SN , page_name:PN) =>{ 
     return getNameModule(serviceName,page_name,str_serviceCommander)
 }

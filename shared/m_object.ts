@@ -16,13 +16,13 @@ export type IJson<K extends t_indexable_key = string , V = any > = IVoid  &{
 }
 
 //IVoid
-export const getEmptyJson = () : IVoid =>{
+export const getEmptyJson = () : IVoid =>{ 
     return {} as IVoid;
 }
 
 export type jsonIsExistProp < T extends IJson , propName extends t_indexable_key> = propName extends  keyof T  ? unknown extends T[propName]  ? false : true  :false
 export type t_jsonAddIfNotExist < T extends IJson , T2  extends IJson > = T & Omit<T2,keyof T >
-export const jsonAddIfNotExist = < T extends IJson , T2  extends IJson > (json : T , jsonToAdd : T2) : t_jsonAddIfNotExist<T,T2> => {
+export const jsonAddIfNotExist = < T extends IJson , T2  extends IJson > (json : T , jsonToAdd : T2) : t_jsonAddIfNotExist<T,T2> =>{ 
     return {...jsonToAdd,...json}
 }
 
@@ -38,37 +38,37 @@ BR extends [] ? Res  : Res extends IJson ? jsonGetIfExistPropNamesElseOther<Res,
 
 export type t_isObject<T> = NOT<t__isNullOrUndefined<T>| t__isFunction<T> | t__isArray<T>> & t__isObject<T> 
 
-export function isObject<T>(val:T) {
+export function isObject<T>(val:T) { 
     return ( !(_isNullOrUndefined(val) || _isFunction(val) || _isArray(val)) && _isObject(val))
 }
 
 export type t_isEmptyJson<T extends IJson> = [keyof T] extends [never] ? t_isObject<T> extends true ? true : never : false 
-export const isEmptyJson = (json : any ) : json is IVoid => {
+export const isEmptyJson = (json : any ) : json is IVoid =>{ 
     if(_isNullOrUndefined(json)) return true 
     if(!isObject(json)) throw new Error(`${json} is not an object , isEmptyJson can't be applied`)
     return ((Object.keys(json).length === 0) )
 }
 
 export type t_isNotEmptyJson <T extends IJson<K ,V>,K extends t_indexable_key = t_indexable_key, V = any > = t_isObject<T> extends true ? T  extends json_AtLeastOne<T> ? true : false :never 
-export const isNotEmptyJson = <T extends IJson<K ,V>,K extends t_indexable_key= t_indexable_key, V = any>(json : any ) : json is json_AtLeastOne<K,T> => {
+export const isNotEmptyJson = <T extends IJson<K ,V>,K extends t_indexable_key= t_indexable_key, V = any>(json : any ) : json is json_AtLeastOne<K,T> =>{ 
    return !isEmptyJson(json) 
 }
 export type t_createJsonAsForEach <K extends t_indexable_key = string, V = any> = IJson<K,V>
-export const createJsonAsForEach =<K extends t_indexable_key = string, V = any> (arr_element : { [k in K] : any }[]) :t_createJsonAsForEach<K,V>=>{
+export const createJsonAsForEach =<K extends t_indexable_key = string, V = any> (arr_element : { [k in K] : any }[]) :t_createJsonAsForEach<K,V>=>{ 
   let obj = {} as IJson<K,V>
-  for (const element of arr_element) {
-      for(const key in element){
+  for (const element of arr_element) { 
+      for(const key in element){ 
           obj[key] = element[key]
       }
   }
   return obj 
 }
 export type t_mergeJsonArr<K extends t_indexable_key , T extends IJson<K,any> > = { [k in K] : T[k] }
-export const mergeJsonArr =<K extends t_indexable_key , T extends IJson<K,any> > (arr_element :T[]) : t_mergeJsonArr<K,T> => {
+export const mergeJsonArr =<K extends t_indexable_key , T extends IJson<K,any> > (arr_element :T[]) : t_mergeJsonArr<K,T> =>{ 
     const transformedData = {};
-    for (const item of arr_element) {
+    for (const item of arr_element) { 
         for (const [key, value] of Object.entries(item)) {
-            if (!transformedData[key]) {
+            if (!transformedData[key]) { 
             transformedData[key] = [];
             }
             transformedData[key].push(value);
@@ -86,11 +86,11 @@ export const entryGetKey=< t_entry extends t_Entry_any>(entry:t_entry):t_EntryGe
 export type t_EntryGetValue<t_entry extends  t_Entry_any > = t_entry[1]
 export const entryGetValue=<t_entry extends  t_Entry_any >(entry:t_entry):t_EntryGetValue<t_entry>=>entry[1]
 
-export const cst_entry = <K extends t_indexable_key , V > (key:K,val:V) :t_Entry <K ,V> =>{
+export const cst_entry = <K extends t_indexable_key , V > (key:K,val:V) :t_Entry <K ,V> =>{ 
     return [key,val]
 }
 
-export const getFristEntryFromJson = <T extends IJson>(json : T) : t_Entry <keyof T , T[keyof T]> => {
+export const getFristEntryFromJson = <T extends IJson>(json : T) : t_Entry <keyof T , T[keyof T]> =>{ 
     const key = Object.keys(json)[0]
     return cst_entry(key,json[key])
 }
@@ -99,9 +99,9 @@ export type t_createJsonFromEntries< t_entries extends (readonly (t_Entry<K,V>)[
 t_entries extends nullOrUndefined  ? IVoid : number  extends t_entries["length"] ?IJson<K,V> : jsonFromArrArr<K,t_entries,V>
 
 export const createJsonFromEntries = 
-< t_entries extends (readonly (t_Entry<K,V>)[])|nullOrUndefined   , K extends t_indexable_key = t_entries extends nullOrUndefined ? t_indexable_key : t_EntryGetKey<t_entries[number]>, V = t_entries extends nullOrUndefined ?  any:t_EntryGetValue<t_entries[number]> >(entries : t_entries)=>{
+< t_entries extends (readonly (t_Entry<K,V>)[])|nullOrUndefined   , K extends t_indexable_key = t_entries extends nullOrUndefined ? t_indexable_key : t_EntryGetKey<t_entries[number]>, V = t_entries extends nullOrUndefined ?  any:t_EntryGetValue<t_entries[number]> >(entries : t_entries)=>{ 
     let res = getEmptyJson() as any 
-    if(entries ) res = entries.reduce((acc,entry:t_Entry<K,V>)=>{
+    if(entries ) res = entries.reduce((acc,entry:t_Entry<K,V>)=>{ 
         const cur_key = entryGetKey<t_Entry<K,V>>(entry)
         if(acc.hasOwnProperty(cur_key))  throw new Error(`Entry with same key in entries ${String(cur_key)}`)
         acc[cur_key] = entryGetValue<t_Entry<K,V>>(entry)
@@ -112,18 +112,18 @@ export const createJsonFromEntries =
 
 }
 export type t_applyFctToObjectValues<F extends t_function , O extends IJson = IJson >  =IJson<keyof O , ReturnType<F>>
-export const applyFctToObjectValues = <F extends t_function , O extends IJson = IJson > (obj : O , fct : F) : IJson<keyof O , ReturnType<F>> => {
+export const applyFctToObjectValues = <F extends t_function , O extends IJson = IJson > (obj : O , fct : F) : IJson<keyof O , ReturnType<F>> =>{ 
     let res = {} as IJson<keyof O , ReturnType<F>>
-    for(const key in obj){
+    for(const key in obj){ 
         res[key] = fct(obj[key])
     }
     return res
 }
 
 export type t_applyFctToObjectKeys<F extends t_function<K_Out,[K]> , K extends t_indexable_key = string ,K_Out extends   t_indexable_key =string , O extends IJson<K> = IJson<K> >  = IJson<ReturnType<F> , O[keyof O]>
-export const applyFctToObjectKeys = <F extends t_function<K_Out,[K]> , K extends t_indexable_key = string ,K_Out extends   t_indexable_key =string , O extends IJson<K> = IJson<K> > (obj : O , fct : F) : t_applyFctToObjectKeys<F,K,K_Out,O> => {
+export const applyFctToObjectKeys = <F extends t_function<K_Out,[K]> , K extends t_indexable_key = string ,K_Out extends   t_indexable_key =string , O extends IJson<K> = IJson<K> > (obj : O , fct : F) : t_applyFctToObjectKeys<F,K,K_Out,O> =>{ 
     let res = {} as IJson<K_Out, O[keyof O]>
-    for(const key in obj){
+    for(const key in obj){ 
         const new_key = fct(key as unknown as K)
         res[new_key] = obj[key]
     }
@@ -131,10 +131,10 @@ export const applyFctToObjectKeys = <F extends t_function<K_Out,[K]> , K extends
 }
 
 export type t_applyFctToObjectEntries<RO extends IJson , K extends string = string , V extends any  = any ,   O extends IJson<K,V> = IJson<K,V> >  = RO
-export const applyFctToObjectEntries = <RO extends IJson , K extends string = string , V extends any  = any ,   O extends IJson<K,V> = IJson<K,V> > (obj : O , fct_entry : t_function<RO,[t_Entry<K,V>]>) : t_applyFctToObjectEntries<RO,K,V,O>  => {
+export const applyFctToObjectEntries = <RO extends IJson , K extends string = string , V extends any  = any ,   O extends IJson<K,V> = IJson<K,V> > (obj : O , fct_entry : t_function<RO,[t_Entry<K,V>]>) : t_applyFctToObjectEntries<RO,K,V,O>  =>{ 
     let res = [] as RO[]
     let key : K 
-    for(const _key in obj){
+    for(const _key in obj){ 
         key = _key as unknown as K
         res = [...res , fct_entry([key,obj[key]])] 
     }
@@ -149,8 +149,8 @@ never
 
 export type t_getAllKeysOfMethodsOfObject < T extends Object > = UnionToArray<keyof t_getAllMethodsOfObject<T> >
 
-export const getAllKeysOfMethodsOfObject =  <O extends Object > (object :O ) => {
-    return Object.getOwnPropertyNames(object).filter(function(property) {
+export const getAllKeysOfMethodsOfObject =  <O extends Object > (object :O ) =>{ 
+    return Object.getOwnPropertyNames(object).filter(function(property) { 
         return _isFunction(object[property]);
     }) as t_getAllKeysOfMethodsOfObject<O>;
 }
@@ -158,7 +158,7 @@ export const getAllKeysOfMethodsOfObject =  <O extends Object > (object :O ) => 
 
 
 export type t_setProp <O extends IJson<K,V>, P extends K , K extends t_indexable_key, _V extends O[P] , V = any   > = upsertInSimpleJson<O,P,_V>
-export function setProp <O extends IJson<K,V>, P extends K , _V extends O[P] , K extends t_indexable_key, V = any   >(obj:O, prop:P, value:_V) {
+export function setProp <O extends IJson<K,V>, P extends K , _V extends O[P] , K extends t_indexable_key, V = any   >(obj:O, prop:P, value:_V) { 
     if (obj) obj[prop] = value
     return obj
 }
@@ -171,7 +171,7 @@ export function s_getProp<O extends IJson, P extends t_indexable_key, _V  = unde
 }
 
 export type t_setPropAddIfExist <O extends IJson<K,V>, P extends K ,K extends t_indexable_key, _V extends O[P] = undefined , Cond extends (arg:O)=> boolean = t_emptyCond<any>, V = any   > =  O 
-export function setPropAddIfExist<O extends IJson<K,V>, P extends K ,_V extends O[P] , K extends t_indexable_key,V >(obj:O, prop:P,  _value :_V, addFct :  <V1 extends O[P] , V2 extends _V>(val:V1, addVal:V2) => _V = <V1 extends O[P] , V2 extends _V>(val:V1, addVal:V2) => { return {...val, ...addVal} }) {
+export function setPropAddIfExist<O extends IJson<K,V>, P extends K ,_V extends O[P] , K extends t_indexable_key,V >(obj:O, prop:P,  _value :_V, addFct :  <V1 extends O[P] , V2 extends _V>(val:V1, addVal:V2) => _V = <V1 extends O[P] , V2 extends _V>(val:V1, addVal:V2) =>{  return {...val, ...addVal} }) { 
     const value  = ((obj?.[prop]) ? addFct(obj[prop], _value) : _value ) 
     setProp(obj, prop, value)
     return obj
@@ -179,11 +179,11 @@ export function setPropAddIfExist<O extends IJson<K,V>, P extends K ,_V extends 
 
 export type t_getPropAndInitIfNotExist <O extends IJson, P extends t_indexable_key ,InitValue  ={}, V extends IJson = any   > =  
 t_s_getProp<O,P,undefined> extends infer R ? R extends undefined  ? [InitValue,O & {[k in P]:InitValue}] : [R,O] : never
-export function getPropAndInitIfNotExist<O extends IJson, P extends t_indexable_key , InitValue ={}, V = any  >(obj:O, prop:P, initValue : InitValue = {} as InitValue) {
+export function getPropAndInitIfNotExist<O extends IJson, P extends t_indexable_key , InitValue ={}, V = any  >(obj:O, prop:P, initValue : InitValue = {} as InitValue) { 
     let invalidGet
     let valProp = s_getProp(obj, prop, invalidGet)
 
-    if (valProp === invalidGet) {
+    if (valProp === invalidGet) { 
         setProp(obj, prop, {...initValue} as any)
         valProp = s_getProp(obj, prop, invalidGet)
     }
@@ -208,7 +208,7 @@ function _getObjectFromPropsArrayAndInitIfNotExist<O extends IJson, ArrP extends
     return res  
 }
 
-export function getObjectFromPropsArrayAndInitIfNotExist<O extends IJson, ArrP extends readonly t_indexable_key[] ,InitValue ={},InvalidValue = undefined >(obj:O,  _propsArray : ArrP, invalidValue : InvalidValue = undefined, initValue :InitValue = {} as InitValue) {
+export function getObjectFromPropsArrayAndInitIfNotExist<O extends IJson, ArrP extends readonly t_indexable_key[] ,InitValue ={},InvalidValue = undefined >(obj:O,  _propsArray : ArrP, invalidValue : InvalidValue = undefined, initValue :InitValue = {} as InitValue) { 
     const propsArray = _propsArray?.filter((elm) => elm) as filterNotNullOrUndefinedArr<ArrP>
     return _getObjectFromPropsArrayAndInitIfNotExist<O,typeof propsArray,InitValue,InvalidValue>(obj, propsArray, invalidValue, initValue) 
     
@@ -216,27 +216,27 @@ export function getObjectFromPropsArrayAndInitIfNotExist<O extends IJson, ArrP e
 type t_setExtraValueFromPropsArray_fct <O extends IJson, P extends t_indexable_key, _V> = (obj: O, prop: P, _value: _V)  => O 
 export type t_setExtraValueFromPropsArray <O extends IJson, ArrP extends readonly t_indexable_key[] ,_V,InitValue ={},InvalidValue = undefined > = 
 t_getObjectFromPropsArrayAndInitIfNotExist<O,ArrP,InitValue,InvalidValue > extends InvalidValue ? InvalidValue : t_setExtraValueFromPropsArray_fct< t_getObjectFromPropsArrayAndInitIfNotExist<O,ArrP,InitValue,InvalidValue>,ArrP[number] , _V >
-export  function setExtraValueFromPropsArray<O extends IJson, ArrP extends readonly t_indexable_key[] , _V,InitValue ={} ,InvalidValue = undefined >(obj:O,  propsArray : ArrP, value : _V, invalidReturn : InvalidValue = undefined, initValue :InitValue = {} as InitValue, fctSet : t_setExtraValueFromPropsArray_fct< t_getObjectFromPropsArrayAndInitIfNotExist<O,readonly (ArrP[number])[],InitValue,InvalidValue>,ArrP[number] , _V > = setPropAddIfExist) {
+export  function setExtraValueFromPropsArray<O extends IJson, ArrP extends readonly t_indexable_key[] , _V,InitValue ={} ,InvalidValue = undefined >(obj:O,  propsArray : ArrP, value : _V, invalidReturn : InvalidValue = undefined, initValue :InitValue = {} as InitValue, fctSet : t_setExtraValueFromPropsArray_fct< t_getObjectFromPropsArrayAndInitIfNotExist<O,readonly (ArrP[number])[],InitValue,InvalidValue>,ArrP[number] , _V > = setPropAddIfExist) { 
     let getted_obj = getObjectFromPropsArrayAndInitIfNotExist(obj, propsArray, invalidReturn)
     if (getted_obj === invalidReturn) return invalidReturn
     fctSet(getted_obj, propsArray[propsArray.length - 1], value)//t_getLastElementArr<ArrP>
     return getted_obj as t_setExtraValueFromPropsArray<O,filterNotNullOrUndefinedArr<ArrP>,_V,InitValue,InvalidValue>
 }
 
-export function createJsonFromMap <K extends t_indexable_key , V > (_map : Map<K,V>){
+export function createJsonFromMap <K extends t_indexable_key , V > (_map : Map<K,V>){ 
     return Object.fromEntries(_map) as IJson<K,V>
 }
 
-export function createMapFromArrArr<V , ArrArr extends readonly ( t_Entry<K,V>)[],V2 = V,K extends t_indexable_key = t_indexable_key > (arrArr:ArrArr,fct:(...args:t_Entry<K,V>)=>V2 = (...args:t_Entry<K,V>)=>{return args[1] as unknown as V2} ){
+export function createMapFromArrArr<V , ArrArr extends readonly ( t_Entry<K,V>)[],V2 = V,K extends t_indexable_key = t_indexable_key > (arrArr:ArrArr,fct:(...args:t_Entry<K,V>)=>V2 = (...args:t_Entry<K,V>)=>{ return args[1] as unknown as V2} ){ 
     let map = new Map<K,V2>()
-    for(const arr of arrArr){
+    for(const arr of arrArr){ 
         map.set(arr[0],fct(arr[0],arr[1]))
     }
     return map
 
 }
 
-export function revertMap<K extends t_indexable_key , V > (map:Map<K,V>){
+export function revertMap<K extends t_indexable_key , V > (map:Map<K,V>){ 
     let res_map = new Map()
     for (const [key, value] of map.entries()) {
         if(!Array.isArray(value)){
@@ -244,7 +244,7 @@ export function revertMap<K extends t_indexable_key , V > (map:Map<K,V>){
             else res_map.set(value,[...res_map.get(value),key])
         }
         else {
-            for(const val of value){
+            for(const val of value){ 
                 if(!res_map.has(val))res_map.set(val,key)
                 else res_map.set(val,[...res_map.get(val),key])
             }
@@ -256,7 +256,7 @@ export function revertMap<K extends t_indexable_key , V > (map:Map<K,V>){
 /*type fdsfd = IterableIterator<"string">
 const map = new Map<"key2"|"key1","value1"|"value2">([["key1", "value1"], ["key2", "value2"]]);
 type fdsfds = ReturnType<typeof map["entries"]> extends IterableIterator<[infer K , infer V]> ? [K,V] : never*/
-export const pop_map = <K extends t_indexable_key , V > (map : Map<K,V> , key ?: K ) : V => {
+export const pop_map = <K extends t_indexable_key , V > (map : Map<K,V> , key ?: K ) : V =>{ 
     if(map.size == 0 )return undefined
     if(key===undefined)key = map.keys().next().value
     const res = map.get(key)

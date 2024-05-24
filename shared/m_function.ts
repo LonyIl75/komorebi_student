@@ -9,12 +9,12 @@ import { t_booleanFunction, t_function } from "./type.js";
 
 export type err_function<T> = (err:any)=>T ;
 
-export const printError = (obj:any , e:any) => {
+export const printError = (obj:any , e:any) =>{ 
     console.log(`[ ${obj.constructor.name} ]Error writing file: ${e.message}`)
 }
 
 
-export function getFunctionName(fun) {
+export function getFunctionName(fun) { 
     var res = fun.toString();
     res = res.substr('function '.length);
     res = res.substr(0, res.indexOf('('));

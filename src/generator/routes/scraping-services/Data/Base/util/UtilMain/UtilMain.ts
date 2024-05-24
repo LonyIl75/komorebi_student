@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { routename as routenameHelpers } from "../helpers.js"
 
 import { majFirstChar } from "@shared/m_string.js"
@@ -11,7 +12,7 @@ class UtilMainData<SN extends string> implements IUtilMainData<SN>{
     _serviceName :SN
     _routeName = routename
 
-    constructor(_serviceName:SN){
+    constructor(_serviceName:SN){ 
         this._serviceName = _serviceName
     }
     

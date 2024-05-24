@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { AServiceRequest, ServiceRequestBodyBase, ServiceRequestHeaderBase, buildSaved, t_st_AServiceRequest } from "@/routes/scraping-services/class/utils/Data/ServiceRoute.js";
 import { EmptyInit, AHaveSerializer, haveSerializerAndEmptyInit } from "@shared/m_json.js";
 import { IJson } from "@shared/m_object.js";
@@ -10,7 +11,7 @@ import { t_verifyStatic } from "@shared/type.js";
     body : ServiceRequestBodyBase
     header : ServiceRequestHeaderBase
 
-    getEmptyInit: () => AServiceRequest= () => {
+    getEmptyInit: () => AServiceRequest= () =>{ 
         return _req_startupsMtp.getEmptyInit() ;
     }
 
@@ -23,16 +24,16 @@ import { t_verifyStatic } from "@shared/type.js";
 
     static emptyObject : EmptyInit<AServiceRequest>  = new EmptyInit<AServiceRequest>(_req_startupsMtp ) ;
 
-    static getEmptyInit: () =>AServiceRequest= () => {
+    static getEmptyInit: () =>AServiceRequest= () =>{ 
         return _req_startupsMtp.emptyObject.emptyInit() ;
     }
 
-    static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{
+    static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{ 
         return haveSerializerAndEmptyInit._isTypeof(_req_startupsMtp.getEmptyInit(),obj)
     }
 
 
-    static fromJson = (json: IJson) : AServiceRequest => {
+    static fromJson = (json: IJson) : AServiceRequest =>{ 
         return AServiceRequest.abstract_fromJson<ServiceRequestBodyBase,ServiceRequestHeaderBase>(_req_startupsMtp,json)
     }
  
@@ -52,15 +53,15 @@ class _res_startupsMtp extends AServiceRequest {
 
     static emptyObject : EmptyInit<AServiceRequest>  = new EmptyInit<AServiceRequest>(_res_startupsMtp) ;
 
-    static getEmptyInit: () =>AServiceRequest= () => {
+    static getEmptyInit: () =>AServiceRequest= () =>{ 
         return _res_startupsMtp.emptyObject.emptyInit() ;
     }
 
-    getEmptyInit: () => AServiceRequest= () => {
+    getEmptyInit: () => AServiceRequest= () =>{ 
         return _res_startupsMtp.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{
+    static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{ 
         return haveSerializerAndEmptyInit._isTypeof(_res_startupsMtp.getEmptyInit(),obj)
     }
 
@@ -72,7 +73,7 @@ class _res_startupsMtp extends AServiceRequest {
 
     }
 
-    static fromJson = (json: IJson) : AServiceRequest => {
+    static fromJson = (json: IJson) : AServiceRequest =>{ 
         return AServiceRequest.abstract_fromJson<ServiceRequestBodyBase,ServiceRequestHeaderBase>(_res_startupsMtp,json)
     }
 }

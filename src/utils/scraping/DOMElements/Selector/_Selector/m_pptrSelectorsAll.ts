@@ -42,15 +42,15 @@ export namespace  FSelectorAll {
     getTypeArrJson<name_functionSelector.querySelectorAll>>
 
 
-    export const selectAllIfFoundElseThrow  = async (page_or_element: t_pageOrElementHN ,selector: selector ) : Promise <t_resFSelectorAll_success_element> => {
-        return await throwIfResolveWith (res_reject_qSelectorAll_element)((_selector: selector )=>{
-            return page_or_element.$$(_selector).then((res)=>{
+    export const selectAllIfFoundElseThrow  = async (page_or_element: t_pageOrElementHN ,selector: selector ) : Promise <t_resFSelectorAll_success_element> =>{ 
+        return await throwIfResolveWith (res_reject_qSelectorAll_element)((_selector: selector )=>{ 
+            return page_or_element.$$(_selector).then((res)=>{ 
                 return res
             })
         },selector)
     }
 
-    export const  _querySelectorAll : IQuerySelectorAll = async (page_or_element: t_pageOrElementHN ,selector:selector,_type : name_functionSelector.querySelectorAll =name_functionSelector.querySelectorAll): Promise<t_resFSelectorAll_success_element> => {
+    export const  _querySelectorAll : IQuerySelectorAll = async (page_or_element: t_pageOrElementHN ,selector:selector,_type : name_functionSelector.querySelectorAll =name_functionSelector.querySelectorAll): Promise<t_resFSelectorAll_success_element> =>{ 
         return await selectAllIfFoundElseThrow(page_or_element,selector);
     }
 
@@ -68,13 +68,13 @@ export namespace  FSelectorAll {
     t_arr_IBaseFunctionSelector & {s_option :selectorsOptions},
     getTypeArrJson<name_functionSelector.waitSelector>> 
 
-    export const  _waitForSelector :IWaitForSelector  = ( page_or_element: t_pageOrElementHN ,selector:selector,s_option :selectorsOptions, _type : name_functionSelector.waitSelector =name_functionSelector.waitSelector ):Promise<t_resFSelectorAll_success_element> => {
-        return page_or_element.waitForSelector(selector,s_option).then((res:t_resSelector)=> {
+    export const  _waitForSelector :IWaitForSelector  = ( page_or_element: t_pageOrElementHN ,selector:selector,s_option :selectorsOptions, _type : name_functionSelector.waitSelector =name_functionSelector.waitSelector ):Promise<t_resFSelectorAll_success_element> =>{ 
+        return page_or_element.waitForSelector(selector,s_option).then((res:t_resSelector)=>{ 
             return [res]
         });
     }
 
-    export function getFunctionWaitSelector ( s_option :selectorsOptions) {
+    export function getFunctionWaitSelector ( s_option :selectorsOptions) { 
         return  ( page_or_element: t_pageOrElementHN ,selector:selector , _type : name_functionSelector.waitSelector =name_functionSelector.waitSelector  ) => _waitForSelector(page_or_element,selector,s_option, _type); 
     
     }
@@ -101,7 +101,7 @@ export namespace  FSelectorAll {
                 [str_ISelectorFunctionObject_props.isRejected] : t_booleanFunction
         };
 
-        constructor (  s_option :selectorsOptions ) {
+        constructor (  s_option :selectorsOptions ) { 
             this[name_functionSelector.querySelectorAll] = {
                 ...getSelectorJson<t_funct_querySelectorAll ,t_getRejecteValue_qSelectorAll > (_querySelectorAll,getRejectValue_qSelectorAll)
             }

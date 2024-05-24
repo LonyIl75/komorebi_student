@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { CodeGenerator } from "@/generator/utils/types.js"
 import { IVoid } from "@shared/m_object.js"
 
@@ -7,7 +8,7 @@ class UtilMainData<SN extends string , R extends string > implements IUtilMainDa
     _serviceName :SN
     _routeName :R 
 
-    constructor(_serviceName:SN,_routeName:R){
+    constructor(_serviceName:SN,_routeName:R){ 
         this._serviceName = _serviceName
         this._routeName = _routeName
     }

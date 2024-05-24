@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { serviceName_lespepitestech } from "@/controller/scraping-services/Services/Config/lespepitestech/config.js";
 import { t_getReq, t_getRes, cst_ReqAndResType, getReq, getRes } from "../../../scraping-services/class/utils/Data/ReqResRoute.js";
 import { t_serviceName_MainService, getUnionRouteOfServiceFromServiceName ,getPropsFromServiceName_ServiceRoutes} from "@/controller/scraping-services/Services/Config/types.js";
@@ -26,7 +27,7 @@ export type getResTypeFromServiceNameAndRoute <SN extends t_serviceName_MainServ
 
 
 
-export const cst_ServiceReqResType = <SN extends t_serviceName_MainService ,R extends getUnionRouteOfServiceFromServiceName <SN> , _Args extends  getReqResTypeFromServiceNameAndRoute<SN,R> =  getReqResTypeFromServiceNameAndRoute<SN,R> >(...args: _Args)  => {
+export const cst_ServiceReqResType = <SN extends t_serviceName_MainService ,R extends getUnionRouteOfServiceFromServiceName <SN> , _Args extends  getReqResTypeFromServiceNameAndRoute<SN,R> =  getReqResTypeFromServiceNameAndRoute<SN,R> >(...args: _Args)  =>{ 
        const r = cst_ReqAndResType(getReq<_Args>(args), getRes<_Args>(args) ) 
        return r as _Args   
 } ;

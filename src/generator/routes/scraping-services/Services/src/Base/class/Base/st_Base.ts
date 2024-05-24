@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { CodeGenerator, t_member} from "@/generator/utils/types.js"
 import { _AService, t_st_service_2 } from "@/routes/scraping-services/class/Services/AService.js"
 import { IVoid } from "@shared/m_object.js"
@@ -22,7 +23,7 @@ export abstract class st_Service<SN extends string , R extends string> implement
     implements: {id:string,generics:readonly string[]}[]
     isAbstract: true
 
-    constructor (_serviceName:SN,_routeName : R){
+    constructor (_serviceName:SN,_routeName : R){ 
 
         this._routeName = _routeName
         this._serviceName = _serviceName

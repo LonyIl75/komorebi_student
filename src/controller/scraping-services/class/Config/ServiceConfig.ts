@@ -82,7 +82,7 @@ export class __ServiceConfig<SN extends _validateServiceName  , R extends _valid
     getRemoteRoute():string[] {
         //A FAIRE extract misc
         let res : string [] =[]
-        for(const key in this.service_address   ) {
+        for(const key in this.service_address   ) { 
             res.push(getRemoteAdressFromServiceAddressBody(this.service_address[key]));
         }
         return res;
@@ -91,7 +91,7 @@ export class __ServiceConfig<SN extends _validateServiceName  , R extends _valid
     getLocalRoute() :string[] {
         //A FAIRE extract misc
         let res : string [] =[]
-        for(const key in this.service_address   ) {
+        for(const key in this.service_address   ) { 
             res.push(getLocalAdressFromServiceAddressBody(this.service_address[key]));
         }
         return res;
@@ -134,7 +134,7 @@ export function f_ServiceConfig<C_SN extends _validateServiceName  , C_FR extend
 
 
     static builder<SN extends C_SN  , R extends _C_R<C_FR,[SN]> , H extends _C_H<C_FH,[SN]>  ,T1 extends _C_T1<C_FT1,[SN]>,RA extends _C_RA<C_FRA,[SN, R, T1]>>
-        (serviceName :SN , remoteName : string,remoteAddress : R,mainAddress : string,idRoute_home:H , idRoutes: T1 , idRouteAndRemoteAddresss : RA , doProcessFunctionName : string = _ServiceConfig.df[str_doProcessFunctionName]){
+        (serviceName :SN , remoteName : string,remoteAddress : R,mainAddress : string,idRoute_home:H , idRoutes: T1 , idRouteAndRemoteAddresss : RA , doProcessFunctionName : string = _ServiceConfig.df[str_doProcessFunctionName]){ 
 
         //const idRoutes :  t_all_routesArrByServiceName< SN>  = [...id_arr_serviceRoutes ,..._idRoutes ]  ;//"login" ; id_arr_serviceRoutes
         return new _ServiceConfig<SN,R , H,T1,RA>  (serviceName , remoteName ,remoteAddress ,mainAddress,idRoute_home, idRoutes ,idRouteAndRemoteAddresss , doProcessFunctionName );

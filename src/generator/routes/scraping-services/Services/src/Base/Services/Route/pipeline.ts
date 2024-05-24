@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { CodeGenerator } from "@/generator/utils/types.js"
 import { IVoid } from "@shared/m_object.js"
 import { majFirstChar } from "@shared/m_string.js"
@@ -9,7 +10,7 @@ class PipelineRouteService<SN extends string , R extends string , P extends stri
     _serviceName :SN
     _pipelineType : P
 
-    constructor(routeName :R , serviceName :SN,pipelineType : P){
+    constructor(routeName :R , serviceName :SN,pipelineType : P){ 
         this._routeName = routeName;
         this._serviceName = serviceName;
         this._pipelineType = pipelineType;

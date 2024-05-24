@@ -24,21 +24,21 @@ export abstract class AArgumentConverter<T extends AArgumentConverter<any>=AArgu
     sep_arg :string ;
     sep_keyVal :string;
 
-    constructor(obj_serializer : t_serializer<T>,sep_arg :string = " " , sep_keyVal :string = "=" ){
+    constructor(obj_serializer : t_serializer<T>,sep_arg :string = " " , sep_keyVal :string = "=" ){ 
         super(obj_serializer )
 
         this.sep_arg = sep_arg;
         this.sep_keyVal = sep_keyVal;
     }
 
-    static toJson(obj: AArgumentConverter<any>) {
+    static toJson(obj: AArgumentConverter<any>) { 
         return {sep_arg : obj.sep_arg , sep_keyVal : obj.sep_keyVal} as const 
     }
 
     static df_getArgListFromObject< F extends haveSerializerAndEmptyInit<F>   >(  obj: F  ,  argC : AArgumentConverter ,  key_functionTransform ?: Map<string, transformFunction>   ) :string {
         let arg_list : Array<string> = [];
 
-        let  arr_entries : [string, unknown][] = Object.entries(obj).filter(([key, value]) => {
+        let  arr_entries : [string, unknown][] = Object.entries(obj).filter(([key, value]) =>{ 
             if(key in obj.getSerializer().toJson( obj.getEmptyInit())) return true;
             else return false ; 
         });
@@ -47,7 +47,7 @@ export abstract class AArgumentConverter<T extends AArgumentConverter<any>=AArgu
         let cur_functTransform : transformFunction = null as transformFunction;
 
 
-        for (const [key, value] of  arr_entries) {
+        for (const [key, value] of  arr_entries) { 
             if (
             !key.startsWith("__") && //A FAIRE : what is "__"  
             typeof value !== "function"

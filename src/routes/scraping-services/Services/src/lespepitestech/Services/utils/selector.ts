@@ -14,8 +14,9 @@ import { page_fct_getLoadingElements, page_fct_getMainComponent, page_fct_isLoad
 import { t_pageOrElementHN, selectors } from "@/utils/scraping/DOMElements/Selector/_Selector/type.js";
 import { Selector, classProp, containOp } from "@/utils/scraping/PageParsing/Schema/primitives/Selector.js";
 import { getLespepitestechHelpers } from "@/routes/scraping-services/Data/lespepitestech/util/helpers.js";
+import { root_startupsMtpPage_child_selectors } from "@/routes/scraping-services/Data/lespepitestech/Services/StartupsMtp/types.js";
 
-export const lespepitestech_loadingElements_selectors = ['[class*="pvs-loader"]','[aria-busy=*="true"]'] as const 
+export const lespepitestech_loadingElements_selectors = root_startupsMtpPage_child_selectors
 
 
 const pageLespepitestech_fct_getLoadingElements = page_fct_getLoadingElements(lespepitestech_loadingElements_selectors)
@@ -25,20 +26,20 @@ const pageLespepitestech_fct_waitForPageFullLoading = page_fct_waitForPageFullLo
 
 export function waitForLespepitestechPageFullLoading (page:t_pageOrElementHN , maxTime ?: number, sz_epoch?:number ) : Promise<boolean> {
 
-   return pageLespepitestech_fct_waitForPageFullLoading(page,maxTime,sz_epoch)
+   return pageLespepitestech_fct_waitForPageFullLoading(page,maxTime,sz_epoch,true)
 }
 
 export const lespepitestech_mainComponent_selectors = [/*Selector.cst_onePropAndTagg(classProp,'page_inner',"div",containOp).toString(),*/Selector.cst_onePropAndTagg(classProp,'view-content',"div",containOp).toString()] as const  //TODO extract in Data config file type.ts
 
 const pageLespepitestech_fct_getMainComponent = page_fct_getMainComponent(lespepitestech_mainComponent_selectors)
 
-export const getLespepitestechMainComponent = (page:t_pageOrElementHN , s_option ?:selectorsOptions )   => {
+export const getLespepitestechMainComponent = (page:t_pageOrElementHN , s_option ?:selectorsOptions )   =>{ 
     return pageLespepitestech_fct_getMainComponent(page,s_option)
 }
 
 
 
-export const waitForLespepitestechPageLoading = (page:t_pageOrElementHN, s_option ?:selectorsOptions ) : Promise<ElementHandle<Node>> =>{
+export const waitForLespepitestechPageLoading = (page:t_pageOrElementHN, s_option ?:selectorsOptions ) : Promise<ElementHandle<Node>> =>{ 
     return getLespepitestechMainComponent(page,s_option)
 }
 
@@ -56,7 +57,7 @@ const lespepitestech_loaded_selectors : selectors = [
 
 const pageLespepitestech_fct_isLoaded = page_fct_isLoaded( lespepitestech_loaded_selectors )
 
-export const isLoaded_lespepitestechPage =  (page:Page) :Promise<boolean>  => {
+export const isLoaded_lespepitestechPage =  (page:Page) :Promise<boolean>  =>{ 
     return pageLespepitestech_fct_isLoaded( page )
 
 }

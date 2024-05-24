@@ -1,4 +1,5 @@
 
+import getCurrentLine from "get-current-line"
 import * as m_debug from "./m_debug.js"
 import { getBaseFileName } from "./m_file.js";
 
@@ -13,13 +14,13 @@ import { Page } from "puppeteer";
 
 export class RemoveDebug{
 
-    constructor(ignore_function:string[]=[],ignore_variable:string[]=[]){
+    constructor(ignore_function:string[]=[],ignore_variable:string[]=[]){ 
         this.debug_functions_regex = getRegexG(RemoveDebug.getDebugFunctionRegex(ignore_function))
         this.debug_variables_regex = getRegexG(RemoveDebug.getDebugVariablesRegex(ignore_variable))
     }
 
 
-    static getDebugFunctionRegex(ignored_function){
+    static getDebugFunctionRegex(ignored_function){ 
         const debug_functions = Object.keys(m_debug).filter((_str)=>!Object.keys(m_debug.helpers).concat(Object.keys(m_debug.assignation)).includes(_str))
         const all_debug = ignored_function.concat(debug_functions)
         let all_debugFunction_regex = getGroupUnionStrRegex(all_debug)
@@ -27,7 +28,7 @@ export class RemoveDebug{
         return function_debug_regex
     }
 
-    static getDebugVariablesRegex(ignored_variable){
+    static getDebugVariablesRegex(ignored_variable){ 
         const debug_variables = Object.keys(m_debug.assignation)
         const all_debug = ignored_variable.concat(debug_variables)
         let all_debugVariable_regex = getGroupUnionStrRegex(all_debug)
@@ -40,14 +41,14 @@ export class RemoveDebug{
 
 
 
-    static getIgnoreImportRegex(str_comment_debug :string ){
+    static getIgnoreImportRegex(str_comment_debug :string ){ 
         return  deb_commentary+'[^\\S\\n]*' +str_comment_debug
     }
 
     removeDebugFunctions(str_src:string) :[string,RegExpExecArray|null]{
         let m= getRegexGM(embedBeginAndEndOfLineStrOrRegex("(.+)",true)).exec( str_src);//notPatternLookahead(".*import")+// .*?; MAYBE A FAIRE 
         let word =""
-        if(m){
+        if(m){ 
              word= m[1] 
             
             if((word.search(this.debug_variables_regex)!=-1 || word.search(/const\s+name_module\s*=/)!=-1 )){
@@ -62,31 +63,31 @@ export class RemoveDebug{
 
 }
 
-export const getNameModule = <SN extends string , PN extends string , C extends string = undefined >(serviceName:SN , page_name:PN, category?: C )  => {
+export const getNameModule = <SN extends string , PN extends string , C extends string = undefined >(serviceName:SN , page_name:PN, category?: C )  =>{ 
     let _res = (category==undefined ? [serviceName,page_name] : [serviceName,category,page_name]) as C extends undefined ? [SN,PN] : [SN,C,PN]
     return m_debug.debug_join(_res)
 }
 
 
-export const concatNameModuleAndDebug = <S1 extends string , S2 extends string > (name_module:S1 , name_debug:S2)  => {
+export const concatNameModuleAndDebug = <S1 extends string , S2 extends string > (name_module:S1 , name_debug:S2)  =>{ 
     return m_debug.debug_join([name_module,name_debug])
 }
 
-export const getNameDebugAllNameModule = <S1 extends string >(name_module:S1  )  => {
+export const getNameDebugAllNameModule = <S1 extends string >(name_module:S1  )  =>{ 
     return concatNameModuleAndDebug(name_module,"a")
 }
 
 export const join_screenshot = <T extends readonly string[]> (...args: T) => join_underscore(...args);
 
-export const take_screenshot = async (page:Page, path:string,num:number) => {
+export const take_screenshot = async (page:Page, path:string,num:number) =>{ 
     await page.screenshot({ path: join_screenshot(num.toString() , path ) });
 }
 
-export const getTestName = <T extends string>(_str:T)=> {
+export const getTestName = <T extends string>(_str:T)=>{ 
     return `test${majFirstChar(_str)}` as const
 }
 
-export const getNameHumanActions = <T extends string>(_str:T)=> {
+export const getNameHumanActions = <T extends string>(_str:T)=>{ 
     return `humanActions${majFirstChar(_str)}` as const
 }
 export const str_idRouteAndRemoteAddresss = "routes" as const 

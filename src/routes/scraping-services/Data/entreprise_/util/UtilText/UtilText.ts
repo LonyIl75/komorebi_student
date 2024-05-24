@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { getChildArr, t_getChildTypeFromArrComponent, t_getClassNameTypeFromArrComponent } from "@/utils/scraping/PageParsing/types.js"
 import { arrToUnion } from "@shared/type.js"
 import { enum_entreprise__style, getEntreprise_Helpers } from "../helpers.js"
@@ -39,7 +40,7 @@ export const df__IComponent_entreprise__utilText :_IComponent = {
     childs_selectors : [entreprise__spanText_selectors],
 } as const 
 
-const getDfEntreprise_TextIJsonComponent = <arrClassName extends readonly t_union_classNameType_entreprise__utilText[] ,  t_idx extends  number >(arr_className : arrClassName ,idx:t_idx,isDfSelectors : boolean = true  , _json : _IComponent = df__IComponent_entreprise__utilText )  :_IComponent=> {
+const getDfEntreprise_TextIJsonComponent = <arrClassName extends readonly t_union_classNameType_entreprise__utilText[] ,  t_idx extends  number >(arr_className : arrClassName ,idx:t_idx,isDfSelectors : boolean = true  , _json : _IComponent = df__IComponent_entreprise__utilText )  :_IComponent=>{ 
     const className :arrClassName[t_idx] = isDfSelectors ? arr_className[idx] : undefined 
     const _selectors = className ? [entreprise__utilText_helpers.val_selector(className).toString()] : undefined 
     return new _Component(_selectors, _json.childs_selectors, _json.isScoped, [...ValTextContent.dfArgsCst], _json.childs_attributes)

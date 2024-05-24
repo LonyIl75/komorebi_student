@@ -33,7 +33,7 @@ export class argPython {
     function_name?:string ;
     list_prefix ?: string ;
     list_kwargs ?: string 
-    constructor(module_path : string , list_kwargs ?: string  , function_name?:string , list_prefix ?: string ){
+    constructor(module_path : string , list_kwargs ?: string  , function_name?:string , list_prefix ?: string ){ 
         this.module_path = module_path;
         this.function_name = function_name;
         this.list_prefix = (list_prefix==undefined? '["debug","err","result"]' :list_prefix);
@@ -41,11 +41,11 @@ export class argPython {
     }
 
     
-    argPythonToArr = (): string[] => {
+    argPythonToArr = (): string[] =>{ 
     const arr: string[] = [];
   
     for (const [key , value ] of Object.entries(this)) {
-        if (typeof value !=="function" && typeof value =="string" && value != undefined) {
+        if (typeof value !=="function" && typeof value =="string" && value != undefined) { 
             arr.push(`--${key}`);
             console.log(`--${key}` + JSON.stringify(value))
             arr.push(value);
@@ -60,26 +60,26 @@ export class argPython {
     args : argPython ;
     process : ChildProcessWithoutNullStreams ;
  
-    constructor( args : argPython , script_path : string =  processPythOutput.main , process : ChildProcessWithoutNullStreams = null as ChildProcessWithoutNullStreams){
+    constructor( args : argPython , script_path : string =  processPythOutput.main , process : ChildProcessWithoutNullStreams = null as ChildProcessWithoutNullStreams){ 
         this.script_path = script_path;
         this.args = args;
         this.process = process;
     }
 
-    static cst_fullParam(module_path : string , list_kwargs ?: string  , function_name?:string , list_prefix ?: string , script_path ?: string  ){
+    static cst_fullParam(module_path : string , list_kwargs ?: string  , function_name?:string , list_prefix ?: string , script_path ?: string  ){ 
         return new execPython(  new argPython(module_path , list_kwargs , function_name , list_prefix  ) , script_path );
     }
 
-    getModuleName = ():string => {
+    getModuleName = ():string =>{ 
         return getBaseFileName(this.script_path );
     }
-    launch_DebugPython = async () => {
+    launch_DebugPython = async () =>{ 
         console.log("spawn" , [this.script_path, ...this.args.argPythonToArr()])
         try {
             this.process =  spawn('python', [this.script_path, ...this.args.argPythonToArr()]);
         
         }
-        catch(err){
+        catch(err){ 
             console.log(JSON.stringify(err))
 
         }
@@ -89,12 +89,12 @@ export class argPython {
     
 
     
-    getPrefixMessages = (): Promise<json_messages> => {
+    getPrefixMessages = (): Promise<json_messages> =>{ 
         let prefix_messages:json_messages  = { debug: [], err: [], result: [] };
         let cur_data : any = {};
-        return new Promise<json_messages>((resolve, reject) => {
+        return new Promise<json_messages>((resolve, reject) =>{ 
 
-        this.process.stdout.on('data', function(data : string ) {
+        this.process.stdout.on('data', function(data : string ) { 
 
             console.log("JSONDATA" +data)
             cur_data=JSON5.parse(data);
@@ -104,10 +104,10 @@ export class argPython {
                 prefix_messages[key]=prefix_messages[key].concat(value);
             }
         });
-        this.process.stdout.on('close', function() {
+        this.process.stdout.on('close', function() { 
             resolve(prefix_messages);
         });
-        this.process.stdout.on('error', (error: Error) => {
+        this.process.stdout.on('error', (error: Error) =>{ 
             reject(error);
           });
         });

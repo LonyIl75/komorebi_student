@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { IJson, IVoid, t_getAllMethodsOfObject } from "@shared/m_object.js"
 import { Apply, Args, Fn, isEqual, makeOptional, t_JoinChar, t_function } from "@shared/type.js"
 
@@ -75,11 +76,11 @@ export type t_genericValue <  Id extends string = string , Generics extends read
 
 export const getGenericEmbedding = <T extends string >(str:T ) => `<${str}>` as const 
 export type t_genericValueParamToString <Generics extends readonly string[] > = Generics extends readonly [any , infer _] ? `<${t_JoinChar<Generics, ",">}>` : ""
-export const genericValueParamToString = <Generics extends readonly string[] >(arrGen:Generics) => {
+export const genericValueParamToString = <Generics extends readonly string[] >(arrGen:Generics) =>{ 
     return (arrGen.length > 0 ? getGenericEmbedding((arrGen.join(",") as t_JoinChar<Generics,",">))  : "") as t_genericValueParamToString<Generics>
 }
 
-export const genericValueToString = <Id extends string , Generics extends readonly string[] >(gv : t_genericValue<Id,Generics>) => {
+export const genericValueToString = <Id extends string , Generics extends readonly string[] >(gv : t_genericValue<Id,Generics>) =>{ 
     const genericStr = genericValueParamToString(gv.generics)
     return `${gv.id}${genericStr}` as const 
 }

@@ -37,12 +37,12 @@ const __filename = fileURLToPath(import.meta.url);
 export class ExposedMap <G extends t_exposeFunction | t_exposeObject<G> , T  extends ExposeObjectOrFunction<G> > {
     scriptMap : Map<string , string[]> ;
 
-    constructor(...args : ConstructorParameters<typeof Map<string , string[]>>) {
+    constructor(...args : ConstructorParameters<typeof Map<string , string[]>>) { 
         this.scriptMap =  new Map<string , string[]> (args[0]);
     }
 
     
-    static init_getScriptID(exposeObjectOrFunct:ExposeObjectOrFunction<any>){
+    static init_getScriptID(exposeObjectOrFunct:ExposeObjectOrFunction<any>){ 
         let scriptTag =exposeObjectOrFunct.getScriptsTag();
         return scriptTag!==undefined ?  scriptTag.id  : mPage.emptyScriptTag().id
     }
@@ -57,14 +57,14 @@ export class ExposedMap <G extends t_exposeFunction | t_exposeObject<G> , T  ext
     }
 
     
-    hasExpose(exposeObject){
+    hasExpose(exposeObject){ 
         let res = this.scriptMap.get(ExposedMap.init_getScriptID(exposeObject)) ;
         if(res == undefined) return false;
         return res.includes(exposeObject.getName());//TODO 23/02/24
     }
 
 
-    async expose(exposeObject:T){
+    async expose(exposeObject:T){ 
         let script_id = ExposedMap.init_getScriptID(exposeObject )
         let lst = this.scriptMap.get(script_id)|| [] ;
         this.scriptMap.set(script_id,[...lst,exposeObject.getName()]);
@@ -109,7 +109,7 @@ T extends _IJsonComponents<unionClassNameType>,
 
 
 
-    constructor (json:IJsonWithScrapingComponents<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>){
+    constructor (json:IJsonWithScrapingComponents<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>){ 
         this.cur_url  =""
         this.base_url= undefined
         this.scriptsTagMap =   new Map<string , FrameAddScriptTagOptions>(...json.scriptsTagMap)
@@ -119,7 +119,7 @@ T extends _IJsonComponents<unionClassNameType>,
        
     }
 
-    setCurUrl(url:string){
+    setCurUrl(url:string){ 
         this.cur_url = url;
         if(!url.startsWith(this.base_url)) {
             const {protocolUrl,domainUrl} = getProtocolAndDomain(url);
@@ -127,13 +127,15 @@ T extends _IJsonComponents<unionClassNameType>,
         }
     }
 
-    async goto(url:string){
+    async goto(url:string){ 
+        console.log("goto",url)
         await this.page.goto(url);
+        console.log("goto_2",url)
         this.setCurUrl(url);
+        //await time.timer(10000)
     }
 
     async setEssentialScripts(){
-        console.log("setEssentialScripts",__filename)
         await this.addFileScriptTag({path:path.resolve(__filename),id:"mPage"});
     }
 
@@ -149,8 +151,8 @@ T extends _IJsonComponents<unionClassNameType>,
     }
 
     async destroy(){
-        return ((obj)=>{
-            return obj.page?.close().then((_)=>{
+        return ((obj)=>{ 
+            return obj.page?.close().then((_)=>{ 
                 obj.scriptsTagMap?.clear();
                 obj.page=null;
                 obj.scriptsTagMap=null;
@@ -159,7 +161,7 @@ T extends _IJsonComponents<unionClassNameType>,
         
     }
 
-    async abort(abort_message:string){
+    async abort(abort_message:string){ 
         await this.destroy();
         throw new Error(abort_message)
     }
@@ -172,11 +174,11 @@ T extends _IJsonComponents<unionClassNameType>,
     }
 
     
-    async setPage(page){
+    async setPage(page){ 
         this.page = page;
     }
 
-    static setScripTagId(scriptTag:FrameAddScriptTagOptions,name?:string){
+    static setScripTagId(scriptTag:FrameAddScriptTagOptions,name?:string){ 
         const _path = name === undefined ?  scriptTag.path : joinFilePath(scriptTag.path,name)
         scriptTag.id = pathToJoinCharFileName(_path,".")
     }
@@ -202,8 +204,8 @@ T extends _IJsonComponents<unionClassNameType>,
         return !(mPage.isBadResult(scriptTag) ||  mPage.isEmptyScriptTag(scriptTag)  )
     }
 
-    need_resolution (  function_name : string  ,  required:FrameAddScriptTagOptions ) {
-        return (res :any )=>{ 
+    need_resolution (  function_name : string  ,  required:FrameAddScriptTagOptions ) { 
+        return (res :any )=>{  
             if(mPage.isBadResult(res)) return this.abort(`${function_name} : required scriptTag ${JSON.stringify(required)} not found`);}
     }
 
@@ -231,29 +233,29 @@ T extends _IJsonComponents<unionClassNameType>,
         return _obj instanceof ExposeFunction ? ExposeFunction.isEmptyObject(_obj) : ExposeObject.isEmptyObject(_obj);
     }
 
-    hasExposeObject(exposeObject:ExposeObject<any>){
+    hasExposeObject(exposeObject:ExposeObject<any>){ 
         return this.scriptObjectMap.hasExpose(exposeObject);
     }
 
-    addObjectToMap(exposeObject:ExposeObject<any>){
+    addObjectToMap(exposeObject:ExposeObject<any>){ 
         this.scriptObjectMap.expose(exposeObject);
     }
 
 
     
 
-    hasExposeFunction(exposeFunction:ExposeFunction){
+    hasExposeFunction(exposeFunction:ExposeFunction){ 
         return this.scriptFunctionMap.hasExpose(exposeFunction);
     }
 
-    addFunctionToMap(exposeFunction:ExposeFunction){
+    addFunctionToMap(exposeFunction:ExposeFunction){ 
         this.scriptFunctionMap.expose(exposeFunction);
     }
 
-    /*//:onEventFunction = new ExposeFunction(funct_console,"console")
-    async addExposeEventFunction(exposeFunction:onEventFunction){
-        return this.page.on(exposeFunction.getName() ,await exposeFunction.getObj());
-    }*/
+    //:onEventFunction = new ExposeFunction(funct_console,"console")
+    //async addExposeEventFunction(exposeFunction:onEventFunction){ 
+       // return this.page.on(exposeFunction.getName() ,await exposeFunction.getObj());
+    //}
 
 
 
@@ -262,7 +264,7 @@ T extends _IJsonComponents<unionClassNameType>,
     }
 
     async addExposeFunction(exposeFunction:ExposeFunction ):Promise<ExposeFunction>{
-        return  await this.addExpose(exposeFunction).then((res :ExposeFunction)=>{return res});
+        return  await this.addExpose(exposeFunction).then((res :ExposeFunction)=>{ return res});
     }
 
     async addExpose(exposeObjOrFunct:ExposeObjectOrFunction<any>) :Promise<ExposeObjectOrFunction<any>>{
@@ -270,7 +272,7 @@ T extends _IJsonComponents<unionClassNameType>,
         return await this.addExposeWithoutScriptTag(exposeObjOrFunct);
     }
 
-    addExposeObject<T extends t_exposeObject<T> > (exposeObject :ExposeObject<T>){
+    addExposeObject<T extends t_exposeObject<T> > (exposeObject :ExposeObject<T>){ 
         return this.addExpose(exposeObject);
     }
 
@@ -284,39 +286,39 @@ T extends _IJsonComponents<unionClassNameType>,
     
 
 
-    hasScriptTagId(scriptTag:FrameAddScriptTagOptions){
+    hasScriptTagId(scriptTag:FrameAddScriptTagOptions){ 
         return this.scriptsTagMap.has(scriptTag.id);
     }
-    hasScriptTagPath(scriptTag:FrameAddScriptTagOptions){
+    hasScriptTagPath(scriptTag:FrameAddScriptTagOptions){ 
         return scriptTag.path && this.scriptsPath.has(scriptTag.path)
     }
 
-    hasScript(scriptTag:FrameAddScriptTagOptions){
+    hasScript(scriptTag:FrameAddScriptTagOptions){ 
         return this.hasScriptTagId(scriptTag) || this.hasScriptTagPath(scriptTag);
     }
 
-    validateScript(scriptTag:FrameAddScriptTagOptions){
+    validateScript(scriptTag:FrameAddScriptTagOptions){ 
         if(scriptTag.id == undefined ) return  mPage.getBadResult()  ;
         else if(this.hasScript(scriptTag)) return mPage.emptyScriptTag();
         else return scriptTag;
     }
 
 
-    async addScriptTagToPage(scriptTag:FrameAddScriptTagOptions){
+    async addScriptTagToPage(scriptTag:FrameAddScriptTagOptions){ 
         await this.page.addScriptTag( {...scriptTag,path:undefined}) // TODO :  IT HURT BUT I HAVE TO 
         this.addScriptTagToMap(scriptTag);
     }
 
-    addScriptTagToMap(scriptTag:FrameAddScriptTagOptions){
+    addScriptTagToMap(scriptTag:FrameAddScriptTagOptions){ 
         if(scriptTag.path ) this.scriptsPath.add(scriptTag.path);  //TODO 23/02/24
         this.scriptsTagMap.set(scriptTag.id,scriptTag); 
     }
 
     addFileScriptTag(scriptTag : FrameAddScriptTagOptions ):Promise<FrameAddScriptTagOptions>{
-        return this.resolveFile(scriptTag).then((res_parse:t_res_parseFile)=>{
+        return this.resolveFile(scriptTag).then((res_parse:t_res_parseFile)=>{ 
             if(! mPage.continue_pipeline( res_parse.script_tag) ) return res_parse.script_tag;
                 return this. addParsingFile(res_parse)
-            }).catch((err)=>{
+            }).catch((err)=>{ 
                 this.abort(`addExposeFunctionsSameScriptTag  ${err}`)
                 return mPage.getBadResult();
             })
@@ -331,7 +333,7 @@ T extends _IJsonComponents<unionClassNameType>,
 
         let p_script_tag = null as Promise<t_res_parseFile > ;
         
-        if(scriptTag.content == undefined){ //readFileAndRemoveExportDefault(scriptTag.path);
+        if(scriptTag.content == undefined){  //readFileAndRemoveExportDefault(scriptTag.path);
             p_script_tag = this.parseFile(scriptTag)
             
         }else{
@@ -343,9 +345,9 @@ T extends _IJsonComponents<unionClassNameType>,
 
     async exposeFunction(exposeFunction:ExposeFunction) :Promise<ExposeFunction>{
         if(this.hasExposeFunction(exposeFunction)) return Promise.resolve(mPage.getEmptyObject(exposeFunction)) ;
-        return (async(_exposeFunction,_obj :Function  , name :string )=>{
+        return (async(_exposeFunction,_obj :Function  , name :string )=>{ 
             //console.log(  `page exposed functions ${name} OBJ : `, _obj ) ;
-            if(_obj && false ){ //TODO if function use .$ we need to expose it to override general function
+            if(_obj && false ){  //TODO if function use .$ we need to expose it to override general function
                 await this.page.exposeFunction(name,_obj);
                 await this.page.addScriptTag( {id:name,content:_obj.toString()}) // TODO :  IT HURT BUT I HAVE TO 
             }
@@ -356,7 +358,7 @@ T extends _IJsonComponents<unionClassNameType>,
 
 
     async addExposeWithoutScriptTag(exposeObjOrFunct:ExposeObjectOrFunction<any>):Promise<ExposeObjectOrFunction<any>>{
-        if( false){ //TODO : if function use .$ we need to expose it to override general function , alternative below  don't work very well :[exposeObjOrFunct.getName()]
+        if( false){  //TODO : if function use .$ we need to expose it to override general function , alternative below  don't work very well :[exposeObjOrFunct.getName()]
             if( exposeObjOrFunct instanceof ExposeFunction) await this.exposeFunction(exposeObjOrFunct) 
             else await this.exposeObject(exposeObjOrFunct)
         }
@@ -369,10 +371,10 @@ T extends _IJsonComponents<unionClassNameType>,
         res_parseFile = await this.laFunction(exposeObjOrFunct.getRequired(),res_parseFile); // ICI 17/08 addScriptTag for all  
         
         console.log("addExposeWithoutScriptTag RES PARSEFILE ", JSON.stringify(res_parseFile))
-        return this.addParsingFile( res_parseFile ).catch((err)=>{
+        return this.addParsingFile( res_parseFile ).catch((err)=>{ 
             this.abort(`addExposeFunctionsSameScriptTag  ${err}`)
             return mPage.getBadResult();
-        }).then((res)=>{
+        }).then((res)=>{ 
             return exposeObjOrFunct // A FAIRE
         })
 
@@ -393,10 +395,10 @@ T extends _IJsonComponents<unionClassNameType>,
         
         res_parseFile = await this.laFunction(exposeObjOrFunct.getRequired(),res_parseFile) as t_res_parseFile;
 
-        return this.addParsingFile( res_parseFile ).catch((err)=>{
+        return this.addParsingFile( res_parseFile ).catch((err)=>{ 
             this.abort(`addExposeFunctionsSameScriptTag  ${err}`)
             return mPage.getBadResult();
-        }).then((res)=>{
+        }).then((res)=>{ 
             return exposeObjOrFunct // A FAIRE
         })
         
@@ -408,26 +410,26 @@ T extends _IJsonComponents<unionClassNameType>,
         let {script_tag, declared_functions,declared_classes} = res_parseFile; 
         //ICI 17/08 expose for all 
         let p_arr= [
-            ...!declared_functions?[]:declared_functions?.map((function_name)=>{
+            ...!declared_functions?[]:declared_functions?.map((function_name)=>{ 
                 let scriptTag = {path:script_tag.path}
                 mPage.setScripTagId(scriptTag,function_name);
                 return this.exposeFunction(new ExposeFunction(null,function_name,[],scriptTag)) //ICI content : await import 
             }),
-            ...!declared_classes?[]:declared_classes?.map((class_name)=>{
+            ...!declared_classes?[]:declared_classes?.map((class_name)=>{ 
                 let scriptTag = {path:script_tag.path}
                 mPage.setScripTagId(scriptTag,class_name);
                 return this.exposeObject(new ExposeObject(null,undefined,[],scriptTag,class_name))
             })
         ]
 
-        return Promise.all(p_arr).then(async(arr_res : (ExposeObject<any> | ExposeFunction) [])=>{
-                arr_res = arr_res.filter((elem)=>{return !mPage.isEmptyObject(elem)})
+        return Promise.all(p_arr).then(async(arr_res : (ExposeObject<any> | ExposeFunction) [])=>{ 
+                arr_res = arr_res.filter((elem)=>{ return !mPage.isEmptyObject(elem)})
                 await this.addScriptTagToPage(script_tag);
-                arr_res.forEach((elem)=>{elem instanceof ExposeFunction ? this.addFunctionToMap(elem) : this.addObjectToMap(elem)})
+                arr_res.forEach((elem)=>{ elem instanceof ExposeFunction ? this.addFunctionToMap(elem) : this.addObjectToMap(elem)})
 
                 return script_tag
             }).catch(
-                (err)=>{
+                (err)=>{ 
                     console.log ("addParsingFile 3 ERR")
                     this.abort(`addScriptTagAndCode  ${err}`)
                     return mPage.getBadResult();
@@ -438,8 +440,8 @@ T extends _IJsonComponents<unionClassNameType>,
 
     async laFunction(requireds :FrameAddScriptTagOptions[] ,res_parseFile:_t_res_parseFile):Promise<t_res_parseFile>{
 
-        requireds.forEach(async(required:FrameAddScriptTagOptions)=>{
-            if(required.content !==undefined) {
+        requireds.forEach(async(required:FrameAddScriptTagOptions)=>{ 
+            if(required.content !==undefined) { 
                 let name = required.id.substring(2,required.id.length)//TODO 23/02/24 
                 let scriptTag = {path:required.path,id:""}
                 mPage.setScripTagId(scriptTag,name);
@@ -471,7 +473,7 @@ T extends _IJsonComponents<unionClassNameType>,
         let filename =""
 
         if(rel_paths == undefined) return res_parseFile; //no required for instance 
-        for (const rel_path of  rel_paths) {
+        for (const rel_path of  rel_paths) { 
 
             filename = getFilenameWithoutExtension(rel_path)
 
@@ -492,7 +494,6 @@ T extends _IJsonComponents<unionClassNameType>,
    
 
     async parseFile(scriptTag :FrameAddScriptTagOptions , ignored_function=[],ignored_variable=[]) : Promise<t_res_parseFile> {
-        console.log( `page parseFile ${scriptTag.path}` ) ;
         scriptTag.content = mreadFile(scriptTag.path);
 
 
@@ -540,7 +541,7 @@ T extends _IJsonComponents<unionClassNameType>,
         do {
             m = getRegexG( import_str_regex ).exec( str_src);
             let IsIgnoredImport = m? getRegexG(embedBeginOfLineStrOrRegex(RemoveDebug.getIgnoreImportRegex("mPage-not-imported"),true)).exec(str_src.substring(m[0].length)):m ; 
-            if (m && !IsIgnoredImport) {
+            if (m && !IsIgnoredImport) { 
                 let group = m[1]?m[1]:m[2];
                 //console.log("getCleanDebugCodeAndImportedFiles | group", group , m );
                 let filename = getFilenameWithoutExtension(group);
@@ -555,22 +556,22 @@ T extends _IJsonComponents<unionClassNameType>,
                 let res_pair = mPage.rm_debug_code.removeDebugFunctions(str_src)
                 word = res_pair[0]
                 m = res_pair[1]
-                if(m){//si pas debug ligne 
+                if(m){ //si pas debug ligne 
                     //console.log("si pas debug ligne  | getCleanDebugCodeAndImportedFiles | word", word);
                     exported_function_name= getExportedFunctionNameRegex(word)
-                    if(exported_function_name){
+                    if(exported_function_name){ 
                         all_exported_functions.push(exported_function_name)
                     }else{
                         exported_class_name =getExportedClassNameRegex(word)
-                        if(exported_class_name) {
+                        if(exported_class_name) { 
                             all_exported_classes.push(exported_class_name)
                         }else{
                                 exported_variable_name = getVariableNameRegex(word)
-                                if(exported_variable_name){
+                                if(exported_variable_name){ 
                                     all_exported_variables = all_exported_variables.concat(exported_variable_name)
                                 }else{
                                     set_exported = getNameOfExportedSet(word)
-                                    if(set_exported){
+                                    if(set_exported){ 
                                         all_exported_classes=all_exported_classes.concat(set_exported)
                                         word = ""
                                     }
@@ -584,7 +585,7 @@ T extends _IJsonComponents<unionClassNameType>,
                 }
             
             }
-            if(m){
+            if(m){ 
                     
                     lct_code += (str_src.substring(0,m.index)+word)
                     str_src=str_src.substring(m.index+m[0].length,str_src.length)
@@ -605,6 +606,6 @@ type t_res_parseFile = {script_tag:FrameAddScriptTagOptions, declared_functions?
 type _t_res_parseFile = t_res_parseFile  & {script_dependencies ?:string[] }
 
 
-const getDfTresParseFile = (scriptTag) :_t_res_parseFile =>{
+const getDfTresParseFile = (scriptTag) :_t_res_parseFile =>{ 
     return { script_tag: scriptTag , declared_functions:[] , declared_classes:[] , script_dependencies:[]} ;
 }

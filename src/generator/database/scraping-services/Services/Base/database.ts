@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { CodeGenerator } from "@/generator/utils/types.js"
 import { t_jsonClusterMeta, t_DatabaseMeta_type } from "@shared/m_database.js"
 import { IVoid } from "@shared/m_object.js"
@@ -12,7 +13,7 @@ class BaseDatabase<SN extends string , R extends string > implements IBaseDataba
     _remoteDatabase : {type:t_DatabaseMeta_type ,name:string, cluster: t_jsonClusterMeta}
     _localDatabase :  {type:t_DatabaseMeta_type , name:string}
 
-    constructor(_serviceName:SN,_routeName:R,remoteDatabase : {type:t_DatabaseMeta_type , name:string, cluster: t_jsonClusterMeta},localDatabase : {type:t_DatabaseMeta_type , name:string}){
+    constructor(_serviceName:SN,_routeName:R,remoteDatabase : {type:t_DatabaseMeta_type , name:string, cluster: t_jsonClusterMeta},localDatabase : {type:t_DatabaseMeta_type , name:string}){ 
         this._serviceName = _serviceName
         this._routeName = _routeName
 

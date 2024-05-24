@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { t_alphabet, t_alphaNumeriChar, UnionToArray, t_char_number, validateStrIsInAllPermutation } from "./type.js"
 
 export type t_specialChar_regex = "("|")"|"{"|"}"|"["|"]"|"*"|"+"|"?"|"."|"\\"|"^"|"$"|"|"|"&"|"/"
@@ -59,7 +60,7 @@ export default class MRegExp<T extends string , F extends t_regexpFlags = undefi
     source : T
     flags : F
 
-    constructor(source : T , flags : F = undefined ) {
+    constructor(source : T , flags : F = undefined ) { 
         super(source, flags)
     }
 

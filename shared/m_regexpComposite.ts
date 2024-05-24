@@ -2,7 +2,7 @@
 _FnEmbeds extends readonly [infer F1,...infer FR] ? F1 extends t_union_FnEmbeds ? FR extends readonly t_union_FnEmbeds[] ?
 [t_functionFn<F1>,...t_TFctEmbedsFromFnEmbeds<FR>] : never : never : []*/
 
-
+import getCurrentLine from "get-current-line"
 import { t_strRegex } from "./_regexp.js"
 import { deepCloneJson } from "./m_json.js"
 import { IJson, t_s_getProp, s_getProp, t_isEmptyJson, t_jsonAddIfNotExist, isEmptyJson, setProp, jsonAddIfNotExist, isObject } from "./m_object.js"
@@ -53,15 +53,15 @@ const df_t_merge_dfTe = {
   
   type t_getNameTe <T extends _te<string>> = T extends _te<string,false> ? T["name"] : T extends _te<string,true> ? T["regex"]["name"]:never//T extends _te<infer A> ? A : never
   const getNameTe = <T extends _te<string>>(val:T) => isComposite(val) ? (val as _te<string,true>)["regex"].name : (val as _te<string,false>).name 
-  const isValidComposite = <T extends _te<string> >(_t:T) =>{
+  const isValidComposite = <T extends _te<string> >(_t:T) =>{ 
     let res : boolean = isComposite(_t) 
-    if(res){
+    if(res){ 
       const t = _t as _Composite
       let arrKeys = t["regex"]["arr_keys"]
-      for(let idx = 0 ; res && idx < t["regex"].value.length ; idx++){
+      for(let idx = 0 ; res && idx < t["regex"].value.length ; idx++){ 
         const val = t["regex"].value[idx]
         res = arrKeys.includes(getNameTe(val))
-        if(res) {
+        if(res) { 
           arrKeys = arrKeys.filter((el)=>el !== getNameTe(val))
           if(isComposite(val)) res = isValidComposite(val)
         }
@@ -87,7 +87,7 @@ const df_t_merge_dfTe = {
   A & t_df_common & {  readonly operator?: string }:never
   
   type t_getPropIfExistElseDf <nameProp extends t_indexable_key ,  T, T_df extends t_df_nonComposite , nameProp_df extends keyof T_df = undefined >= t_s_getProp<T,nameProp,t_s_getProp<T_df,nameProp_df extends undefined ? nameProp : nameProp_df ,never>>
-  const getPropIfExistElseDf = <nameProp extends t_indexable_key ,  T , T_df extends t_df_nonComposite , nameProp_df extends keyof T_df = undefined>(_nameProp:nameProp, t:T,df:T_df,_nameProp_df?:nameProp_df):t_getPropIfExistElseDf<nameProp,T,T_df,nameProp_df>=>{
+  const getPropIfExistElseDf = <nameProp extends t_indexable_key ,  T , T_df extends t_df_nonComposite , nameProp_df extends keyof T_df = undefined>(_nameProp:nameProp, t:T,df:T_df,_nameProp_df?:nameProp_df):t_getPropIfExistElseDf<nameProp,T,T_df,nameProp_df>=>{ 
     if(_nameProp_df === undefined) _nameProp_df = _nameProp as unknown as nameProp_df
     const [_b1,_b2] = [t.hasOwnProperty(_nameProp),df.hasOwnProperty(_nameProp_df)]
     if(!(_b1 || _b2)) throw new Error(`getPropIfExistElseDf : ${_nameProp.toString()} not found in t and ${_nameProp_df.toString()} in df`)
@@ -100,7 +100,7 @@ const df_t_merge_dfTe = {
   type t_applyFctEmbed <S extends string  ,   TFctEmbed extends t_union_name >= Apply<t_fnStrOrRegexEmbed<TFctEmbed>,[S]> 
   type t_getAndApplyFctEmbed < S extends string , T extends _te<string,false> , T_df extends t_df_nonComposite >= t_getPropIfExistElseDf<"fctEmbed",T,T_df> extends infer TFctEmbed ? TFctEmbed extends t_union_name ?
   t_applyFctEmbed<S,TFctEmbed>  : never : never
-  const getAndApplyFctEmbed = < S extends string , T extends _te<string,false> , T_df extends t_df_nonComposite >(str:S,t:T,df:T_df) => {
+  const getAndApplyFctEmbed = < S extends string , T extends _te<string,false> , T_df extends t_df_nonComposite >(str:S,t:T,df:T_df) =>{ 
     let name_fctEmbed : t_union_name = getPropIfExistElseDf<"fctEmbed",T,T_df>("fctEmbed",t,df)
     const fctEmbed = getFctEmbedEmbeddingPAS(name_fctEmbed)
     if(_isFunction(fctEmbed)) return fctEmbed(str,true)
@@ -109,19 +109,19 @@ const df_t_merge_dfTe = {
   
   type t_getAndApplyFctGroupEmbed < S extends string , TFctEmbeds extends fdsfdcv , T_df extends t_df_merge  >= 
   t_s_getProp<TFctEmbeds,"_",undefined> extends undefined ?  t_applyFctEmbed<S,T_df["df_fct"]> : t_applyFctEmbed<S,TFctEmbeds["_"]>  
-  const getAndApplyFctGroupEmbed = < S extends string , TFctEmbeds extends fdsfdcv , T_df extends t_df_merge  >(str:S,fctEmbeds:TFctEmbeds,df:T_df) => {
+  const getAndApplyFctGroupEmbed = < S extends string , TFctEmbeds extends fdsfdcv , T_df extends t_df_merge  >(str:S,fctEmbeds:TFctEmbeds,df:T_df) =>{ 
     let name_fctEmbed : t_union_name = getPropIfExistElseDf<"_",TFctEmbeds,T_df,"df_fct">("_",fctEmbeds,df,"df_fct")
     const _fctEmbed = getFctEmbedEmbeddingPAS(name_fctEmbed)
     return _fctEmbed(str,true)
   }
   
   type t_getAndApplyFctEmbedOnTeRegex < T extends _te<string,false> , T_df extends t_df_nonComposite >= t_getAndApplyFctEmbed<T["regex"],T,T_df> 
-  const getAndApplyFctEmbedOnTeRegex = < T extends _te<string,false> , T_df extends t_df_nonComposite >(t:T,df:T_df) => {
+  const getAndApplyFctEmbedOnTeRegex = < T extends _te<string,false> , T_df extends t_df_nonComposite >(t:T,df:T_df) =>{ 
     return getAndApplyFctEmbed<T["regex"],T,T_df>(t["regex"],t,df)
   }
   
   type t_getOperator < T extends _te<string>>  = t_s_getProp<T,"operator","">
-  const getOperator = <T extends _te<string>>(t:T) => {
+  const getOperator = <T extends _te<string>>(t:T) =>{ 
     return s_getProp(t,"operator","") as t_getOperator<T>
   }
   
@@ -173,7 +173,7 @@ const df_t_merge_dfTe = {
   
   
   
-  export function _joinRegexGroup<S extends string ,   T extends _te<string,false> , T_df extends Omit<_te<string,false>,"regex"|"name">= {fctEmbed:t_df_name_embeddingPAS,joinChar:""} > (_str : S , str_regex:T["regex"] ,join_char : T_df["joinChar"] = "" as any,name_fct_embed :  T_df["fctEmbed"] = df_name_embeddingPAS as any){
+  export function _joinRegexGroup<S extends string ,   T extends _te<string,false> , T_df extends Omit<_te<string,false>,"regex"|"name">= {fctEmbed:t_df_name_embeddingPAS,joinChar:""} > (_str : S , str_regex:T["regex"] ,join_char : T_df["joinChar"] = "" as any,name_fct_embed :  T_df["fctEmbed"] = df_name_embeddingPAS as any){ 
     const fct_embed = getFctEmbedEmbeddingPAS(name_fct_embed)
     return  [_str,fct_embed(str_regex,true)].join(join_char) as t__joinRegexGroup<T,T_df,S>
   }
@@ -204,12 +204,12 @@ const df_t_merge_dfTe = {
     arr_keys : ArrK
   
   
-    constructor(name : N , _compositeRegexp : _Value,arr_keys : ArrK ,   _df_fctEmbed : T_df = df_t_merge_dfTe as any){
+    constructor(name : N , _compositeRegexp : _Value,arr_keys : ArrK ,   _df_fctEmbed : T_df = df_t_merge_dfTe as any){ 
       this.name = name
       this.value = _compositeRegexp
       this.arr_keys = arr_keys
       this.df = _df_fctEmbed
-      for (const idx in this.value) {
+      for (const idx in this.value) { 
         const val = this.value[idx] 
         //@ts-ignore
         if(!val.hasOwnProperty("fctEmbed")) val.fctEmbed = this.df["fctEmbed"]
@@ -220,12 +220,12 @@ const df_t_merge_dfTe = {
     }
   
   
-    buildGroupRegexp < _TFctEmbeds extends  makeOptional<IJson<ArrK[number],fdsfdcv>> = undefined >(_fct_embeds :_TFctEmbeds = undefined as any){
+    buildGroupRegexp < _TFctEmbeds extends  makeOptional<IJson<ArrK[number],fdsfdcv>> = undefined >(_fct_embeds :_TFctEmbeds = undefined as any){ 
   
   
       let str = ""
-      const joinRegexGroup = <T extends fdsfdcv , t_val extends _te<string> =_te<string>>(cur_value : t_val , _fct_embeds :T ={} as T ) => {
-        const updateTdfFctEmbed	 =<T extends fdsfdcv >(fctEmbed:T ) => {
+      const joinRegexGroup = <T extends fdsfdcv , t_val extends _te<string> =_te<string>>(cur_value : t_val , _fct_embeds :T ={} as T ) =>{ 
+        const updateTdfFctEmbed	 =<T extends fdsfdcv >(fctEmbed:T ) =>{ 
           let cpy_df = deepCloneJson(this.df)
           return (isEmptyJson(fctEmbed) ? cpy_df : (s_getProp<T,"df",undefined>(fctEmbed,"df",undefined) === undefined ?  setProp(cpy_df,"fctEmbed",fctEmbed["df"]):cpy_df)) as t_updateTdfFctEmbed<T,T_df>
           }
@@ -246,7 +246,7 @@ const df_t_merge_dfTe = {
           return `${joinChar}${res}` as t_joinRegexGroup<t_val,T_df,T>
   
       }
-      for ( let idx = 0 ; idx < this.value.length ; idx++) {
+      for ( let idx = 0 ; idx < this.value.length ; idx++) { 
         const _value = this.value[idx]
         const _name = this.arr_keys[idx]
         const _fctEmbed = _fct_embeds?.[_name]
@@ -256,7 +256,7 @@ const df_t_merge_dfTe = {
       return str as  string[] extends ArrK ? string : _t_st_buildGroupRegexp<ArrK,_Value,T_df ,_TFctEmbeds>
     }
   
-    static st_buildGroupRegexp < N extends string , ArrK extends readonly string[] , _Value extends t_ICompositeRegexp<ArrK> ,T_df extends t_df_merge = t_df_t_merge_dfTe ,_TFctEmbeds extends makeOptional<IJson<ArrK[number],fdsfdcv>> = undefined >(_this: CompositeRegexp<N,ArrK,_Value,T_df>,_fct_embeds ?:_TFctEmbeds){
+    static st_buildGroupRegexp < N extends string , ArrK extends readonly string[] , _Value extends t_ICompositeRegexp<ArrK> ,T_df extends t_df_merge = t_df_t_merge_dfTe ,_TFctEmbeds extends makeOptional<IJson<ArrK[number],fdsfdcv>> = undefined >(_this: CompositeRegexp<N,ArrK,_Value,T_df>,_fct_embeds ?:_TFctEmbeds){ 
       return _this.buildGroupRegexp(_fct_embeds)
     }
 

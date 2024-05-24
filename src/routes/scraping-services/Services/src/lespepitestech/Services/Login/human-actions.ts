@@ -53,7 +53,7 @@ class HA_LespepitestechServiceLogin extends  AHA_ServiceBase<t_serviceName_lespe
         return AService.df_localFunction()
     }
 
-    static getDfArgsGetTree :()=> t_args_getTree = ()=>{return {
+    static getDfArgsGetTree :()=> t_args_getTree = ()=>{ return {
         params:{
             routeName:str_login,
             prop_base_selectors:root_loginPage_child_selectors,
@@ -91,7 +91,7 @@ class HA_LespepitestechServiceLogin extends  AHA_ServiceBase<t_serviceName_lespe
         return [param,fct_loading]
     }
 
-    getTree< BaseElement extends unionClassNameType  ,  UnionRegex  extends t_1  ,UnionIdPath  extends t_2 , ArrUnionClassNameType extends t_3 ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> & t_5  ,  T extends _IJsonComponents< unionClassNameType> & t_6  >(req:req_login , res : res_login,_args:reshapeObject< t_AHA_Service_ArgsGetTree<t_serviceName_lespepitestech,t_str_login,BaseElement,UnionRegex ,UnionIdPath , ArrUnionClassNameType,unionClassNameType ,ArrArr ,  T>>= {}  ){
+    getTree< BaseElement extends unionClassNameType  ,  UnionRegex  extends t_1  ,UnionIdPath  extends t_2 , ArrUnionClassNameType extends t_3 ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> & t_5  ,  T extends _IJsonComponents< unionClassNameType> & t_6  >(req:req_login , res : res_login,_args:reshapeObject< t_AHA_Service_ArgsGetTree<t_serviceName_lespepitestech,t_str_login,BaseElement,UnionRegex ,UnionIdPath , ArrUnionClassNameType,unionClassNameType ,ArrArr ,  T>>= {}  ){ 
         const params = this.getTreeParam(req,res,_args)
         return AHA_ServiceBase._getTree< t_serviceName_lespepitestech,t_str_login,BaseElement,  t_unionRegex_mapRegex_lespepitestech_login ,t_unionIdPath_mapRegex_lespepitestech_login , t_arrClassName_login,t_unionClassName_login ,t_arrChilds_login ,  t_IJsonComponent_login>(...params)
     }

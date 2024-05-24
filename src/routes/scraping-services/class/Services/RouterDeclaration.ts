@@ -21,7 +21,7 @@ import { t_body_scrapingService } from './ScrapingService.js';
 import { IJson_ServiceConfig } from '@/controller/scraping-services/class/Config/IJson_ServiceConfig.js';
 
 
-export  function f_RouterDeclaration<C_SN extends _validateServiceName  , C_FR extends FnValidateRemoteAddress , C_FH extends FnValidateIdHome   ,C_FT1 extends FnValidateRoute, C_FSN extends FnValidateServiceName=FnValidateServiceName ,C_FRA extends FnValidateRouteAndAddress =FnValidateRouteAndAddress, C_FRqRs extends FnValidateJsonReqRes=FnValidateJsonReqRes >( ) {
+export  function f_RouterDeclaration<C_SN extends _validateServiceName  , C_FR extends FnValidateRemoteAddress , C_FH extends FnValidateIdHome   ,C_FT1 extends FnValidateRoute, C_FSN extends FnValidateServiceName=FnValidateServiceName ,C_FRA extends FnValidateRouteAndAddress =FnValidateRouteAndAddress, C_FRqRs extends FnValidateJsonReqRes=FnValidateJsonReqRes >( ) { 
     class RouterDeclaration<SN extends C_SN  , R extends _C_R<C_FR,[SN]> , H extends _C_H<C_FH,[SN]>  , T1 extends _C_T1<C_FT1,[SN]>   ,RA extends _C_RA<C_FRA,_C_SN_Result> ,JsonReqRes extends _C_JsonReqRes<C_FRqRs,_C_SN_Result> , _C_SN_Result extends (_C_SN<C_FSN,[SN]>& [SN, R, T1]) = (_C_SN<C_FSN,[SN]>& [SN, R, T1])>  implements t_body_scrapingService<SN,R,H,T1,RA> { 
 
 
@@ -34,12 +34,12 @@ export  function f_RouterDeclaration<C_SN extends _validateServiceName  , C_FR e
         Test : create router with a map of handler
         */
 
-        constructor(  body_scrapingService : t_body_scrapingService <SN,R,H,T1,RA >,routesConfig :JsonReqRes ) {
+        constructor(  body_scrapingService : t_body_scrapingService <SN,R,H,T1,RA >,routesConfig :JsonReqRes ) { 
             this.router = Router();
-            this.routes =  routesConfig ; //createJsonAsForEach(Object.values(routesHandler).map((routeHandler : t_routeHandler<SN , any>) => { return  { handler_function : routeHandler }})) as  serviceRoutesHandler<SN>;
+            this.routes =  routesConfig ; //createJsonAsForEach(Object.values(routesHandler).map((routeHandler : t_routeHandler<SN , any>) =>{  return  { handler_function : routeHandler }})) as  serviceRoutesHandler<SN>;
             this.doService = body_scrapingService.doService ;
             this.config = body_scrapingService.config ;
-            //this.routes = Object.keys(config_parms).map((route:string)=>{  //as getUnionRouteOfServiceFromServiceName <SN> ;
+            //this.routes = Object.keys(config_parms).map((route:string)=>{   //as getUnionRouteOfServiceFromServiceName <SN> ;
         }
         getRouter():Router{
             return this.router ;
@@ -52,11 +52,11 @@ export  function f_RouterDeclaration<C_SN extends _validateServiceName  , C_FR e
         getConfig(){
             return this.config ;
         }
-        async setRoutes<M extends MainService<SN , R, H ,T1,RA>> (mainService : M) {
+        async setRoutes<M extends MainService<SN , R, H ,T1,RA>> (mainService : M) { 
 
             type t_T1 = M extends MainService<SN , any,any ,infer ArrR,any> ? ArrR : never ;
 
-            return Object.keys(this.routes).forEach(async(str_idRoute:T1 [number]  ) => {
+            return Object.keys(this.routes).forEach(async(str_idRoute:T1 [number]  ) =>{ 
             
                 if(!isNotLoginRoute(str_idRoute)){
                     //TODO-IMP:
@@ -65,7 +65,7 @@ export  function f_RouterDeclaration<C_SN extends _validateServiceName  , C_FR e
                 else{ 
                     const service = await MainService.getService(mainService,str_idRoute) ;
                     for (const nameFunction of service.getNamesOfFunction() ){
-                        let fct_route = (_req: IJson , _res:IJson ) => {
+                        let fct_route = (_req: IJson , _res:IJson ) =>{ 
 
                                 let reqRes = this.routes[str_idRoute]  ;
                                 let [req,res]  = [getExtractedPropsFromPick (pickAndFilterProps_firstLevelProps(_req,getReq(reqRes))), getExtractedPropsFromPick (pickAndFilterProps_firstLevelProps(_res, getRes(reqRes)  ))]

@@ -14,12 +14,12 @@ export const EXIT_FAILURE  = 1 as const ;
 
 export type t_fct_errorHandler<T = void> = (error: any) => T;
 
-export const df_fct_errorHandler : t_fct_errorHandler = (error: any) => {
+export const df_fct_errorHandler : t_fct_errorHandler = (error: any) =>{ 
     console.log(error);
     return process.exit(EXIT_FAILURE);
 };
 
-export const ifNotGetDfErrorHandler  = <T>(errorHandler ?: t_fct_errorHandler<T>) => {
+export const ifNotGetDfErrorHandler  = <T>(errorHandler ?: t_fct_errorHandler<T>) =>{ 
     return errorHandler ?errorHandler : df_fct_errorHandler
 }
 
@@ -39,10 +39,10 @@ class ErrorMessage extends Message{
     value :string
     static type : t_resp_message = "Error"
 
-    constructor( name_module:string , message :string , value :string ){
+    constructor( name_module:string , message :string , value :string ){ 
         super(ErrorMessage.type,name_module, message,value)
     } 
-    toJson = () => {
+    toJson = () =>{ 
         return {
             type : this.type,
             from : this.name_module,
@@ -50,10 +50,10 @@ class ErrorMessage extends Message{
             value : this.value
         }
     }
-    static fromJson = (json : t_jsonResponse) => {
+    static fromJson = (json : t_jsonResponse) =>{ 
         return new ErrorMessage(json.from,json.message,json.value)
     }
-    static fromParamsToJson = (name_module:string , message :string , value :any ) => {
+    static fromParamsToJson = (name_module:string , message :string , value :any ) =>{ 
         const valueStr = typeof value === "string" ? value : JSON.stringify(value)
         return new ErrorMessage(name_module,message,valueStr).toJson()
     }

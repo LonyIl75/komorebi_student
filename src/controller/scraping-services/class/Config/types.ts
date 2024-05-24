@@ -24,11 +24,11 @@ export type idx_idRouteFromRouteIdAndRemoteAddress =  ReturnType<typeof getIdxId
 export type t_getIdRouteFromIdAndRemoteAddress<T extends t_routeIdAndRemoteAddress> = T[idx_idRouteFromRouteIdAndRemoteAddress] ;
 export type t_getRemoteAddressFromIdAndRemoteAddress<T extends t_routeIdAndRemoteAddress> = T[idx_remoteAddressFromRouteIdAndRemoteAddress] ;
 
-export function getIdRouteFromIdAndRemoteAddress(arr:t_routeIdAndRemoteAddress)  {
+export function getIdRouteFromIdAndRemoteAddress(arr:t_routeIdAndRemoteAddress)  { 
     return arr[getIdxIdRouteFromIdAndRemoteAddress()] ;
 }
 
-export function getRemoteAddressFromIdAndRemoteAddress(arr:t_routeIdAndRemoteAddress)  {
+export function getRemoteAddressFromIdAndRemoteAddress(arr:t_routeIdAndRemoteAddress)  { 
     return arr[getIdxRemoteAddressFromRouteIdAndRemoteAddress()] ;
 }
 
@@ -93,10 +93,10 @@ export const isNotHomeRoute = <T extends string >(key:T)  => (key !== str_main) 
 export const getIdxIdHomeRoute = ():t_base_id_serviceRoutes["length"]=> id_arr_serviceRoutes.length  ;
 export type idx_idHomeRoute = ReturnType<typeof getIdxIdHomeRoute> ;
 
-export const validIdRoutesOrThrow = <ArrIdRoutes extends readonly string[]>(arr:ArrIdRoutes,reqOrRes : "req"|"res"|"idRoutes"="idRoutes")=> {
+export const validIdRoutesOrThrow = <ArrIdRoutes extends readonly string[]>(arr:ArrIdRoutes,reqOrRes : "req"|"res"|"idRoutes"="idRoutes")=>{ 
     const validatePipeline : ([number,t_function<boolean,[string]>,string]) []= [[getIdxIdLoginRoute(),isNotLoginRoute,str_login],[getIdxIdHomeRoute(),isNotHomeRoute,str_main]]
 
-    validatePipeline.forEach((idxValidateFctName)=>{
+    validatePipeline.forEach((idxValidateFctName)=>{ 
         const [idx,validateFct,name] = idxValidateFctName ;
         if(validateFct(arr[idx])) throw new Error(`${reqOrRes}s should include ${name} as is ${idx} element `)
     })

@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { getIdxIdHomeRoute, getIdxIdLoginRoute, isNotHomeRoute, isNotLoginRoute, str_login, str_main, validIdRoutesOrThrow } from "@/controller/scraping-services/class/Config/types.js"
 import { CodeGenerator, genericValueToString, t_genericValue } from "@/generator/utils/types.js"
 import { arrayToString } from "@shared/m_array.js"
@@ -14,7 +15,7 @@ class PipelineService<IdRouteReq extends readonly string[] , IdRouteRes extends 
     _req : IdRouteReq;
     _res : IdRouteRes;
 
-    constructor(routeName :string , serviceName :string,req : IdRouteReq,res : IdRouteRes){
+    constructor(routeName :string , serviceName :string,req : IdRouteReq,res : IdRouteRes){ 
         this._routeName = routeName;
         this._serviceName = serviceName;
         validIdRoutesOrThrow(req,'req')

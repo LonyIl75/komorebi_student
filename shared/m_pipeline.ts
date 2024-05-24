@@ -97,8 +97,8 @@ type _t_pipeline_env_var_op =  {
     //[str_stopValue] : t_env_var_stopval
 }
 
-const initEmptyEnvVarOp = (op : t_union_id_env_var_op) : _t_pipeline_env_var_op[t_union_id_env_var_op] => {
-    switch(op){
+const initEmptyEnvVarOp = (op : t_union_id_env_var_op) : _t_pipeline_env_var_op[t_union_id_env_var_op] =>{ 
+    switch(op){ 
         case str_noneOp : return getEmptyJson()
         case str_while : return {max:0,counter:0/*cur_value:0,stopValue:undefined*/}
         case str_interval : return {min:0,counter:0/*cur_value:0*/}
@@ -113,28 +113,28 @@ const pipeline_cond  :{
 
 } = {
     [str_noneOp] : undefined,
-    [str_while] : (...args:[_t_pipeline_env_var_op[t_str_while]])=> {
+    [str_while] : (...args:[_t_pipeline_env_var_op[t_str_while]])=>{ 
         const arg = args[0]
         return /*cond_stopValue(arg) &&*/ cond_maxvalue(arg)
     },
-    [str_interval]:(...args:[_t_pipeline_env_var_op[t_str_interval]])=> {
+    [str_interval]:(...args:[_t_pipeline_env_var_op[t_str_interval]])=>{ 
         const arg = args[0] as any 
         return (arg?.max === undefined || cond_maxvalue(arg))  && (arg?.min === undefined || cond_minvalue(arg))
-    }/*,
-    [str_stopValue]:(...args:[_t_pipeline_env_var_op[t_str_stopValue]])=>{
-        const arg = args[0]
-        return cond_stopValue(arg)
-    }*/
+    }
+    //,[str_stopValue]:(...args:[_t_pipeline_env_var_op[t_str_stopValue]])=>{ 
+       // const arg = args[0]
+        //return cond_stopValue(arg)
+    //}
 }
 
 const df_next_fct :{
     [k in string ] :t_functionSetter<[_t_pipeline_env_var_op[t_union_id_env_var_op]]>
 }={
-     increment : (...args:[t_env_var_maxval]) => {args[0].counter++},
-     decrement : (...args:[t_env_var_minval]) => {args[0].counter--}
+     increment : (...args:[t_env_var_maxval]) =>{ args[0].counter++},
+     decrement : (...args:[t_env_var_minval]) =>{ args[0].counter--}
 }
-const df_fct_fromIdEnvVar = (op : t_union_id_env_var_op) => {
-    switch(op){
+const df_fct_fromIdEnvVar = (op : t_union_id_env_var_op) =>{ 
+    switch(op){ 
         case str_while:
             return df_next_fct.increment
         default : 
@@ -162,7 +162,7 @@ I extends [I_1,...I_2] = [I_1,...I_2],O  extends [I_1,O_2] = [I_1,O_2]>{
     condition ?: t_booleanFunction<[I_1]>
     next ?: t_functionSetter<[I_1]>
 
-    constructor(_pipeline :t_pipeline<I,O,IEnv,Op,I_1,OInterArr>,op : Op ,modifiers : t_modifier_pipeline.t_enum , condition?:t_booleanFunction<[I_1]> ,string_function ?:string   ) {
+    constructor(_pipeline :t_pipeline<I,O,IEnv,Op,I_1,OInterArr>,op : Op ,modifiers : t_modifier_pipeline.t_enum , condition?:t_booleanFunction<[I_1]> ,string_function ?:string   ) { 
         this.pipeline = _pipeline;
         //A FAIRE : why need as I_1
         this.op =op 
@@ -183,11 +183,11 @@ I extends [I_1,...I_2] = [I_1,...I_2],O  extends [I_1,O_2] = [I_1,O_2]>{
         return getLastElementArr(this.pipeline)
     }
 
-    isUnInitializedCondition = () => {
+    isUnInitializedCondition = () =>{ 
         return this.condition == pipeline_cond[str_noneOp] 
     }
 
-    async run_pipeline(initValue?:I_2,initEnv?:I_1){
+    async run_pipeline(initValue?:I_2,initEnv?:I_1){ 
         let intermediate_result :[I_1,OInterArr[number]]  = null
         if(initEnv == undefined || this.isUnInitializedCondition() || this.condition(initEnv)){
             intermediate_result = await this.run(this.pipeline,[initEnv,...initValue] as I)
@@ -219,28 +219,28 @@ export class PipelineBuilder<AllCategory extends string  ,KCategory extends AllC
    lib : {[kc in KCategory] : {[kf in KFct] : O[kf]}} & t_noneFctObj
    rules : {[k in KCategory] :Array<RegExp>}
 
-   constructor ( _rules : t_rules_base<AllCategory,KCategory>, _lib : O , map : {readonly [kc in KCategory] : readonly KFct[]} ){
-       this.rules = applyFctToObjectValues(_rules , (arr:Array<t_regex_array<AllCategory>>):Array<RegExp>=>{
+   constructor ( _rules : t_rules_base<AllCategory,KCategory>, _lib : O , map : {readonly [kc in KCategory] : readonly KFct[]} ){ 
+       this.rules = applyFctToObjectValues(_rules , (arr:Array<t_regex_array<AllCategory>>):Array<RegExp>=>{ 
             return arr.map((rule)=>new RegExp(rule.join("")))
        });
-       const lib = applyFctToObjectValues(map , (arr:KFct[])=>{
+       const lib = applyFctToObjectValues(map , (arr:KFct[])=>{ 
             return arr.reduce((acc , fct_name)=>({...acc,[fct_name]:_lib[fct_name]}),{} as {[kf in KFct] : O[kf]})
        })
        this.lib = {...lib,...noneFctObj};
    }
 
-   static embed_pipeline_regexArr = <AllCategory extends string  , KCategory extends AllCategory  >(_rules : t_rules_base<AllCategory,KCategory>):t_rules_base<AllCategory,KCategory> => {
+   static embed_pipeline_regexArr = <AllCategory extends string  , KCategory extends AllCategory  >(_rules : t_rules_base<AllCategory,KCategory>):t_rules_base<AllCategory,KCategory> =>{ 
         type t_rules = typeof _rules
         type t_key_rules = KCategory
         type t_val_rules = Array<t_regex_array<AllCategory>>
         if(isEmptyJson(_rules)) return _rules
-        return applyFctToObjectEntries<t_rules,t_key_rules,t_val_rules,t_rules >(_rules ,(_rule_entry :t_Entry<t_key_rules,t_val_rules>)=>{
+        return applyFctToObjectEntries<t_rules,t_key_rules,t_val_rules,t_rules >(_rules ,(_rule_entry :t_Entry<t_key_rules,t_val_rules>)=>{ 
                 const [key_rule , val_rule] =  _rule_entry
                 return  {[key_rule] : val_rule.map((e)=>[str_beginOfLine_regex,...e]) }  as t_rules_base<AllCategory,KCategory>
         });
    }
 
-   static isNoneCategory = <KCategory extends string>(category : KCategory | t_noneCategory):category is t_noneCategory => {
+   static isNoneCategory = <KCategory extends string>(category : KCategory | t_noneCategory):category is t_noneCategory =>{ 
          return category == noneCategory
     }
 
@@ -252,7 +252,7 @@ export class PipelineBuilder<AllCategory extends string  ,KCategory extends AllC
 
    _validatePipeline(arr_fcts : readonly KFct[]) : {mss:string , result : {[k in KFct]: KCategory}|IVoid } {
         type t_res = {[k in KFct]: KCategory}|IVoid 
-        let acc_obj :t_res = arr_fcts.reduce((acc,fct_name)=>{
+        let acc_obj :t_res = arr_fcts.reduce((acc,fct_name)=>{ 
             return {...acc,[fct_name]:this.getCategoryOfFct(fct_name)}
         },{} as t_res ) as t_res 
         let _str = Object.values(acc_obj).join("")
@@ -267,7 +267,7 @@ export class PipelineBuilder<AllCategory extends string  ,KCategory extends AllC
          return {mss:"",result:acc_obj};
    }
 
-   _createPipeline<Arr extends readonly KFct[] , Op extends t_union_id_env_var_op = t_str_noneOp >(_arr_fcts :  {[k in KFct]: KCategory} , op :Op = str_noneOp as Op){
+   _createPipeline<Arr extends readonly KFct[] , Op extends t_union_id_env_var_op = t_str_noneOp >(_arr_fcts :  {[k in KFct]: KCategory} , op :Op = str_noneOp as Op){ 
 
         //TODO op 
         type t_arr_fcts< _Arr extends readonly KFct[] , _RArr extends (O[KFct])[] =[] ,  _RIEnv extends IJson = IVoid > = 
@@ -284,9 +284,9 @@ export class PipelineBuilder<AllCategory extends string  ,KCategory extends AllC
         type ArrFcts = IEnvAndArrFcts[1]
         type t_env_var = t_pipeline_env_var<IEnv,Op>
 
-        const arr_fcts = Object.entries(_arr_fcts).reduce((acc , entry)=>{
+        const arr_fcts = Object.entries(_arr_fcts).reduce((acc , entry)=>{ 
             const [fct_name , category] = entry as [KFct,KCategory]
-            return ( (obj_fct)=>[...acc,async(...args:[t_env_var,...any[]])=> {
+            return ( (obj_fct)=>[...acc,async(...args:[t_env_var,...any[]])=>{ 
                 const [env , ...restArgs] = args
                 let res = await obj_fct(...restArgs)
                 return isRetFunctionisNothing(res)? [env] : [env,...(res?.length ?res :[res])]
@@ -301,12 +301,11 @@ export class PipelineBuilder<AllCategory extends string  ,KCategory extends AllC
         type t_interFct = getInterInput<getSubArray<ArrFcts,1,1>>
         
         const res = new Pipeline<t_input ,t_output,IEnv,Op,t_env_var,t_interFct>(arr_fcts as any,op , enum_promise_execution.sequential )
-        console.log("res",res)
         return res
 
    }
 
-    createPipeline<Arr extends readonly KFct[] , Op extends t_union_id_env_var_op = t_str_noneOp >(arr_fcts :  Arr, op :Op = str_noneOp as Op){
+    createPipeline<Arr extends readonly KFct[] , Op extends t_union_id_env_var_op = t_str_noneOp >(arr_fcts :  Arr, op :Op = str_noneOp as Op){ 
         const validated = this._validatePipeline(arr_fcts)
         if(isNotEmptyJson(validated.result)){
             return this.

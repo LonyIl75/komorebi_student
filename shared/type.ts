@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 
 export const _notFoundIdx = ():-1 => -1
 export type t_notFoundIdx = ReturnType<typeof _notFoundIdx>
@@ -39,7 +40,7 @@ export type t_alphaNumeriChar = t_alphabet|t_alphabetMaj | t_char_number
 export const none_attributeName : "__none__" = "__none__" 
 export type t_none_attributeName = typeof none_attributeName 
 export type t_isNoneAttributeName <T extends string> = T extends t_none_attributeName ? true : false 
-export const isNoneAttributeName =<T extends string>(attr_name : any  ) : attr_name is t_none_attributeName =>{
+export const isNoneAttributeName =<T extends string>(attr_name : any  ) : attr_name is t_none_attributeName =>{ 
   return (attr_name === none_attributeName) as t_isNoneAttributeName<T>
 }
 export const arr_attributeName = [none_attributeName,"id","src","alt","href","type","color","aria-label"] as const
@@ -55,7 +56,7 @@ export const arr_attributeName_strict = arr_attributeName.slice(1) as removeFirs
 export type t_arr_attributeName_strict = typeof arr_attributeName_strict
 export type t_attributeName_val <isStrict extends boolean = false  >= isStrict extends true ? t_union_attributeName_strict : t_union_attributeName 
 
-export const validateAttributeNameValue = <t_isStrict extends boolean = boolean> (name : t_attributeName_val<t_isStrict> , isStrict?:t_isStrict ) => {
+export const validateAttributeNameValue = <t_isStrict extends boolean = boolean> (name : t_attributeName_val<t_isStrict> , isStrict?:t_isStrict ) =>{ 
   return isStrict === undefined ||isStrict === false ? arr_attributeName.includes(name)  : arr_attributeName_strict.includes(name as t_attributeName_val<true>)
 }
 

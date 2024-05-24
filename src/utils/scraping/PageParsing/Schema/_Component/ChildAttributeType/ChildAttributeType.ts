@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { haveSerializerAndEmptyInit, EmptyInit, AHaveSerializer, deepCloneJson } from "@shared/m_json.js";
 import { IJson, createJsonFromEntries, entryGetKey, t_createJsonFromEntries } from "@shared/m_object.js";
 import {  NOT,PopUnion, getIntersectJsons, jsonObjectToArrKey, jsonObjectToArrValue } from "@shared/type.js";
@@ -91,22 +92,22 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
     }
 
     //A FAIRE not sure that constrained function is valid to initialized fromJson
-    static fromJson = (json: IJson & t_attribute_name) : ChildAttributeType => {
+    static fromJson = (json: IJson & t_attribute_name) : ChildAttributeType =>{ 
         const entry  = ChildAttributeType.getAttributeValueEntry(json ) 
         return new ChildAttributeType(entry[0],entry[1],json?.selector,ValTextContent.getArgsForCst(json),deepCloneJson(json?.args_setting),json?.joinChar_group)
     }
 
     static emptyObject : EmptyInit<ChildAttributeType>  = new EmptyInit<ChildAttributeType>(ChildAttributeType) ;
 
-    static getEmptyInit: () => ChildAttributeType = () => {
+    static getEmptyInit: () => ChildAttributeType = () =>{ 
         return ChildAttributeType.emptyObject.emptyInit() ;
     }
 
-    getEmptyInit: () => ChildAttributeType = () => {
+    getEmptyInit: () => ChildAttributeType = () =>{ 
         return ChildAttributeType.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: AHaveSerializer<ChildAttributeType>) => boolean = (obj:AHaveSerializer<ChildAttributeType>)=>{
+    static isTypeof: (obj: AHaveSerializer<ChildAttributeType>) => boolean = (obj:AHaveSerializer<ChildAttributeType>)=>{ 
         return haveSerializerAndEmptyInit._isTypeof(ChildAttributeType.getEmptyInit(),obj)
     }
 
@@ -130,11 +131,11 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
         return (json === ChildAttributeType.getInvalidAttributeValue() )as t_isInvalidValueAttribute<T>
     }
 
-    static isAttributeFunctionName = <T extends t_attribute_name >(json:T)  =>{
+    static isAttributeFunctionName = <T extends t_attribute_name >(json:T)  =>{ 
         return (!isAttributeName_(json)) as NOT<t_isAttributeName_<T>>
     }
 
-    static  getAttributeValueEntry = <T extends t_attribute_name > (_json : T) :t_getAttributeValueEntry<T>=> {
+    static  getAttributeValueEntry = <T extends t_attribute_name > (_json : T) :t_getAttributeValueEntry<T>=>{ 
         let res  :any = ChildAttributeType.getInvalidAttributeValueEntry()
         if(!isNoneAttributeNameVal_(_json[df_str_attribute_name])){
             const json = _json as t_attribute_name<true>
@@ -142,7 +143,7 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
             let [key,val]  = [undefined ,undefined ]
 
             let i = 0 
-            while(i < arr_key_attribute_name.length ){
+            while(i < arr_key_attribute_name.length ){ 
                 key = arr_key_attribute_name[i]  
                 val = json[key]
                 if(json.hasOwnProperty(key)) {
@@ -157,7 +158,7 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
         //t_isNoneAttributeName<T[t_df_str_attributeName]> extends true ? t_invalidAttributeValueEntry : T extends t_attribute_name<true> ? t_getValidAttributeValueEntry<T> :never 
     }
 
-    static getAttributeValue =  <T extends  t_attribute_name > (_json : T) :t_getAttributeValue<T> => {
+    static getAttributeValue =  <T extends  t_attribute_name > (_json : T) :t_getAttributeValue<T> =>{ 
         return ChildAttributeType.getAttributeValueFromEntry(ChildAttributeType.getAttributeValueEntry(_json))
     }
 
@@ -171,7 +172,7 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
             }
     }
 
-    static getAttributeValueFromEntry = <T extends  t_attribute_name > (attributeEntry : t_getAttributeValueEntry<T> ):t_getAttributeValue<T> => {
+    static getAttributeValueFromEntry = <T extends  t_attribute_name > (attributeEntry : t_getAttributeValueEntry<T> ):t_getAttributeValue<T> =>{ 
         let res 
         if(ChildAttributeType.isInvalidAttributeValueEntry(attributeEntry)){
             res=  createJsonFromEntries(attributeEntry  )
@@ -181,23 +182,23 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
     }
 
     //TODO if more then two => switch and enum instead of all the thing in types.ts
-    static isAttributeNoneName ( json:t_attribute_name ){
+    static isAttributeNoneName ( json:t_attribute_name ){ 
         let res = ChildAttributeType.getAttributeValue(json)
         if(ChildAttributeType.isInvalidAttributeValue(res))return false 
         else return !isAttributeNoneName_(res as t_attribute_name_)
     }
 
-    static isAttributeNoneFunctionName(json:t_attribute_name){
+    static isAttributeNoneFunctionName(json:t_attribute_name){ 
         let res = ChildAttributeType.getAttributeValue(json)
         if(ChildAttributeType.isInvalidAttributeValue(res))return false 
         else return !isAttributeNoneFunctionName(res as t_attributeFunctionName)
     }
 
-    setType = (type : t_union_key_attribute_name) => {
+    setType = (type : t_union_key_attribute_name) =>{ 
         this.type = type
     }
 
-    static _getKeyAndVal = <T extends t_attribute_name , t_f_isStrict extends boolean = false , t_isStrict extends boolean = false  >(attribute_name : T ,f_isStrict: t_f_isStrict = false as any,isStrict :t_isStrict = false as any) => {
+    static _getKeyAndVal = <T extends t_attribute_name , t_f_isStrict extends boolean = false , t_isStrict extends boolean = false  >(attribute_name : T ,f_isStrict: t_f_isStrict = false as any,isStrict :t_isStrict = false as any) =>{ 
         const attributeValue_entry  = ChildAttributeType.getAttributeValueEntry(attribute_name)//TODO why IChildAttributeType dont work 
         const _attribute_val_2 = ChildAttributeType.getAttributeValueFromEntry(attributeValue_entry)
 
@@ -213,28 +214,28 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
         return [key,val] as const
     }
 
-    static _getType = <t_f_isStrict extends boolean = false , t_isStrict extends boolean = false  >(attribute_name : t_attribute_name , f_isStrict: t_f_isStrict = false as any,isStrict :t_isStrict = false as any) => {
+    static _getType = <t_f_isStrict extends boolean = false , t_isStrict extends boolean = false  >(attribute_name : t_attribute_name , f_isStrict: t_f_isStrict = false as any,isStrict :t_isStrict = false as any) =>{ 
         return ChildAttributeType._getKeyAndVal(attribute_name,f_isStrict,isStrict)[0]
     }
 
-    getType = <t_f_isStrict extends boolean = false , t_isStrict extends boolean = false  >( f_isStrict: t_f_isStrict = false as any,isStrict :t_isStrict = false as any) => {
+    getType = <t_f_isStrict extends boolean = false , t_isStrict extends boolean = false  >( f_isStrict: t_f_isStrict = false as any,isStrict :t_isStrict = false as any) =>{ 
         if(this[str_type] === undefined) this.setType(ChildAttributeType._getType(this as any ,f_isStrict,isStrict))
         return this[str_type]
     }
 
-    setName = < t_isStrict extends boolean = false> (name : t_union_attribute_name_val<t_isStrict>, isStrict : t_isStrict = false as any) => {
+    setName = < t_isStrict extends boolean = false> (name : t_union_attribute_name_val<t_isStrict>, isStrict : t_isStrict = false as any) =>{ 
         const type = this.getType()
         if(!validateAttributeNamValue<t_isStrict>(type,name,isStrict)) throw new Error()
         //@ts-ignore
         this[type] = name
     }
 
-    static cst_cpy = (childAttribute : ChildAttributeType) => {
+    static cst_cpy = (childAttribute : ChildAttributeType) =>{ 
         const type = childAttribute.getType()
        return new ChildAttributeType(type,childAttribute[type],childAttribute.selector,ValTextContent.getArgsForCst(childAttribute),deepCloneJson(childAttribute.args_setting),childAttribute.joinChar_group)
     }
 
-    getKeyAndVal( ){
+    getKeyAndVal( ){ 
         const type = this.getType()
         return [type,this[type]] as const
     }

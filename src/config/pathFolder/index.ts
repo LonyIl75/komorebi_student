@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { join_underscore_lowercase } from '@shared/m_string.js';
 import { joinFilePath } from '@shared/m_file.js';
 
@@ -46,10 +47,10 @@ const category_path:t_category_path = {
 
 const df_id_debug = "debug"
 
-export const getCategoryDebugFromPath = (str_path :string ,json : t_category_path= category_path  ) :string|"debug" => {
+export const getCategoryDebugFromPath = (str_path :string ,json : t_category_path= category_path  ) :string|"debug" =>{ 
     let regex : RegExp ;
     let found : RegExpExecArray ;
-    for(const key_str_regex in json){
+    for(const key_str_regex in json){ 
         regex = new RegExp(key_str_regex)
             if((found=regex.exec(str_path))) {
                 return json[key_str_regex]

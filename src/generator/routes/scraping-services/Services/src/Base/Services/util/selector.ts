@@ -1,4 +1,4 @@
-
+import getCurrentLine from "get-current-line"
 import { CodeGenerator } from "@/generator/utils/types.js"
 import { IVoid } from "@shared/m_object.js"
 import { majFirstChar } from "@shared/m_string.js"
@@ -11,7 +11,7 @@ class ServiceSelectors<SN extends string> implements IServiceSelectors<SN>{
     _serviceName :SN
     _name = name
 
-    constructor(_serviceName:SN){
+    constructor(_serviceName:SN){ 
         this._serviceName = _serviceName
     }
     
@@ -33,13 +33,13 @@ class ServiceSelectors<SN extends string> implements IServiceSelectors<SN>{
 
         const page${majFirstChar(this._serviceName)}_fct_getMainComponent = page_fct_getMainComponent(${this._serviceName}_mainComponent${this._name})
 
-        export const get${majFirstChar(this._serviceName)}MainComponent = (page:t_pageOrElementHN , s_option ?:selectorsOptions )   => {
+        export const get${majFirstChar(this._serviceName)}MainComponent = (page:t_pageOrElementHN , s_option ?:selectorsOptions )   =>{ 
             return page${majFirstChar(this._serviceName)}_fct_getMainComponent(page,s_option)
         }
 
 
 
-        export const waitFor${majFirstChar(this._serviceName)}PageLoading = (page:t_pageOrElementHN, s_option ?:selectorsOptions ) : Promise<ElementHandle<Node>> =>{
+        export const waitFor${majFirstChar(this._serviceName)}PageLoading = (page:t_pageOrElementHN, s_option ?:selectorsOptions ) : Promise<ElementHandle<Node>> =>{ 
             return get${majFirstChar(this._serviceName)}MainComponent(page,s_option)
         }
 
@@ -56,7 +56,7 @@ class ServiceSelectors<SN extends string> implements IServiceSelectors<SN>{
 
         const page${majFirstChar(this._serviceName)}_fct_isLoaded = page_fct_isLoaded( ${this._serviceName}_loaded${this._name} )
 
-        export const isLoaded_${this._serviceName}Page =  (page:Page) :Promise<boolean>  => {
+        export const isLoaded_${this._serviceName}Page =  (page:Page) :Promise<boolean>  =>{ 
             return page${majFirstChar(this._serviceName)}_fct_isLoaded( page )
 
         }` as const 

@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { t_serviceName_lespepitestech } from "@/controller/scraping-services/Services/Config/lespepitestech/config.js"
 import { DatabaseLocalAndRemote } from "@shared/m_database.js"
 import HA_LespepitestechServiceStartupsMtp , { t_str_startupsMtp, str_startupsMtp } from "./human-actions.js"
@@ -26,11 +27,11 @@ const _LespepitestechServiceStartupsMtp = _st_LespepitestechServiceStartupsMtp a
 
 export class LespepitestechServiceStartupsMtp extends _LespepitestechServiceStartupsMtp implements IAService_3<t_str_startupsMtp> {
 
-    constructor(_address:getRouteRemoteAddressFromServiceNameAndIdRoute <t_serviceName_lespepitestech , t_str_startupsMtp > = LespepitestechServiceStartupsMtp.address ,_databaseLocalAndRemote :DatabaseLocalAndRemote<t_serviceName_lespepitestech>  = LespepitestechServiceStartupsMtp.databaseLocalAndRemote) {
+    constructor(_address:getRouteRemoteAddressFromServiceNameAndIdRoute <t_serviceName_lespepitestech , t_str_startupsMtp > = LespepitestechServiceStartupsMtp.address ,_databaseLocalAndRemote :DatabaseLocalAndRemote<t_serviceName_lespepitestech>  = LespepitestechServiceStartupsMtp.databaseLocalAndRemote) { 
         if(LespepitestechServiceStartupsMtp.address === undefined )LespepitestechServiceStartupsMtp.address = _address
         if(_address == undefined) throw new Error("address is undefined")
 
-        if(LespepitestechServiceStartupsMtp.databaseLocalAndRemote === undefined ){
+        if(LespepitestechServiceStartupsMtp.databaseLocalAndRemote === undefined ){ 
             LespepitestechServiceStartupsMtp.databaseLocalAndRemote = _databaseLocalAndRemote
             HA_LespepitestechServiceStartupsMtp.getDatabaseLocalAndRemote = ()=>LespepitestechServiceStartupsMtp.databaseLocalAndRemote
         }
@@ -43,11 +44,11 @@ export class LespepitestechServiceStartupsMtp extends _LespepitestechServiceStar
         return [...HA_LespepitestechServiceStartupsMtp.namesOfPipelineFunction()] as const
     }
 
-    getLocalPipelineFunction(req : req_startupsMtp,res:res_startupsMtp )  {
+    getLocalPipelineFunction(req : req_startupsMtp,res:res_startupsMtp )  { 
         return null 
     }
 
-    getServicePipelineFunction(req : req_startupsMtp,res:res_startupsMtp )  {
+    getServicePipelineFunction(req : req_startupsMtp,res:res_startupsMtp )  { 
         type t_arr_fcts = ReturnType< typeof this.getNamesOfPipelineFunction>
         return pipelineBuilder.createPipeline<t_arr_fcts> (req.body.pipeline.body as any ,req.body.pipeline.op as any)
     }
