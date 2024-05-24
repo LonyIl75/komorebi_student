@@ -12,8 +12,8 @@ export const  Entreprise_MainService =   MainService.cst<t_serviceName_entrepris
 export type entreprise__doProcessFunctionName = typeof ServiceConfig.df[t_str_doProcessFunctionName];
 
 export const doServiceEntreprise_ : t_doServiceFunction<t_serviceName_entreprise_,t_remoteAddress_entreprise_ , t_idRoute_home_entreprise_,t_idRoutes_entreprise_,t_idRouteAndRemoteAddresss_entreprise_>
-= async (id_route : t_idRouteUnion_entreprise_ , functionName : string  ,  ...args:any[]) =>{    
-    return  Entreprise_MainService.then(  async (obj ) =>{    
+= async (id_route : t_idRouteUnion_entreprise_ , functionName : string  ,  ...args:any[]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/   
+    return  Entreprise_MainService.then(  async (obj ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/   
         return  await MainService.doServiceFunction(obj,id_route , functionName , ...args);
     })
 }

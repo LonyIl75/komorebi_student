@@ -9,7 +9,7 @@ export  const  empty_child_component :  undefined  = undefined
 export type t_empty_child_component = typeof empty_child_component
 export type t_child_component <classname extends string > = classname extends t_noneCompClassName ? t_empty_child_component :  ITypeChilds<classname> 
 type t_isEmptyChildComponent < T extends t_child_component<string> > = T extends t_empty_child_component ? true : false 
-export const isEmptyChildComponent = < T extends t_child_component<string> > (child_component : T)  =>{ 
+export const isEmptyChildComponent = < T extends t_child_component<string> > (child_component : T)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return (child_component === empty_child_component) as t_isEmptyChildComponent<T>
 }
 
@@ -19,7 +19,7 @@ export  const  empty_childs_components :  t_empty_child_component[]  = [empty_ch
 export type t_empty_childs_components = typeof empty_childs_components
 export type t_childs_components <unionclassname extends string > = t_child_component<unionclassname>[]
 type t_isEmptyChildsComponents< T extends t_childs_components<string> > =  T extends t_empty_childs_components ? true : false 
-export const isEmptyChildsComponents = < T extends t_childs_components<string> > (childs_components : T)  =>{ 
+export const isEmptyChildsComponents = < T extends t_childs_components<string> > (childs_components : T)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return childs_components.length ==0 || (childs_components.length == 1 && (childs_components[0] === empty_childs_components[0])) as t_isEmptyChildsComponents<T>//TODO not correct union but necessary 
 }
 

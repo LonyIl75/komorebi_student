@@ -14,7 +14,7 @@ export class MatchObject {
 
     static getNotFoundMatch = getInvalidMatchObject 
 
-    static isNotFoundMatch(obj:t_matchObject) { 
+    static isNotFoundMatch(obj:t_matchObject) { /*console.log("DEBUG_ME",getCurrentLine());*/
         return obj === MatchObject.getNotFoundMatch() || obj.match === MatchObject.getNotFoundMatch()
     }
 
@@ -22,7 +22,7 @@ export class MatchObject {
     _beg : number 
     _end : number 
 
-    constructor(match : string|t_invalid_MatchObject = MatchObject.df.match, beg: number = MatchObject.df.beg, end : number = MatchObject.df.end) { 
+    constructor(match : string|t_invalid_MatchObject = MatchObject.df.match, beg: number = MatchObject.df.beg, end : number = MatchObject.df.end) { /*console.log("DEBUG_ME",getCurrentLine());*/
         this._match = match
         this._beg = beg
         this._end = end
@@ -45,15 +45,15 @@ export class MatchObject {
 
 type t_matchObject = MatchObject | t_invalid_MatchObject
 
-export const getMatchAndPosFromRegexMatching = (_str : string , regex : RegExp , num_groups : number[]= [0]) =>{ 
+export const getMatchAndPosFromRegexMatching = (_str : string , regex : RegExp , num_groups : number[]= [0]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const res = regex.exec(_str)
     return _getMatchAndPosFromRegexMatching(res, num_groups)
 }
 
 
-export const getMatchAndPosFromRegexMatchingInterval = (_str : string , regex : RegExp , interval_num_groups ?: [arg_beg:number,arg_end?:number]) =>{ 
+export const getMatchAndPosFromRegexMatchingInterval = (_str : string , regex : RegExp , interval_num_groups ?: [arg_beg:number,arg_end?:number]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const res = regex.exec(_str)
-    if(res) {  
+    if(res) { /*console.log("DEBUG_ME",getCurrentLine());*/ 
         if(interval_num_groups === undefined) interval_num_groups = [0]
         if(interval_num_groups.length == 1 || isEndIdx(interval_num_groups[1]) ) interval_num_groups = [interval_num_groups[0],res.length-1]
     }
@@ -63,12 +63,12 @@ export const getMatchAndPosFromRegexMatchingInterval = (_str : string , regex : 
     return _getMatchAndPosFromRegexMatching(res,num_groups)
 }
 
-const _getMatchAndPosFromRegexMatching = (res : RegExpMatchArray , num_groups : number[]= [0]) =>{ 
+const _getMatchAndPosFromRegexMatching = (res : RegExpMatchArray , num_groups : number[]= [0]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     let res_arr : t_matchObject[] = []
-    if (res) { 
+    if (res) { /*console.log("DEBUG_ME",getCurrentLine());*/
         let start_idx = res.index
         let res_group = null
-        for (const num_group of num_groups) { 
+        for (const num_group of num_groups) { /*console.log("DEBUG_ME",getCurrentLine());*/
             res_group = res[num_group]
             res_arr.push(res_group ? new MatchObject(res_group, start_idx, start_idx + res_group.length) : MatchObject.getNotFoundMatch())
         }

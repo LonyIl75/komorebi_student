@@ -32,13 +32,13 @@ export const entreprise__mainComponent_selectors = [/*Selector.cst_onePropAndTag
 
 const pageEntreprise__fct_getMainComponent = page_fct_getMainComponent(entreprise__mainComponent_selectors)
 
-export const getEntreprise_MainComponent = (page:t_pageOrElementHN , s_option ?:selectorsOptions )   =>{ 
+export const getEntreprise_MainComponent = (page:t_pageOrElementHN , s_option ?:selectorsOptions )   =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return pageEntreprise__fct_getMainComponent(page,s_option)
 }
 
 
 
-export const waitForEntreprise_PageLoading = (page:t_pageOrElementHN, s_option ?:selectorsOptions ) : Promise<ElementHandle<Node>> =>{ 
+export const waitForEntreprise_PageLoading = (page:t_pageOrElementHN, s_option ?:selectorsOptions ) : Promise<ElementHandle<Node>> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return getEntreprise_MainComponent(page,s_option)
 }
 
@@ -49,7 +49,7 @@ const entreprise__loaded_selectors : selectors = [
 
 const pageEntreprise__fct_isLoaded = page_fct_isLoaded( entreprise__loaded_selectors )
 
-export const isLoaded_entreprise_Page =  (page:Page) :Promise<boolean>  =>{ 
+export const isLoaded_entreprise_Page =  (page:Page) :Promise<boolean>  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return pageEntreprise__fct_isLoaded( page )
 
 }

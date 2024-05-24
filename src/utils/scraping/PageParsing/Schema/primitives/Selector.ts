@@ -29,7 +29,7 @@ export const fct_mod_directChild = <T1 extends string =string>(str : T1 )  => (`
 export const fct_mod_hasDirectChild = <T1 extends string =string>(str : T1 )  => fct_mod_has(fct_mod_directChild<T1>(str))
 export const fct_mod_not =  <T extends string > (str : T ) => (`:not(${str})` as const )
 
-export const fct_joinChild = (es:readonly string[]) =>{ 
+export const fct_joinChild = (es:readonly string[]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return (es.slice(1)).reduce((acc,e)=>acc+fct_mod_directChild(e),es[0])
 }
 
@@ -42,7 +42,7 @@ export class PropertyAndOperator{
         op: noOp 
     }
 
-    constructor(prop : t_property,value : string , op : t_operator = PropertyAndOperator.df.op){ 
+    constructor(prop : t_property,value : string , op : t_operator = PropertyAndOperator.df.op){ /*console.log("DEBUG_ME",getCurrentLine());*/
         if(!prop && (value || op )) throw new Error("PropertyAndOperator constructor : prop or value or op is undefined")
         if(!(value && op) && (value || op )) throw new Error("PropertyAndOperator constructor : prop or value or op is undefined")
         this.prop = prop
@@ -53,13 +53,13 @@ export class PropertyAndOperator{
         return this.prop && this.value ? `[${this.prop}${this.op}\"${this.value}\"]` :""
     }
 
-    setProp(prop : t_property){ 
+    setProp(prop : t_property){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.prop = prop
     }
-    setValue(value : string){ 
+    setValue(value : string){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.value = value
     }
-    setOp(op : t_operator){ 
+    setOp(op : t_operator){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.op = op
     }
 }
@@ -73,12 +73,12 @@ export class SelectorProp {
 
     static df_fct_mod : t_fct_modSelectorProp = (str : string ) => str
 
-    constructor( prop : PropertyAndOperator,fct_mod : t_fct_modSelectorProp = SelectorProp.df_fct_mod){ 
+    constructor( prop : PropertyAndOperator,fct_mod : t_fct_modSelectorProp = SelectorProp.df_fct_mod){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.fct_mod = fct_mod
         this.prop = prop
     }
 
-    static cst_val (prop : t_property,value : string , op : t_operator = PropertyAndOperator.df.op , fct_mod ?: t_fct_modSelectorProp ){ 
+    static cst_val (prop : t_property,value : string , op : t_operator = PropertyAndOperator.df.op , fct_mod ?: t_fct_modSelectorProp ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         return new SelectorProp(new PropertyAndOperator(prop,value,op),fct_mod)
     }
 
@@ -86,7 +86,7 @@ export class SelectorProp {
         return this.fct_mod(this.prop.toString())
     }
 
-    setProp(value ?: string , op ?: t_operator, prop ?: t_property ){ 
+    setProp(value ?: string , op ?: t_operator, prop ?: t_property ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         if(prop) this.prop.setProp(prop)
         if(value) this.prop.setValue(value)
         if(op) this.prop.setOp(op)
@@ -116,22 +116,22 @@ export class Selector implements ISelector<t_HTMLTagg>{
         properties:[]
     }
 
-    constructor(properties_ : SelectorProp[] = Selector.df.properties , tagg : t_HTMLTagg = Selector.df.tagg ){ 
+    constructor(properties_ : SelectorProp[] = Selector.df.properties , tagg : t_HTMLTagg = Selector.df.tagg ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.properties = properties_
         this.tagg = tagg
     }
-    static cst_oneProp(prop : t_property,value : string , op : t_operator = PropertyAndOperator.df.op , fct_mod ?: t_fct_modSelectorProp , tagg : t_HTMLTagg = Selector.df.tagg){ 
+    static cst_oneProp(prop : t_property,value : string , op : t_operator = PropertyAndOperator.df.op , fct_mod ?: t_fct_modSelectorProp , tagg : t_HTMLTagg = Selector.df.tagg){ /*console.log("DEBUG_ME",getCurrentLine());*/
         return new Selector([new SelectorProp(new PropertyAndOperator(prop,value,op),fct_mod)],tagg)
     }
 
-    static cst_onePropAndTagg(prop : t_property,value : string , tagg : t_HTMLTagg = Selector.df.tagg, op : t_operator = PropertyAndOperator.df.op , fct_mod ?: t_fct_modSelectorProp ){ 
+    static cst_onePropAndTagg(prop : t_property,value : string , tagg : t_HTMLTagg = Selector.df.tagg, op : t_operator = PropertyAndOperator.df.op , fct_mod ?: t_fct_modSelectorProp ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         return new Selector([new SelectorProp(new PropertyAndOperator(prop,value,op),fct_mod)],tagg)
     }
 
-    static cst_multPropAndTagg(prop : t_property,values : string[] , tagg : t_HTMLTagg = Selector.df.tagg, op : t_operator = PropertyAndOperator.df.op , fct_mods ?: t_fct_modSelectorProp[] ){ 
+    static cst_multPropAndTagg(prop : t_property,values : string[] , tagg : t_HTMLTagg = Selector.df.tagg, op : t_operator = PropertyAndOperator.df.op , fct_mods ?: t_fct_modSelectorProp[] ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         let selector_props = []
         let last_fct_mod = fct_mods?.length ? fct_mods[0] : SelectorProp.df_fct_mod
-        for (let i = 0; i < values.length; i++) { 
+        for (let i = 0; i < values.length; i++) { /*console.log("DEBUG_ME",getCurrentLine());*/
             const fct_mod = fct_mods?.length ? fct_mods.length > i ? fct_mods[i] : last_fct_mod : SelectorProp.df_fct_mod
             selector_props.push(new SelectorProp(new PropertyAndOperator(prop,values[i],op),fct_mod))
         }
@@ -139,24 +139,24 @@ export class Selector implements ISelector<t_HTMLTagg>{
         return new Selector(selector_props,tagg)
     }
 
-    setTagg(tagg : t_HTMLTagg){ 
+    setTagg(tagg : t_HTMLTagg){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.tagg = tagg
     }
 
-    addProperty(prop : PropertyAndOperator , fct_mod ?: t_fct_modSelectorProp ){ 
+    addProperty(prop : PropertyAndOperator , fct_mod ?: t_fct_modSelectorProp ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.properties.push(new SelectorProp(prop,fct_mod))
     }
 
     toString(){
         let str = ""
         str = this.tagg
-        for (let i = 0; i < this.properties.length; i++) { 
+        for (let i = 0; i < this.properties.length; i++) { /*console.log("DEBUG_ME",getCurrentLine());*/
             str = [str,this.properties[i].toString()].join("")
         } 
         return str
     }
 
-    getProperty(idx:number){ 
+    getProperty(idx:number){ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.properties[idx]
     }
 
@@ -164,16 +164,16 @@ export class Selector implements ISelector<t_HTMLTagg>{
 }
 
 
-export const strToSelectorProp = <T extends string > (name:T,isClassName : boolean = true,  prop: t_property = classProp , op : t_operator =containOp, fct_mod?: t_fct_modSelectorProp ):SelectorProp  =>{ 
+export const strToSelectorProp = <T extends string > (name:T,isClassName : boolean = true,  prop: t_property = classProp , op : t_operator =containOp, fct_mod?: t_fct_modSelectorProp ):SelectorProp  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     let _str : StrChildType.t_childType<T> = (isClassName ? StrChildType.compClassnameToChildType(name) : name) as unknown as StrChildType.t_childType<T>
     return new SelectorProp(new PropertyAndOperator(prop,_str,op),fct_mod)
 }
 
-export const strToSelector = <T extends string > (name:T,isClassName : boolean = true,  prop?: t_property, op?: t_operator ,tagg ?: t_HTMLTagg , fct_mod?: t_fct_modSelectorProp):Selector  =>{ 
+export const strToSelector = <T extends string > (name:T,isClassName : boolean = true,  prop?: t_property, op?: t_operator ,tagg ?: t_HTMLTagg , fct_mod?: t_fct_modSelectorProp):Selector  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     let obj_select : SelectorProp = strToSelectorProp(name,isClassName,prop,op,fct_mod)
     return new Selector([obj_select],tagg)
 }
 
-export const strToSelector_str = <T extends string > (name:T,isClassName : boolean = true,  prop?: t_property, op?: t_operator , tagg ?: t_HTMLTagg , fct_mod?: t_fct_modSelectorProp):string  =>{ 
+export const strToSelector_str = <T extends string > (name:T,isClassName : boolean = true,  prop?: t_property, op?: t_operator , tagg ?: t_HTMLTagg , fct_mod?: t_fct_modSelectorProp):string  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return strToSelector(name,isClassName,prop,op,tagg,fct_mod).toString()
 }

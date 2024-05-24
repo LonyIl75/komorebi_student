@@ -26,47 +26,47 @@ import { execPromisify } from "./m_node_cli.js";
 import { reshapeObjectIgnoreOpt } from "./type.js";
 
 
-const _getFctFullMongoUrl = <P extends string , S extends string> (mongo_prefix :P , mongo_suffix :S) =>{ 
-    return <N extends string >(mongo_name :N) =>{ 
+const _getFctFullMongoUrl = <P extends string , S extends string> (mongo_prefix :P , mongo_suffix :S) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    return <N extends string >(mongo_name :N) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         const res = createAddress<readonly [P] , N>([mongo_prefix] , mongo_name)  
         return join_urlAndQueryParam<typeof res , S>( res, mongo_suffix)
     }
 }
 
-const getIdFromName = (name:string) =>{ 
+const getIdFromName = (name:string) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return crypto.createHash('sha256').update(name).digest('hex')
 }
 
-const _isInvalidId = (_id:string) =>{ 
+const _isInvalidId = (_id:string) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return _id === getInvalidId();
 }
 
-const getInvalidId = () =>{ 
+const getInvalidId = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return str_undefined_address;
 }
 
 
 
-export const connectDB  = async <R,T>(res_connectDB : Promise<R>, errorHandler ?: t_fct_errorHandler<T>) =>{ 
+export const connectDB  = async <R,T>(res_connectDB : Promise<R>, errorHandler ?: t_fct_errorHandler<T>) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     try {
         return await res_connectDB;
-    } catch (err) { 
+    } catch (err) { /*console.log("DEBUG_ME",getCurrentLine());*/
         return ifNotGetDfErrorHandler(errorHandler)(err) 
     }
 }
 
 
-export const connectToMongoDB = async <T extends Mongoose|nullOrUndefined> (uri: string, options?: ConnectOptions ,  errorHandler ?: t_fct_errorHandler<T> ) =>{ 
+export const connectToMongoDB = async <T extends Mongoose|nullOrUndefined> (uri: string, options?: ConnectOptions ,  errorHandler ?: t_fct_errorHandler<T> ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return connectDB<Mongoose , T>(mongoose.connect(uri,options),errorHandler);
 }
 
-export const connectToSqlite = async <T extends sqlite3.Database|nullOrUndefined> (uri:string , options?:t_options_sqlite , errorHandler ?: t_fct_errorHandler<T> ) =>{ 
+export const connectToSqlite = async <T extends sqlite3.Database|nullOrUndefined> (uri:string , options?:t_options_sqlite , errorHandler ?: t_fct_errorHandler<T> ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     if(options == undefined) options = [sqlite3.OPEN_READONLY]
     if(options.length == 1) options = [options[0],ifNotGetDfErrorHandler(errorHandler)] as t_options_sqlite
     return new sqlite3.Database(uri,...options) as sqlite3.Database|void;
 }
 
-const connectToPrismaClient = async <T extends _PrismaClient|nullOrUndefined> (url:string,options?:t_prismaClient_options,  errorHandler ?: t_fct_errorHandler<T> ) =>{ 
+const connectToPrismaClient = async <T extends _PrismaClient|nullOrUndefined> (url:string,options?:t_prismaClient_options,  errorHandler ?: t_fct_errorHandler<T> ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     let p_prismaClient = import(toFilePath (url)).then((obj)=>new obj.PrismaClient())
     return connectDB(p_prismaClient,errorHandler);
 }
@@ -99,12 +99,12 @@ export type t_databaseMeta_type = t_arr_databaseMeta_type[number]
 
 export type t_DatabaseMeta_type = t_databaseMeta_type
 export type t_providerDbToType <T extends string > = string extends T ?t_DatabaseMeta_type : Lowercase<T> extends Lowercase<t_DatabaseMeta_type>? t_DatabaseMeta_type : undefined
-export const providerDbToType = <T extends string >(providerDb : T ) : t_providerDbToType<T> =>{ 
+export const providerDbToType = <T extends string >(providerDb : T ) : t_providerDbToType<T> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     let res : any = undefined 
-    if(providerDb) { 
+    if(providerDb) { /*console.log("DEBUG_ME",getCurrentLine());*/
     
         const minProviderDb = minAllStr(providerDb)
-        for(const type of arr_databaseMeta_type){ 
+        for(const type of arr_databaseMeta_type){ /*console.log("DEBUG_ME",getCurrentLine());*/
             let min_type = minAllStr(type)
             if(minProviderDb.startsWith(min_type)) {res = type; break}
         }
@@ -151,37 +151,37 @@ export class DatabaseMeta extends  haveSerializerAndEmptyInit<DatabaseMeta> impl
 
     static emptyObject : EmptyInit<DatabaseMeta>  = new EmptyInit<DatabaseMeta>(DatabaseMeta) ;
 
-    static getEmptyInit: <IConnection = any ,IOptions = any>() => DatabaseMeta = () =>{ 
+    static getEmptyInit: <IConnection = any ,IOptions = any>() => DatabaseMeta = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return DatabaseMeta.emptyObject.emptyInit() ;
     }
 
-    getEmptyInit: () => DatabaseMeta = () =>{ 
+    getEmptyInit: () => DatabaseMeta = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return DatabaseMeta.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: AHaveSerializer<DatabaseMeta>) => boolean = (obj:AHaveSerializer<DatabaseMeta>)=>{ 
+    static isTypeof: (obj: AHaveSerializer<DatabaseMeta>) => boolean = (obj:AHaveSerializer<DatabaseMeta>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return haveSerializerAndEmptyInit._isTypeof(DatabaseMeta.getEmptyInit(),obj)
     }
 
     isTypeof = DatabaseMeta.isTypeof
 
-    getName = () =>{ 
+    getName = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.name;
     }
 
-    getId = () =>{ 
+    getId = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.id;
     }
 
-    getUrl = () =>{ 
+    getUrl = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.url;
     }
 
-    getAdmin = () =>{ 
+    getAdmin = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.admin;
     }
 
-    setUrl = (url:string) =>{ 
+    setUrl = (url:string) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.url = url
     }
 
@@ -205,7 +205,7 @@ export interface _IFDatabaseMetaDBMongoDB extends _IFDatabaseMetaMongoDB,_IFData
 export interface IClusterMetaMongoDB  extends _IDatabaseMetaMongoDB{}
 export interface IFClusterMetaMongoDB  extends _IFDatabaseMetaMongoDB{}
 
-function getFctFullMongoUrl(obj:_IDatabaseMetaMongoDB ){ 
+function getFctFullMongoUrl(obj:_IDatabaseMetaMongoDB ){ /*console.log("DEBUG_ME",getCurrentLine());*/
     return _getFctFullMongoUrl(obj.url,obj.options?.suffix||"")
 }
 
@@ -220,7 +220,7 @@ export class ClusterMetaMongoDB extends  haveSerializerAndEmptyInit<ClusterMetaM
 
     static getDfNameFromId = (id:string) => `cluster${id}` ;
    
-    constructor(id: string=DatabaseMeta.invalid_id , url:string = undefined  , name : string = undefined ,options : IJson = undefined , admin : string = undefined  ){ 
+    constructor(id: string=DatabaseMeta.invalid_id , url:string = undefined  , name : string = undefined ,options : IJson = undefined , admin : string = undefined  ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super( {toJson:ClusterMetaMongoDB.toJson , fromJson:ClusterMetaMongoDB.fromJson});
         this.id = id 
         this.url = url
@@ -229,7 +229,7 @@ export class ClusterMetaMongoDB extends  haveSerializerAndEmptyInit<ClusterMetaM
         this.name = name 
     }
 
-    static cst = (id?:string , url?:string , name ?:string  , options ?:IJson , admin?:string) =>{ 
+    static cst = (id?:string , url?:string , name ?:string  , options ?:IJson , admin?:string) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         let tmp_obj = new DatabaseMeta(id,url,name,admin);
         tmp_obj.name = name || ClusterMetaMongoDB.getDfNameFromId(tmp_obj.id)
         let obj = ClusterMetaMongoDB.fromJson({...DatabaseMeta.toJson(tmp_obj),options});
@@ -245,21 +245,21 @@ export class ClusterMetaMongoDB extends  haveSerializerAndEmptyInit<ClusterMetaM
         return {id:_clusterMongo.id , name:_clusterMongo.name , url:_clusterMongo.url , admin:_clusterMongo.admin , options:{..._clusterMongo.options}} as const 
     }
 
-    static  fromJson = (json: IJson) : ClusterMetaMongoDB =>{ 
+    static  fromJson = (json: IJson) : ClusterMetaMongoDB =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return new ClusterMetaMongoDB(json.id , json.url, json.admin , json.options, json.name)
     }
 
     static emptyObject : EmptyInit<ClusterMetaMongoDB>  = new EmptyInit<ClusterMetaMongoDB>(ClusterMetaMongoDB) ;
 
-    static getEmptyInit: () => ClusterMetaMongoDB = () =>{ 
+    static getEmptyInit: () => ClusterMetaMongoDB = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return ClusterMetaMongoDB.emptyObject.emptyInit() ;
     }
 
-    getEmptyInit: () => ClusterMetaMongoDB = () =>{ 
+    getEmptyInit: () => ClusterMetaMongoDB = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return ClusterMetaMongoDB.getEmptyInit() ;
     }
     
-    static isTypeof: (obj: AHaveSerializer<ClusterMetaMongoDB>) => boolean = (obj:AHaveSerializer<ClusterMetaMongoDB>)=>{ 
+    static isTypeof: (obj: AHaveSerializer<ClusterMetaMongoDB>) => boolean = (obj:AHaveSerializer<ClusterMetaMongoDB>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return haveSerializerAndEmptyInit._isTypeof(ClusterMetaMongoDB.getEmptyInit(),obj)
     }
 
@@ -286,15 +286,15 @@ export class DatabaseMetaSQLite extends  DatabaseMeta implements  IFDatabaseMeta
     admin ?: string ;
     type :"SQLite" = "SQLite";
 
-    constructor(obj : DatabaseMeta   ){ 
+    constructor(obj : DatabaseMeta   ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super(obj.id,obj.url,obj.name,obj.admin,DatabaseMetaSQLite.toJson,DatabaseMetaSQLite.fromJson); 
     }
     
-    static toJson = (obj: DatabaseMetaSQLite) =>{ 
+    static toJson = (obj: DatabaseMetaSQLite) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return {...DatabaseMeta.toJson(obj), type:"SQLite"} as const 
     }
 
-    static fromJson = (json: IDatabaseMetaSQLite) : DatabaseMetaSQLite =>{ 
+    static fromJson = (json: IDatabaseMetaSQLite) : DatabaseMetaSQLite =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         let obj= DatabaseMeta.fromJson(json) as any
         obj.type = "SQLite"
         return new DatabaseMetaSQLite(obj)
@@ -323,7 +323,7 @@ export class DatabaseMetaMongoDB extends  DatabaseMeta implements  IFDatabaseMet
     type :"MongoDB" = "MongoDB";
     readonly cluster : IClusterMetaMongoDB;
 
-    constructor(cluster : IClusterMetaMongoDB , options : IJson, meta_database : DatabaseMeta   ){ 
+    constructor(cluster : IClusterMetaMongoDB , options : IJson, meta_database : DatabaseMeta   ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         let tmp_url = meta_database.url|| createAddress([cluster.url],meta_database.name)
         super(meta_database.id,tmp_url,meta_database.name,meta_database.admin,DatabaseMetaMongoDB.toJson,DatabaseMetaMongoDB.fromJson); 
         this.cluster = cluster
@@ -331,12 +331,12 @@ export class DatabaseMetaMongoDB extends  DatabaseMeta implements  IFDatabaseMet
        
     }
 
-    static toJson = (obj: DatabaseMetaMongoDB)  =>{ 
+    static toJson = (obj: DatabaseMetaMongoDB)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return {...DatabaseMeta.toJson(obj), type:"MongoDB" , cluster:deepCloneJson(obj.cluster), options:deepCloneJson(obj.options)} as const 
     }
 
 
-    static fromJson = (json: IDatabaseMetaMongoDB) : DatabaseMetaMongoDB =>{ 
+    static fromJson = (json: IDatabaseMetaMongoDB) : DatabaseMetaMongoDB =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         let obj= DatabaseMeta.fromJson(json) as any
         obj.type = "MongoDB"
         return new DatabaseMetaMongoDB(json.cluster,json.options,obj)
@@ -359,15 +359,15 @@ export class DatabaseMetaPrisma extends  DatabaseMeta implements  IFDatabaseMeta
     admin : string ;
     type :"Prisma" = "Prisma";
 
-    constructor(  meta_database : DatabaseMeta   ){ 
+    constructor(  meta_database : DatabaseMeta   ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super(meta_database.id,meta_database.url,meta_database.name,meta_database.admin,DatabaseMetaPrisma.toJson,DatabaseMetaPrisma.fromJson); 
     }
 
-    static toJson = (obj: DatabaseMetaPrisma)  =>{ 
+    static toJson = (obj: DatabaseMetaPrisma)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return {...DatabaseMeta.toJson(obj), url:obj.url , type:"Prisma" } as const 
     }
 
-    static fromJson = (json: IDatabaseMetaPrisma) : DatabaseMetaPrisma =>{ 
+    static fromJson = (json: IDatabaseMetaPrisma) : DatabaseMetaPrisma =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         let obj= DatabaseMeta.fromJson(json) as any
         obj.url = json.url
         obj.type = "Prisma"
@@ -403,21 +403,21 @@ abstract class ADatabaseMetaAndConnection<T extends t_DatabaseMeta_type,D extend
     connection : TC|null;
     options : TO
 
-    setConnection = (connection:TC) =>{ 
+    setConnection = (connection:TC) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.connection = connection;
     }
 
-    getConnection = () =>{ 
+    getConnection = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.connection
     }
 
     abstract connect() : Promise<void | TC>
 
-     getOptions = () =>{ 
+     getOptions = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.options;
      }
 
-     static super_init (obj:ADatabaseMetaAndConnection<t_DatabaseMeta_type,any,any,any>,_database_meta: DatabaseMeta , _options : t_optionsDatabase<t_DatabaseMeta_type,t_multiDB>|t_optionsDatabase<t_DatabaseMeta_type,undefined>) { 
+     static super_init (obj:ADatabaseMetaAndConnection<t_DatabaseMeta_type,any,any,any>,_database_meta: DatabaseMeta , _options : t_optionsDatabase<t_DatabaseMeta_type,t_multiDB>|t_optionsDatabase<t_DatabaseMeta_type,undefined>) { /*console.log("DEBUG_ME",getCurrentLine());*/
         obj.database_meta = _database_meta
         obj.options = _options
         obj.connection = null
@@ -435,7 +435,7 @@ class DatabaseMetaAndConnectionMongoDB extends ADatabaseMetaAndConnection<"Mongo
         super();
     }
 
-    static cst:(co_options :ConnectOptions,...args:ConstructorParameters<typeof DatabaseMetaMongoDB>)=> DatabaseMetaAndConnectionMongoDB =(co_options :ConnectOptions, ...args:ConstructorParameters<typeof DatabaseMetaMongoDB>)=>{ 
+    static cst:(co_options :ConnectOptions,...args:ConstructorParameters<typeof DatabaseMetaMongoDB>)=> DatabaseMetaAndConnectionMongoDB =(co_options :ConnectOptions, ...args:ConstructorParameters<typeof DatabaseMetaMongoDB>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         let database_meta = new DatabaseMetaMongoDB (...args)
         let obj = new DatabaseMetaAndConnectionMongoDB()
         ADatabaseMetaAndConnection.super_init(obj,database_meta,co_options)
@@ -454,7 +454,7 @@ class DatabaseMetaAndConnectionSQLite extends ADatabaseMetaAndConnection<"SQLite
         super();
     }
 
-    static cst:(co_options :t_options_sqlite,...args:ConstructorParameters<typeof DatabaseMetaSQLite>)=> DatabaseMetaAndConnectionSQLite =(co_options :t_options_sqlite, ...args:ConstructorParameters<typeof DatabaseMetaSQLite>)=>{ 
+    static cst:(co_options :t_options_sqlite,...args:ConstructorParameters<typeof DatabaseMetaSQLite>)=> DatabaseMetaAndConnectionSQLite =(co_options :t_options_sqlite, ...args:ConstructorParameters<typeof DatabaseMetaSQLite>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         let database_meta = new DatabaseMetaSQLite (...args)
         let obj = new DatabaseMetaAndConnectionSQLite()
         ADatabaseMetaAndConnection.super_init(obj,database_meta,co_options)
@@ -473,7 +473,7 @@ type t_prismaOptions = any
 type t_prismaLog = any 
 type t_prismaExtArgs = any 
 class _PrismaClient < T extends t_prismaOptions = t_prismaOptions, U extends t_prismaLog=t_prismaLog, ExtArgs extends t_prismaExtArgs=t_prismaExtArgs> {
-    constructor(optionsArg ?: prisma_Subset<T, t_prismaOptions> ) { 
+    constructor(optionsArg ?: prisma_Subset<T, t_prismaOptions> ) { /*console.log("DEBUG_ME",getCurrentLine());*/
         
     }
 }
@@ -496,11 +496,11 @@ export class DatabaseAndPrismaMeta<T extends t_databaseMeta_type , D extends IDa
     isDev : boolean 
     init_function : t_initFunction
 
-    getPrismaMeta = () =>{ 
+    getPrismaMeta = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.prisma_meta
     }
 
-    constructor(database_meta : D , prisma_meta : DatabaseMetaPrisma,init_function : t_initFunction , isDev : boolean = false ,  options : t_prismaClient_options = null ) { 
+    constructor(database_meta : D , prisma_meta : DatabaseMetaPrisma,init_function : t_initFunction , isDev : boolean = false ,  options : t_prismaClient_options = null ) { /*console.log("DEBUG_ME",getCurrentLine());*/
         super();
         this.isDev = isDev
         this.prisma_meta = prisma_meta
@@ -509,7 +509,7 @@ export class DatabaseAndPrismaMeta<T extends t_databaseMeta_type , D extends IDa
         this.init_function = init_function
     }
 
-    static cst_cpy <T extends t_databaseMeta_type , D extends IDatabaseMetaDB<T>>(obj:DatabaseAndPrismaMeta<T,D>){ 
+    static cst_cpy <T extends t_databaseMeta_type , D extends IDatabaseMetaDB<T>>(obj:DatabaseAndPrismaMeta<T,D>){ /*console.log("DEBUG_ME",getCurrentLine());*/
         let obj_cpy = new DatabaseAndPrismaMeta(obj.database_meta,obj.prisma_meta,obj.init_function,obj.isDev,obj.options)
         obj_cpy.connection = obj.connection
         return obj_cpy
@@ -517,7 +517,7 @@ export class DatabaseAndPrismaMeta<T extends t_databaseMeta_type , D extends IDa
     }
 
     
-    static toJson = <T extends t_databaseMeta_type , D extends DatabaseMeta & IDatabaseMetaDB<T>>(obj:DatabaseAndPrismaMeta<T,D>)  =>{ 
+    static toJson = <T extends t_databaseMeta_type , D extends DatabaseMeta & IDatabaseMetaDB<T>>(obj:DatabaseAndPrismaMeta<T,D>)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return {
             prisma_meta : DatabaseMetaPrisma.toJson(obj.prisma_meta),
             database_meta : obj.database_meta.toJson() as IDatabaseMetaDB<T> ,
@@ -526,9 +526,9 @@ export class DatabaseAndPrismaMeta<T extends t_databaseMeta_type , D extends IDa
         } as const 
     }
 
-    static fromJson = <T extends t_databaseMeta_type , D extends  IDatabaseMetaDB<T>>(json:IDatabaseAndPrismaMeta<T,D>) =>{ 
+    static fromJson = <T extends t_databaseMeta_type , D extends  IDatabaseMetaDB<T>>(json:IDatabaseAndPrismaMeta<T,D>) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         
-        const fct_fromJson = <_T extends t_databaseMeta_type > (type : _T,json_database_meta:IDatabaseMetaDB<_T>)  =>{ 
+        const fct_fromJson = <_T extends t_databaseMeta_type > (type : _T,json_database_meta:IDatabaseMetaDB<_T>)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             let r : IDatabaseMetaDB<t_databaseMeta_type> & DatabaseMeta
             switch(type){ 
                 case "MongoDB": 
@@ -549,32 +549,32 @@ export class DatabaseAndPrismaMeta<T extends t_databaseMeta_type , D extends IDa
         return new DatabaseAndPrismaMeta<T,typeof database_meta >(database_meta,prisma_meta,undefined,json.isDev,json.options)
     }
 
-    static pushSchema = (pathschema:string) =>{ 
+    static pushSchema = (pathschema:string) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return execPromisify(`npx prisma db push --schema ${pathschema}`)
     }
-    static generateClient = (pathschema:string) =>{ 
+    static generateClient = (pathschema:string) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return execPromisify(`npx prisma generate --schema ${pathschema}`)
     }
-    static pushSchemaAndGenerateClient = (pathschema:string) =>{ 
+    static pushSchemaAndGenerateClient = (pathschema:string) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return DatabaseAndPrismaMeta.pushSchema(pathschema).then((_)=>DatabaseAndPrismaMeta.generateClient(pathschema))
     }
 
-    async initConnection ( ){ 
+    async initConnection ( ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         let pr:Promise<any> = Promise.resolve([])
         //TODO : copy prisma_meta.url to prisma_meta.url_dev during npm build 
         if(this.isDev || !isFolderExist(this.prisma_meta.url)) {
             const json_replace = this.getJsonReplaceValues() 
 
-            const initConnectionIsDev = (obj_schema_paths : IJson)=>{ 
+            const initConnectionIsDev = (obj_schema_paths : IJson)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                 return Promise.all(Object.values(obj_schema_paths).map((pathschema)=>DatabaseAndPrismaMeta.generateClient(pathschema)))
             }
 
-            pr = this.init_function(json_replace).then(async (obj_pathschema)=>{ 
-                let arr = Object.values(obj_pathschema.needCreation).map((pathschema)=>{ 
+            pr = this.init_function(json_replace).then(async (obj_pathschema)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+                let arr = Object.values(obj_pathschema.needCreation).map((pathschema)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     let rd =  DatabaseAndPrismaMeta.pushSchemaAndGenerateClient(pathschema)
                     return rd 
                 })
-                return await Promise.all(arr).then(async (_arr)=>{ 
+                return await Promise.all(arr).then(async (_arr)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     if(!this.isDev && _arr.length == 0) return initConnectionIsDev(obj_pathschema.all)
                 })    
             })
@@ -669,7 +669,7 @@ export class DatabaseLocalAndRemote<T extends string=string> implements t_Databa
         return  this[t_enum_databaseType.localDatabase]
     }
 
-    constructor (serviceName:T, local : t_DatabaseLocalAndRemote<T>[t_enum_databaseType.localDatabase] , remote : t_DatabaseLocalAndRemote<T>[t_enum_databaseType.remoteDatabase]) { 
+    constructor (serviceName:T, local : t_DatabaseLocalAndRemote<T>[t_enum_databaseType.localDatabase] , remote : t_DatabaseLocalAndRemote<T>[t_enum_databaseType.remoteDatabase]) { /*console.log("DEBUG_ME",getCurrentLine());*/
         
         this.serviceName = serviceName
         this[t_enum_databaseType.localDatabase] = local,
@@ -684,7 +684,7 @@ export class DatabaseLocalAndRemote<T extends string=string> implements t_Databa
         }
     }
 
-    static fromJson  <T extends string=string>(dbLocalAndRemote : t_IDatabaseLocalAndRemote<T>)  { 
+    static fromJson  <T extends string=string>(dbLocalAndRemote : t_IDatabaseLocalAndRemote<T>)  { /*console.log("DEBUG_ME",getCurrentLine());*/
         return new DatabaseLocalAndRemote<T>(dbLocalAndRemote.serviceName,DatabaseAndPrismaMeta.fromJson(dbLocalAndRemote[t_enum_databaseType.localDatabase]),DatabaseAndPrismaMeta.fromJson(dbLocalAndRemote[t_enum_databaseType.remoteDatabase]))
     }
 
@@ -715,7 +715,7 @@ export class DatabaseLocalAndRemote<T extends string=string> implements t_Databa
         await Promise.all([/*this.getLocalDatabase().connect(),*/this.getRemoteDatabase().connect()])
     }
 
-    setPrismaUrl = (url_remote:string,url_local : string ) =>{ 
+    setPrismaUrl = (url_remote:string,url_local : string ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.getLocalDatabase().prisma_meta.setUrl(url_local)
         this.getRemoteDatabase().prisma_meta.setUrl(url_remote)
     }

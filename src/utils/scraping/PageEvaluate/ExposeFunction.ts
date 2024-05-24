@@ -18,7 +18,7 @@ import { promiseAlltoPromise } from '@shared/m_promise.js';
     export class ExposeFunction extends ExposeObjectOrFunction<Function> {
 
         
-        constructor(funct:Function ,  name ?: string  ,required?:FrameAddScriptTagOptions[] , scriptTag?:FrameAddScriptTagOptions ){ 
+        constructor(funct:Function ,  name ?: string  ,required?:FrameAddScriptTagOptions[] , scriptTag?:FrameAddScriptTagOptions ){ /*console.log("DEBUG_ME",getCurrentLine());*/
             super(funct,name,scriptTag,required);
         }
 
@@ -29,7 +29,7 @@ import { promiseAlltoPromise } from '@shared/m_promise.js';
         
     };
     export class  onEventFunction extends ExposeFunction {
-        constructor(funct:Function ,  name ?: keyof PageEventObject  ,required?:FrameAddScriptTagOptions[] , scriptTag?:FrameAddScriptTagOptions ){ 
+        constructor(funct:Function ,  name ?: keyof PageEventObject  ,required?:FrameAddScriptTagOptions[] , scriptTag?:FrameAddScriptTagOptions ){ /*console.log("DEBUG_ME",getCurrentLine());*/
             super(funct,name as string ,required,scriptTag);
         }
 
@@ -61,7 +61,7 @@ import { promiseAlltoPromise } from '@shared/m_promise.js';
 
 
    export function  _page_exposeFunction (page:Page , arr_exposeFunction:ExposeFunction[]): Promise<void>[] {
-        return arr_exposeFunction.map(async (exposeFunction:ExposeFunction) =>{ 
+        return arr_exposeFunction.map(async (exposeFunction:ExposeFunction) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             return page.exposeFunction(exposeFunction.getScriptsTag()!.id,await exposeFunction.getObj())
         })
     }

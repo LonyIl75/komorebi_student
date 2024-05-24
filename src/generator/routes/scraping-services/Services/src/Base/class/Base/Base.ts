@@ -24,7 +24,7 @@ export abstract class Service<SN extends string , R extends string  >  implement
     implements: {id:string,generics:readonly string[]}[]
     isAbstract: true
 
-    constructor (_serviceName:SN,_routeName : R){ 
+    constructor (_serviceName:SN,_routeName : R){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this._routeName = _routeName
         this._serviceName = _serviceName
         this.name = majFirstChar(this._serviceName)

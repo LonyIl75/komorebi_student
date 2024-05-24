@@ -26,20 +26,20 @@ extends mPage<UnionRegex,UnionIdPath,ArrUnionClassName,unionClassNameType,t_arrr
 
     parsing_tree : t_ParsingTree<arrToUnion<ArrUnionClassName>> ;
     
-    constructor(json:IJsonWithScrapingComponents<UnionRegex,UnionIdPath,ArrUnionClassName,unionClassNameType,t_arrrArrUnion_page_childsClassName,T>){ 
+    constructor(json:IJsonWithScrapingComponents<UnionRegex,UnionIdPath,ArrUnionClassName,unionClassNameType,t_arrrArrUnion_page_childsClassName,T>){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super(json);
         this.parsing_tree = {} as t_ParsingTree<arrToUnion<ArrUnionClassName>>;
     }
     
     async destroy(){
-        return ((obj,fct)=>{ 
-            return fct().then((_)=>{ ;
+        return ((obj,fct)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+            return fct().then((_)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/;
                 obj.parsing_tree = null;
             })
         })(this,super.destroy)
     }
 
-    setParsingTree(parsing_tree:t_ParsingTree<arrToUnion<ArrUnionClassName>>){ 
+    setParsingTree(parsing_tree:t_ParsingTree<arrToUnion<ArrUnionClassName>>){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.parsing_tree = parsing_tree;
     }
 

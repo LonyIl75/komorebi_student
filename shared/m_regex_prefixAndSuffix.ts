@@ -10,16 +10,16 @@ export class PrefixAndSuffix< P extends string =string, S extends string =""> {
     readonly _prefix:P 
     readonly _suffix:S
 
-    static _valPrefixOrSuffix <T extends string > (prefixOrSuffix :T) { 
+    static _valPrefixOrSuffix <T extends string > (prefixOrSuffix :T) { /*console.log("DEBUG_ME",getCurrentLine());*/
         return sourceRegexToStrRegex(prefixOrSuffix) as T|""
     }
 
-    constructor(prefix :P = "" as P, suffix : S = "" as S  ) { 
+    constructor(prefix :P = "" as P, suffix : S = "" as S  ) { /*console.log("DEBUG_ME",getCurrentLine());*/
         this._prefix = PrefixAndSuffix._valPrefixOrSuffix<P>(prefix) as P
         this._suffix = PrefixAndSuffix._valPrefixOrSuffix<S>(suffix) as S
     }
 
-    static cstFromObj< P extends string =string, S extends string ="">(obj_prefixAndSuffix:PrefixAndSuffix<P,S>) { 
+    static cstFromObj< P extends string =string, S extends string ="">(obj_prefixAndSuffix:PrefixAndSuffix<P,S>) { /*console.log("DEBUG_ME",getCurrentLine());*/
         return new PrefixAndSuffix<P,S>(obj_prefixAndSuffix.prefix, obj_prefixAndSuffix.suffix)
     }
 
@@ -31,7 +31,7 @@ export class PrefixAndSuffix< P extends string =string, S extends string =""> {
         return this._suffix
     }
 
-    encloseStr<T extends string >(str : T ) { 
+    encloseStr<T extends string >(str : T ) { /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.prefix + str + this.suffix as `${P}${T}${S}`
     }
 }
@@ -41,10 +41,10 @@ export type t_PrefixAndSuffix = PrefixAndSuffix<string,string>
 export type t_getPPrefixAndSuffix < T extends t_PrefixAndSuffix > = T extends PrefixAndSuffix<infer P, string> ? P : never
 export type t_getSSuffixAndSuffix < T extends t_PrefixAndSuffix > = T extends PrefixAndSuffix<string, infer S> ? S : never
 
-export const _concatStrFct = < T extends string , PAS extends PrefixAndSuffix<P,S>, P extends string , S extends string ="">(prefixAndSuffix:PAS)  =>{ 
+export const _concatStrFct = < T extends string , PAS extends PrefixAndSuffix<P,S>, P extends string , S extends string ="">(prefixAndSuffix:PAS)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return (str:T) => prefixAndSuffix.encloseStr<T>(str)
 }
-export const concatStrFct = < PAS extends PrefixAndSuffix<P,S>, P extends string , S extends string ="">(prefixAndSuffix:PAS)  =>{ 
+export const concatStrFct = < PAS extends PrefixAndSuffix<P,S>, P extends string , S extends string ="">(prefixAndSuffix:PAS)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return <T extends string > (str:T) => _concatStrFct<T,PAS,P,S>(prefixAndSuffix)(str)
 }
 
@@ -60,7 +60,7 @@ t_addStrToRegexOrStr<false,Reg,PrefixAndSuffix<S>,S,"",F,A,_F>  extends infer Re
 Res extends MRegExp<string,F> ? t_joinRegexWithJoinStr<JoinChar,F,R,Res> : never : never : never : never : never : never : Acc
 
 export const joinRegexWithJoinStr = 
-<JoinChar extends string ,F extends  t_regexpFlags , ArrReg extends readonly MRegExp<string,string>[] > (argsRegExp : ArrReg,joinStr : JoinChar , flags : F ) =>{ 
+<JoinChar extends string ,F extends  t_regexpFlags , ArrReg extends readonly MRegExp<string,string>[] > (argsRegExp : ArrReg,joinStr : JoinChar , flags : F ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     type cur_arrReg = ArrReg[number]
     type cur_S = get_SFromMRegExp<cur_arrReg>
     type cur_F =get_FFromMRegExp<cur_arrReg>
@@ -76,7 +76,7 @@ export const joinRegexWithJoinStr =
     return res as t_joinRegexWithJoinStr<JoinChar,F,ArrReg>
 }
 
-export const convertStrRegexToStr = <T extends string >(paramStr :T ) =>{ 
+export const convertStrRegexToStr = <T extends string >(paramStr :T ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const _PAS = new PrefixAndSuffix<"",typeof ju_escapeRegexStr>("",ju_escapeRegexStr)
     const _str = convertStrToRegexStr(fct_escape()) 
     const _regStr = addStrToRegexOrStr<true,typeof _str,typeof _PAS,"",typeof ju_escapeRegexStr>(_str,_PAS)
@@ -86,7 +86,7 @@ export const convertStrRegexToStr = <T extends string >(paramStr :T ) =>{
 export const regexToStr = (regex:RegExp) => regex.source
   
 
-export const unionRegex = <ArrReg extends readonly MRegExp<string,string>[],  JoinChar extends string = t_regex_charUnionStr,F extends  t_regexpFlags = undefined > (arr_regex : ArrReg , joinStr:JoinChar = regex_charUnionStr as JoinChar,flags : F= undefined as any ) =>{ 
+export const unionRegex = <ArrReg extends readonly MRegExp<string,string>[],  JoinChar extends string = t_regex_charUnionStr,F extends  t_regexpFlags = undefined > (arr_regex : ArrReg , joinStr:JoinChar = regex_charUnionStr as JoinChar,flags : F= undefined as any ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return joinRegexWithJoinStr(arr_regex,joinStr,flags)
 }
 
@@ -99,7 +99,7 @@ type _fnAddStrToRegexOrStr_FnFctTransform< Args extends [string],PAS extends Pre
 ReturnType<__fnAddStrToRegexOrStr_FnFctTransform<Args[0],PAS,P,S>>
 
 export const addStrToRegexOrStr = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>),PAS extends PrefixAndSuffix<P,S>,  P extends string  , S extends string ="", F extends t_regexpFlags = undefined ,_S extends string = undefined , _F extends t_regexpFlags = undefined  >
-(param_regexOrStr :_T , prefixAndSuffix : PAS, isStr :B = true as B , flags :F = undefined) =>{ 
+(param_regexOrStr :_T , prefixAndSuffix : PAS, isStr :B = true as B , flags :F = undefined) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const fct_transform : __fnAddStrToRegexOrStr_FnFctTransform<string,PAS,P,S>  = concatStrFct<PAS,P,S>(prefixAndSuffix)
     return transformRegexOrStr<B,_T, addStrToRegexOrStr_FnFctTransform<PAS,P,S>,typeof fct_transform,_S,_F,F>(param_regexOrStr, isStr, fct_transform, flags)
 }
@@ -140,7 +140,7 @@ namespace _EmbeddingPASGroup {
 
     export const name = str_EmbeddingPASGroup
     export const prefixAndSuffix = new PrefixAndSuffix("(", ")")
-    export const fctEmbed = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   >(param_regexOrStr: _T, isStr : B ) =>{ 
+    export const fctEmbed = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   >(param_regexOrStr: _T, isStr : B ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         type _t = typeof prefixAndSuffix
         type _t_p = t_getPPrefixAndSuffix<_t>
         type _t_s = t_getSSuffixAndSuffix<_t>
@@ -163,7 +163,7 @@ namespace _EmbeddingPASNonCapturingGroup {
 
     export const name = str_EmbeddingPASNonCapturingGroup
     export const prefixAndSuffix = new PrefixAndSuffix(`${_getPASEmbeddingPAS(EmbeddingPASGroup).prefix}?:`, _getPASEmbeddingPAS(EmbeddingPASGroup).suffix)
-    export const fctEmbed = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   > (param_regexOrStr: _T, isStr : B) =>{ 
+    export const fctEmbed = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   > (param_regexOrStr: _T, isStr : B) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         type _t = typeof prefixAndSuffix
         type _t_p = t_getPPrefixAndSuffix<_t>
         type _t_s = t_getSSuffixAndSuffix<_t>
@@ -215,7 +215,7 @@ export const embedCapturingGroupStrOrRegex = _getFctEmbedEmbeddingPAS(EmbeddingP
 export const embedNonCapturingGroupStrOrRegex = _getFctEmbedEmbeddingPAS(EmbeddingPAS[EmbeddingPASNonCapturingGroup.name])
 
 const prefixAndSuffix_beginOfLine = new PrefixAndSuffix(str_beginOfLine_regex, "")
-export const embedBeginOfLineStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined    > (param_regexOrStr: _T, isStr : B) =>{ 
+export const embedBeginOfLineStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined    > (param_regexOrStr: _T, isStr : B) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     type _t = typeof prefixAndSuffix_beginOfLine
     type _t_p = t_getPPrefixAndSuffix<_t>
     type _t_s = t_getSSuffixAndSuffix<_t>
@@ -223,7 +223,7 @@ export const embedBeginOfLineStrOrRegex = <B extends boolean,_T extends (B exten
 }
 
 const prefixAndSuffix_endOfLine = new PrefixAndSuffix("", str_endOfLine_regex)
-export const embedEndOfLineStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined    > (param_regexOrStr: _T, isStr : B) =>{ 
+export const embedEndOfLineStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined    > (param_regexOrStr: _T, isStr : B) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     type _t = typeof prefixAndSuffix_endOfLine
     type _t_p = t_getPPrefixAndSuffix<_t>
     type _t_s = t_getSSuffixAndSuffix<_t>
@@ -231,7 +231,7 @@ export const embedEndOfLineStrOrRegex = <B extends boolean,_T extends (B extends
 }
 
 const prefixAndSuffix_beginAndEndOfLine = new PrefixAndSuffix(str_beginOfLine_regex, str_endOfLine_regex)
-export const embedBeginAndEndOfLineStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   > (param_regexOrStr: _T, isStr : B) =>{ 
+export const embedBeginAndEndOfLineStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   > (param_regexOrStr: _T, isStr : B) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     type _t = typeof prefixAndSuffix_beginAndEndOfLine
     type _t_p = t_getPPrefixAndSuffix<_t>
     type _t_s = t_getSSuffixAndSuffix<_t>
@@ -241,7 +241,7 @@ export const embedBeginAndEndOfLineStrOrRegex = <B extends boolean,_T extends (B
 
 
 const prefixAndSuffix_optional = new PrefixAndSuffix("", "?")
-export const embedOptionalStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   > (param_regexOrStr: _T, isStr : B) =>{ 
+export const embedOptionalStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   > (param_regexOrStr: _T, isStr : B) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     type _t = typeof prefixAndSuffix_optional
     type _t_p = t_getPPrefixAndSuffix<_t>
     type _t_s = t_getSSuffixAndSuffix<_t>
@@ -250,7 +250,7 @@ export const embedOptionalStrOrRegex = <B extends boolean,_T extends (B extends 
 
 
 
-export const embedOptCapturingGroupStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   >(param_regexOrStr: _T, isStr : B ) =>{ 
+export const embedOptCapturingGroupStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   >(param_regexOrStr: _T, isStr : B ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const tmp = embedCapturingGroupStrOrRegex<B,_T,_S,_F>(param_regexOrStr, isStr)
     type _t = typeof tmp
     type _t_s = _t extends MRegExp<string,string> ?  get_SFromMRegExp<_t> : undefined
@@ -258,7 +258,7 @@ export const embedOptCapturingGroupStrOrRegex = <B extends boolean,_T extends (B
     return embedOptionalStrOrRegex<B,_t extends (B extends true ? string : MRegExp<_t_s, _t_f>) ? _t : never ,_t_s,_t_f>(tmp as any , isStr)
 }
 
-export const embedOptNonCapturingGroupStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   >(param_regexOrStr: _T, isStr : B ) =>{ 
+export const embedOptNonCapturingGroupStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   >(param_regexOrStr: _T, isStr : B ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const tmp = embedNonCapturingGroupStrOrRegex<B,_T,_S,_F>(param_regexOrStr, isStr)
     type _t = typeof tmp
     type _t_s = _t extends MRegExp<string,string> ?  get_SFromMRegExp<_t> : undefined
@@ -268,11 +268,11 @@ export const embedOptNonCapturingGroupStrOrRegex = <B extends boolean,_T extends
 
 
 
-export function unionRegexs< T extends readonly string[] = string[]> (...str_regex:T){ 
+export function unionRegexs< T extends readonly string[] = string[]> (...str_regex:T){ /*console.log("DEBUG_ME",getCurrentLine());*/
     return str_regex.join(char_join_pipe) as t_JoinChar_pipe<T>
   }
   
-  export function getUnionNonMatchingGroups < T extends readonly string[] = string[]> (...str_regex:T){ 
+  export function getUnionNonMatchingGroups < T extends readonly string[] = string[]> (...str_regex:T){ /*console.log("DEBUG_ME",getCurrentLine());*/
     type _fn = ReturnType<typeof _getFnEmbeddingPAS<typeof EmbeddingPASNonCapturingGroup.name,typeof EmbeddingPASNonCapturingGroup>>
     const tmp = str_regex.map((_str)=>embedNonCapturingGroupStrOrRegex(_str,true)) as ApplyFnToArr<_fn,T>
     return unionRegexs<typeof tmp>(...tmp) 
@@ -280,7 +280,7 @@ export function unionRegexs< T extends readonly string[] = string[]> (...str_reg
   
 
  
-  export function getGroupUnionStrRegex< T extends readonly string[] = string[]> (str_regex:T){ 
+  export function getGroupUnionStrRegex< T extends readonly string[] = string[]> (str_regex:T){ /*console.log("DEBUG_ME",getCurrentLine());*/
     const tmp = unionRegexs<T>(...str_regex)
     return embedCapturingGroupStrOrRegex<true,typeof tmp>(tmp,true)
   }
@@ -290,7 +290,7 @@ export function unionRegexs< T extends readonly string[] = string[]> (...str_reg
 export const majMinFirstCharStrRegex = <T extends string , F extends t_regexpFlags = undefined >(_str:T, flags:validateIsRegexFlags<F> = undefined) => new RegExp(`[${_str[0].toUpperCase()}${_str[0].toLowerCase()}]${_str.substring(1, _str.length)}`, flags)
 
 
-export const _regexIsBeginWith = < B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   > (param_regexOrStr: _T, isStr : B) =>{ 
+export const _regexIsBeginWith = < B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   > (param_regexOrStr: _T, isStr : B) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     
     const prefix = new PrefixAndSuffix("", "(.*)")
     type _t = typeof prefix
@@ -308,7 +308,7 @@ export type t_isBeginWith <T extends string , B extends boolean,_T extends (B ex
 (_T extends MRegExp<_S,_F> ? _S : _T) extends infer Beg ? Beg extends string ? 
  T extends `${Beg}${string}` ? true : _S : never : never 
 
-export const isBeginWith = <T extends string , B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   > (_str : T , param_regexOrStr: _T, isStr : B) =>{ 
+export const isBeginWith = <T extends string , B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   > (_str : T , param_regexOrStr: _T, isStr : B) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     let regexOrStr = _regexIsBeginWith<B,_T,_S,_F>(param_regexOrStr, isStr)
     return (isStr ? new RegExp(regexOrStr as string ) : regexOrStr as RegExp).test(_str) as t_isBeginWith<T,B,_T,_S,_F>
 }
@@ -317,7 +317,7 @@ export const isBeginWith = <T extends string , B extends boolean,_T extends (B e
 //see : t_isBeginWith<"gcxd",false,MRegExp<"g">,"g"> != t_isBeginWith<"gcxd",false,MRegExp<"g">> because _S become undefined
 
 
-export const idxOfChars = (name,arr_chars )=>{ 
+export const idxOfChars = (name,arr_chars )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     let _name = name 
     const regStr = getUnionNonMatchingGroups(arr_chars)
   
@@ -325,7 +325,7 @@ export const idxOfChars = (name,arr_chars )=>{
     let idx = fct_index(name)
     let idx_split = []
     let beg_idx = 0 
-    while(idx){ 
+    while(idx){ /*console.log("DEBUG_ME",getCurrentLine());*/
         idx_split.push(beg_idx+idx)
         beg_idx = idx
         _name = _name.substring(idx+1)
@@ -335,7 +335,7 @@ export const idxOfChars = (name,arr_chars )=>{
   }
   
   
-  export const generateName = (name,join_chars =["_",".","-"] ,_split_chars =  [" "]) : string[]=>{ 
+  export const generateName = (name,join_chars =["_",".","-"] ,_split_chars =  [" "]) : string[]=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
       
       
     const split_chars = [..._split_chars ,...join_chars]
@@ -348,7 +348,7 @@ export const idxOfChars = (name,arr_chars )=>{
     const permutation : any[] = getPermutation(enumerate(arr_fct_join_fct.length-1),split_arr.length-1)
   
     let res = []
-    for (const perm of permutation){ 
+    for (const perm of permutation){ /*console.log("DEBUG_ME",getCurrentLine());*/
         const tmp = perm.reduce((acc,nb,idx)=>arr_fct_join_fct[nb](acc,split_arr[idx+1]),split_arr[0])
         
         res.push(tmp)

@@ -10,7 +10,7 @@ class PipelineRouteService<SN extends string , R extends string , P extends stri
     _serviceName :SN
     _pipelineType : P
 
-    constructor(routeName :R , serviceName :SN,pipelineType : P){ 
+    constructor(routeName :R , serviceName :SN,pipelineType : P){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this._routeName = routeName;
         this._serviceName = serviceName;
         this._pipelineType = pipelineType;

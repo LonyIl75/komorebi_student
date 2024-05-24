@@ -38,15 +38,15 @@ export  class TypeChilds< unionChildType extends string  >   extends  haveSerial
 
     static emptyObject : EmptyInit< TypeChilds<any>>  = new EmptyInit< TypeChilds<any>>(TypeChilds) ;
              
-    static getEmptyInit: () => t_emptyTypeChilds = () =>{ 
+    static getEmptyInit: () => t_emptyTypeChilds = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return TypeChilds.emptyObject.emptyInit() ;
     }
 
-    getEmptyInit: () => t_emptyTypeChilds  = () =>{ 
+    getEmptyInit: () => t_emptyTypeChilds  = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return TypeChilds.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: AHaveSerializer<TypeChilds<any>>) => boolean = (obj:AHaveSerializer<TypeChilds<any>>)=>{ 
+    static isTypeof: (obj: AHaveSerializer<TypeChilds<any>>) => boolean = (obj:AHaveSerializer<TypeChilds<any>>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return haveSerializerAndEmptyInit._isTypeof(TypeChilds.getEmptyInit(),obj)
     }
 
@@ -64,7 +64,7 @@ export  class TypeChilds< unionChildType extends string  >   extends  haveSerial
     }
 
 
-    constructor(type:StrChildType.t_childType<unionChildType>  = noneChildType  as StrChildType.t_childType<unionChildType> , ids : Array<number> = []){ 
+    constructor(type:StrChildType.t_childType<unionChildType>  = noneChildType  as StrChildType.t_childType<unionChildType> , ids : Array<number> = []){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super({toJson:TypeChilds.toJson , fromJson:TypeChilds.fromJson})
         this.type = type;
         this.ids = ids;
@@ -87,7 +87,7 @@ export  class TypeChilds< unionChildType extends string  >   extends  haveSerial
         return obj.type as StrChildType.t_childType<className>
     }
 
-    static childTypeTocompClassname = <className  extends string   >(_json:ITypeChilds <className> ): className=>{ 
+    static childTypeTocompClassname = <className  extends string   >(_json:ITypeChilds <className> ): className=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
          return StrChildType._childTypeToCompClassname<StrChildType.t_childType<className>>(TypeChilds.getType(_json) ) as unknown as className
      }
 

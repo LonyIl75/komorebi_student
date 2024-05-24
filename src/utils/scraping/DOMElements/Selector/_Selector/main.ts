@@ -50,9 +50,9 @@ export const invalidValue_functSelectorObject = null as unknown as t_functSelect
 
 export type foreachFunction_arrFunctSelectorObject = ( arg : t_selectorFunctionsObjects ) => t_functSelectorObject |typeof invalidValue_functSelectorObject
 
-export const forEach_arrFunctSelectorObject = ( _funct : foreachFunction_arrFunctSelectorObject ): ReturnType<foreachFunction_arrFunctSelectorObject> =>{ 
+export const forEach_arrFunctSelectorObject = ( _funct : foreachFunction_arrFunctSelectorObject ): ReturnType<foreachFunction_arrFunctSelectorObject> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     let res: ReturnType<foreachFunction_arrFunctSelectorObject>  = invalidValue_functSelectorObject
-    for( const objectF of  arr_functSelectorObject){ 
+    for( const objectF of  arr_functSelectorObject){ /*console.log("DEBUG_ME",getCurrentLine());*/
             res = _funct(objectF as t_selectorFunctionsObjects  )
             if(res!=invalidValue_functSelectorObject) return res
     }
@@ -60,11 +60,11 @@ export const forEach_arrFunctSelectorObject = ( _funct : foreachFunction_arrFunc
 }
 
 export const getFunctSelectorObjectFromFunctionName = < FN extends t_name_selectorFunction >(name : FN) 
-: t_functSelectorObject_fromFunctionName< FN>   =>{ 
-        const find_functSelectorObjectFromFunctionName : foreachFunction_arrFunctSelectorObject = (objectF : t_selectorFunctionsObjects) =>{ 
+: t_functSelectorObject_fromFunctionName< FN>   =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        const find_functSelectorObjectFromFunctionName : foreachFunction_arrFunctSelectorObject = (objectF : t_selectorFunctionsObjects) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             let res : t_functSelectorObject = invalidValue_functSelectorObject
-            for( const name_selectorFunction in objectF){ 
-                if (name_selectorFunction == name) {  
+            for( const name_selectorFunction in objectF){ /*console.log("DEBUG_ME",getCurrentLine());*/
+                if (name_selectorFunction == name) { /*console.log("DEBUG_ME",getCurrentLine());*/ 
                     res= objectF[name_selectorFunction] //as t_functSelectorObject
                     return res 
                 }
@@ -82,7 +82,7 @@ _objF extends t_selectorFunction ?t_getFunctionFromISelectorFunctionObject<_objF
 
 
 export const getFunctSelectorFromFunctionName = < FN extends t_name_selectorFunction >(name : FN) 
-: t_functSelector_fromFunctionName< FN>   =>{ 
+: t_functSelector_fromFunctionName< FN>   =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     let objectF: t_functSelectorObject_fromFunctionName< FN>  = getFunctSelectorObjectFromFunctionName(name)
     return getFunctionFromISelectorFunctionObject<t_functSelectorObject_fromFunctionName< FN>> (objectF) as t_functSelector_fromFunctionName< FN>
 }
@@ -95,7 +95,7 @@ _objF extends t_selectorFunction ? t_getRejectedValueFromISelectorFunctionObject
 
 
 export const getRejectedValueSelectorFromFunctionName = < FN extends t_name_selectorFunction >(name : FN)
-: t_getRejectedValueSelector_fromFunctionName< FN>   =>{ 
+: t_getRejectedValueSelector_fromFunctionName< FN>   =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     let objectF: t_functSelectorObject_fromFunctionName< FN>  = getFunctSelectorObjectFromFunctionName(name)
     return getRejectedValueFromISelectorFunctionObject(objectF) as t_getRejectedValueSelector_fromFunctionName< FN>
 }
@@ -106,7 +106,7 @@ _objF extends t_selectorFunction ? t_getIsRejectedFromISelectorFunctionObject<_o
 
 
 export const getIsRejectedValueSelectorFromFunctionName = < FN extends t_name_selectorFunction >(name : FN)
-: t_isRejectedValueSelector_fromFunctionName< FN>   =>{ 
+: t_isRejectedValueSelector_fromFunctionName< FN>   =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     let objectF: t_functSelectorObject_fromFunctionName< FN>  = getFunctSelectorObjectFromFunctionName(name) 
     return getIsRejectedFromISelectorFunctionObject(objectF) as t_isRejectedValueSelector_fromFunctionName< FN>
 }
@@ -148,7 +148,7 @@ export type t_retgetCatchFunctionOfFunctSelector <T extends mode_of_executionSel
 
 export  const getCatchFValueOfFunctSelector =<T extends mode_of_executionSelector.t_enum ,FN extends t_name_selectorFunction > (
     mode_resolution : T,name : FN 
-    ) :t_getCatchValueOfFunctSelector<T,FN>=>{ 
+    ) :t_getCatchValueOfFunctSelector<T,FN>=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
 
 
     let catch_value  = FSelector.reject_qSelector  //default case 
@@ -167,7 +167,7 @@ export  const getCatchFValueOfFunctSelector =<T extends mode_of_executionSelecto
     return catch_value as t_getCatchValueOfFunctSelector<T,FN>
 }
 
-export const isCatchFValueOfFunctSelector = <T extends mode_of_executionSelector.t_enum , FN extends t_name_selectorFunction >(value : any,mode_resolution : T,name : FN ) =>{ 
+export const isCatchFValueOfFunctSelector = <T extends mode_of_executionSelector.t_enum , FN extends t_name_selectorFunction >(value : any,mode_resolution : T,name : FN ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     if(getIsRejectedValueSelectorFromFunctionName(name)(value)) return true
     else {
         return isRejected_qSelector(value)
@@ -176,7 +176,7 @@ export const isCatchFValueOfFunctSelector = <T extends mode_of_executionSelector
 }
 
  export  const getCatchFunctionOfFunctSelector =< T extends mode_of_executionSelector.t_enum ,FN extends t_name_selectorFunction > (
-    mode_resolution : T,name : FN ,) :t_retgetCatchFunctionOfFunctSelector<T,FN>=>{ 
+    mode_resolution : T,name : FN ,) :t_retgetCatchFunctionOfFunctSelector<T,FN>=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
 
 
     let catch_funct : t_errCatchFunction<t_getCatchValueOfFunctSelector<T,FN>> = (err: any)=> getCatchFValueOfFunctSelector<T,FN>(mode_resolution,name)

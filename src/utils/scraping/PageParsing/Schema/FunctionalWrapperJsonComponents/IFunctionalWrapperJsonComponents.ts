@@ -153,7 +153,7 @@ ArrArr extends t_arr_component<unionClassNameType,string> , T extends _IJsonComp
     arrClassName : ArrUnionClassNameType 
     arrClassNameAndChildsComponents : ArrArr
  
-    constructor(arrClassName : ArrUnionClassNameType ,arrClassNameAndChildsComponents : ArrArr,jsonArr_component_json:T){ 
+    constructor(arrClassName : ArrUnionClassNameType ,arrClassNameAndChildsComponents : ArrArr,jsonArr_component_json:T){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.arrClassName = arrClassName
         this.arrClassNameAndChildsComponents =arrClassNameAndChildsComponents 
         this.jsonArr_component_json =jsonArr_component_json

@@ -36,7 +36,7 @@ export const df_client_id : t_clientId = "0";
 export const df_nil_cdp_session : CDPSession = null;
 
 
-export const getDfClientIdIfUndefined = (client_id?:t_clientId): t_clientId =>{ 
+export const getDfClientIdIfUndefined = (client_id?:t_clientId): t_clientId =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return client_id === undefined ? df_client_id : client_id
 }
 
@@ -50,7 +50,7 @@ export class BrowserMPage {
     browser : Browser;
     mapMPageAndDescr : Map<t_targetId , t_val_pageAndDescr>;
 
-    constructor(browserId:t_browserId,browser:Browser){ 
+    constructor(browserId:t_browserId,browser:Browser){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.browserId = browserId;
         this.browser = browser;
         this.mapMPageAndDescr = new Map<t_targetId , t_val_pageAndDescr>();
@@ -63,16 +63,16 @@ export class BrowserMPage {
 
     async destroyMPageAndDescr() : Promise<void>{
         const arr_promise :(Promise<void>)[] = [] 
-        this.mapMPageAndDescr.forEach((val:t_val_pageAndDescr,key:t_targetId,...args:any[]) =>{ 
+        this.mapMPageAndDescr.forEach((val:t_val_pageAndDescr,key:t_targetId,...args:any[]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             arr_promise.push(this.closeMPage(key))
         })
-        return Promise.all(arr_promise).then((param)=>{ });
+        return Promise.all(arr_promise).then((param)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/});
     }
     
 
     async destroy():Promise<void>{
         
-        return this.destroyMPageAndDescr().then(async (_)=>{ 
+        return this.destroyMPageAndDescr().then(async (_)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             return await this.destroyBrowser();
         })
     }
@@ -95,11 +95,11 @@ export class BrowserMPage {
         return this.mapMPageAndDescr.get(targetId).mPage;
     }
 
-    static initPage = async (page:Page) =>{ 
+    static initPage = async (page:Page) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         await page.setViewport(default_viewPort)
     }
 
-    static async initMPage(gl_page:t_mPage){ 
+    static async initMPage(gl_page:t_mPage){ /*console.log("DEBUG_ME",getCurrentLine());*/
         await gl_page.addExposeFunction(new ExposeFunction (null,"subsetPage",[],{path:joinFilePath(getPathPageParsing(),"subsetPage.js")}))
         await gl_page.addExposeFunction(new ExposeFunction (null,"TreeParsing",[],{path:joinFilePath(getPathPageParsing(),"TreeParsing.js")}))
     
@@ -110,7 +110,7 @@ export class BrowserMPage {
     }
 
     async newMPage(_description_page:t_opt_value_description,jsonScrap : t_JsonWithScrapingComponent = JsonWithScrapingComponents.getEmptyInit()) : Promise<[t_targetId,t_mPage]>{
-        return this.browser.newPage().then(async (_page:Page) =>{ 
+        return this.browser.newPage().then(async (_page:Page) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             await BrowserMPage.initPage(_page)
             let target_idx:t_targetId = this.browser.targets().indexOf(_page.target()) as t_targetId;
             let mpage : t_mPage  = await mPage.cst_before_evaluate(_page,jsonScrap);
@@ -125,23 +125,23 @@ export class BrowserMPage {
         return r === undefined ? _notFound() : r ;
     }
 
-    isValidTargetId(targetId:t_targetId)   { 
+    isValidTargetId(targetId:t_targetId)   { /*console.log("DEBUG_ME",getCurrentLine());*/
         return is_notFound(targetId)
     }
 
-    getNbName = (name:string) : number =>{ 
+    getNbName = (name:string) : number =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return Object.values(this.mapMPageAndDescr).filter((val_pageAndDescr:t_val_pageAndDescr) => val_pageAndDescr.description.name == name).length
     }
 
 
-    getNewDescriptionPage = (_description_page:t_opt_value_description) : t_value_description =>{ 
+    getNewDescriptionPage = (_description_page:t_opt_value_description) : t_value_description =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         const name = _description_page.name;
         const nb_name = this.getNbName(name)
         const description = BrowserMPage.getDfDescription(name,nb_name)
         return {name,description,nb_name}
     }
 
-    static getDfDescription = (name:string,nb_name:number)  =>{ 
+    static getDfDescription = (name:string,nb_name:number)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return join_hyphen(name,`${nb_name}`)
     }
 
@@ -165,13 +165,13 @@ export class BrowserMPage {
     }
 
     closeMPage(targetId:t_targetId) : Promise<void>{
-        return ((obj)=>obj.getMPageById(targetId).destroy().then((_) =>{ 
+        return ((obj)=>obj.getMPageById(targetId).destroy().then((_) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             obj.deleteMPageAndDescr(targetId);
         }))(this)
     
     }
 
-    static addPostfixToDescription(str_service:string) {  
+    static addPostfixToDescription(str_service:string) { /*console.log("DEBUG_ME",getCurrentLine());*/ 
         return join_underscore(str_service , postfix_page) 
     } 
 
@@ -188,7 +188,7 @@ export class  brwsrAndId {
     }
 
     async destroy() : Promise<void>{
-        return this.browserMPage.destroy().then((r)=>{ 
+        return this.browserMPage.destroy().then((r)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             this.browserMPage = null;
             this.unsetBrowserClientId();
             return r 
@@ -216,7 +216,7 @@ export class  brwsrAndId {
     }
 
 
-    constructor(browserMPage:BrowserMPage,client_id:t_clientId=brwsrAndId.unsettedClientId){ 
+    constructor(browserMPage:BrowserMPage,client_id:t_clientId=brwsrAndId.unsettedClientId){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.browserMPage = browserMPage;
         this.client_id = client_id;
     }
@@ -233,37 +233,37 @@ export class BrowsersPool {
     readonly pool_min_size : number ;
 
 
-    private constructor(pool_min_size: number){ 
+    private constructor(pool_min_size: number){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.browsers = new Map<t_browserId,brwsrAndId>();
         this.pool_min_size = pool_min_size;
     }
 
     async destroy() : Promise<void>{
         let arr_promise : Array<Promise<void>> = [];
-        this.browsers.forEach((val:brwsrAndId,key:t_browserId,...args:any[]) =>{ 
-            arr_promise.push(this.destroyBrowerId(key).then((r)=>{ 
+        this.browsers.forEach((val:brwsrAndId,key:t_browserId,...args:any[]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+            arr_promise.push(this.destroyBrowerId(key).then((r)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                 this.deleteBrowserId(key)
                 return r 
             }));
         })
-        return Promise.all(arr_promise).then((_)=>{ });
+        return Promise.all(arr_promise).then((_)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/});
     }
 
     async fillBrowsersPool() :Promise<Map<t_browserId,brwsrAndId>|null> {
         let arr_promise : Array<Promise<number>> = [];
-        for(let i = 0; i < this.pool_min_size; i++){ 
+        for(let i = 0; i < this.pool_min_size; i++){ /*console.log("DEBUG_ME",getCurrentLine());*/
             arr_promise.push(this.addBrowser());
         }
-        return Promise.all(arr_promise).then(() =>{ 
+        return Promise.all(arr_promise).then(() =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             return this.browsers;
-        }).catch(async (err) =>{ 
+        }).catch(async (err) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             console.log("err",err);
             await this.destroy();
             return null;
         })
     }
 
-    set setBrowsers(browsers : Map<t_browserId,brwsrAndId>){ 
+    set setBrowsers(browsers : Map<t_browserId,brwsrAndId>){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.browsers = browsers;
     }
 
@@ -290,7 +290,7 @@ export class BrowsersPool {
 
     addBrowser() : Promise<t_browserId>{
         //A FAIRE constructor brwsrAndId with parameter like headless 
-        return puppeteer.launch({headless: false}).then((_brwsr: Browser) =>{ 
+        return puppeteer.launch({headless: false}).then((_brwsr: Browser) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             const browserAndId : brwsrAndId = new brwsrAndId(new BrowserMPage(this.browsers.size,_brwsr) );
             const insertIndex = this.browsers.size as t_browserId ; 
             this.browsers.set(insertIndex,browserAndId)
@@ -303,7 +303,7 @@ export class BrowsersPool {
     static async cst_browsers(pool_min_size : number =2 ) : Promise<BrowsersPool|null>{
         debug_with_curLine(debug_browserPool, getCurrentLine(), "CST BROWSER POOL");
         let browsersPool : BrowsersPool = new BrowsersPool(pool_min_size);
-        return await browsersPool.fillBrowsersPool().then((_map)=>{ 
+        return await browsersPool.fillBrowsersPool().then((_map)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             return _map?.size >= pool_min_size ? browsersPool : null 
         });
     }
@@ -316,7 +316,7 @@ export class BrowsersPool {
     T extends _IJsonComponents<unionClassNameType>
     >(browserId:t_browserId,description_page:t_opt_value_description,jsonScrap ?: JsonWithScrapingComponents<UnionRegex,UnionIdPath,ArrClassNameType,unionClassNameType,ArrArr,T> ) : Promise<mpageTargetIdBrowserId<UnionRegex,UnionIdPath,ArrClassNameType,unionClassNameType,ArrArr,T>>{
 
-        return this.getBrowserMPage(browserId).newMPage(description_page,jsonScrap).then(async([target_idx ,_mPage]:[t_targetId ,t_mPage]) =>{ 
+        return this.getBrowserMPage(browserId).newMPage(description_page,jsonScrap).then(async([target_idx ,_mPage]:[t_targetId ,t_mPage]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
 
             return new mpageTargetIdBrowserId<UnionRegex,UnionIdPath,ArrClassNameType,unionClassNameType,ArrArr,T>(_mPage,browserId,target_idx);
         })
@@ -335,7 +335,7 @@ export class BrowsersPool {
         this.browsers.get(browserId).setBrowserClientId(clientId)
     }
 
-    unsetBrowserClientId(browserId:t_browserId) { 
+    unsetBrowserClientId(browserId:t_browserId) { /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.browsers.get(browserId).unsetBrowserClientId();
     }
 
@@ -345,7 +345,7 @@ export class BrowsersPool {
 
     destroyBrowerId(browserId: t_browserId):Promise<void>{
         const t = this.getBrowserAndId(browserId)
-        return t.destroy().then(async (r)=>{ 
+        return t.destroy().then(async (r)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             this.deleteBrowserId(browserId)
             return r
         })
@@ -369,20 +369,20 @@ export class BrowsersPool {
     }
 
        
-    getTargetFromTargetIdx(browserId:t_browserId,targetIdx:t_targetId)  { 
+    getTargetFromTargetIdx(browserId:t_browserId,targetIdx:t_targetId)  { /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.getBrowserMPage(browserId).getTargetById(targetIdx)
     }
 
-    getMPageFromTargetIdx(browserId:t_browserId,targetIdx:t_targetId)  { 
+    getMPageFromTargetIdx(browserId:t_browserId,targetIdx:t_targetId)  { /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.getBrowserMPage(browserId).getMPageById(targetIdx)
     }
 
 
-    deleteDescriptionPage(res_page: t_mpageTargetIdBrowserId) {    
+    deleteDescriptionPage(res_page: t_mpageTargetIdBrowserId) { /*console.log("DEBUG_ME",getCurrentLine());*/   
         return this.getBrowserMPage(res_page.browserId).deleteDescriptionPage(res_page.targetId);
     }
 
-    async getTargetIdx(browserId:t_browserId,_mpage:t_mPage) { 
+    async getTargetIdx(browserId:t_browserId,_mpage:t_mPage) { /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.getBrowserMPage(browserId).getMPageId(_mpage)
 
     }
@@ -396,7 +396,7 @@ export let browsers : BrowsersPool ;
 
 
 export async function closeBrowsers () : Promise<void> {
-    if(browsers) { 
+    if(browsers) { /*console.log("DEBUG_ME",getCurrentLine());*/
         return browsers.destroy();
     }else {
         return Promise.resolve();
@@ -445,7 +445,7 @@ T extends _IJsonComponents< unionClassNameType>
 
     targetId:t_targetId
 
-    constructor(mpage:mPage<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>,browserId:t_browserId,targetId?:t_targetId){ 
+    constructor(mpage:mPage<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>,browserId:t_browserId,targetId?:t_targetId){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.mpage = mpage;
         this.browserId = browserId;
 
@@ -475,7 +475,7 @@ T extends _IJsonComponents< unionClassNameType>
     const browsers : BrowsersPool = await getBrowsers()
     let keyBrowser :t_browserId|undefined = _id?.brwsrId
     const isBrwsrAssociated = keyBrowser !== undefined
-    if(!isBrwsrAssociated){ 
+    if(!isBrwsrAssociated){ /*console.log("DEBUG_ME",getCurrentLine());*/
         if(_id?.clientId === undefined) throw new Error("brwsrId && clientId is undefined")
         keyBrowser= await getBrowserInstance(_id.clientId)
         if(BrowsersPool.isInvalidBrowserKey(keyBrowser)) throw new Error("browser is null")
@@ -506,7 +506,7 @@ export type t_cst_optionScraping = [_t_cst_optionScraping[0],_t_cst_optionScrapi
 
 
 
-export const optionScrapingToCstOptionScraping = (args:t_optionsScraping) : t_cst_optionScraping =>{ 
+export const optionScrapingToCstOptionScraping = (args:t_optionsScraping) : t_cst_optionScraping =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return arrayFilterIndices(args,[jsonScrapIdx])
 }
 
@@ -523,13 +523,13 @@ export class OptionScraping implements IOptionScraping {
 
     debug_options?:t_cst_optionScraping[1]
 
-    constructor(...args:t_cst_optionScraping){ 
+    constructor(...args:t_cst_optionScraping){ /*console.log("DEBUG_ME",getCurrentLine());*/
         //this.id = id;
         this.description_page = args[0];//TODO-IMP req , res first see below 
         this.debug_options = args[1];
     }  
 
-    static cst_optionScraping = (args:t_optionsScraping) : OptionScraping =>{ 
+    static cst_optionScraping = (args:t_optionsScraping) : OptionScraping =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return new OptionScraping(...optionScrapingToCstOptionScraping(args))//A FAIRE : redo 
     }
 
@@ -537,7 +537,7 @@ export class OptionScraping implements IOptionScraping {
 }
 
 
-export const fillfctWithOptionScraping=<T extends t_function > (funct : T ,opt :IOptionScraping ,jsonScrap :_t_cst_optionScraping[t_jsonScrapIdx] , ...args:any[]) :ReturnType<T>  =>{ 
+export const fillfctWithOptionScraping=<T extends t_function > (funct : T ,opt :IOptionScraping ,jsonScrap :_t_cst_optionScraping[t_jsonScrapIdx] , ...args:any[]) :ReturnType<T>  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return funct(//opt.id,
         opt.description_page
         ,jsonScrap
@@ -563,12 +563,12 @@ IEnv extends IJson = IVoid , Op extends t_union_id_env_var_op = t_str_noneOp , I
     const description = _args[0].body.optionsScraping.description_page ||{name:_name_page}
     const _res_page = await getNewPage<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>(_id,description,jsonScrap)
     await (async(res_page : mpageTargetIdBrowserId<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T> 
-      ,_pi: Pipeline<I_2 ,O  ,IEnv  ,Op,I_1 ,OInterArr> ,...args : I_2 ) =>{ 
+      ,_pi: Pipeline<I_2 ,O  ,IEnv  ,Op,I_1 ,OInterArr> ,...args : I_2 ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         args = fct_modify_args(res_page,...args)
         let r = null 
         try{
             r = await _pi.run_pipeline(args,args[0].body.pipeline.initEnv) 
-        }catch(e){ 
+        }catch(e){ /*console.log("DEBUG_ME",getCurrentLine());*/
             console.log("tryWithRessourcePage",e)
             await browsers.closeMPage(res_page)
         }

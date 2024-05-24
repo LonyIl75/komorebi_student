@@ -27,11 +27,11 @@ const _Entreprise_ServiceMain = _st_Entreprise_ServiceMain as {
 
 export class Entreprise_ServiceMain extends _Entreprise_ServiceMain implements IAService_3<t_str_main> {
 
-    constructor(_address:getRouteRemoteAddressFromServiceNameAndIdRoute <t_serviceName_entreprise_ , t_str_main > = Entreprise_ServiceMain.address ,_databaseLocalAndRemote :DatabaseLocalAndRemote<t_serviceName_entreprise_>  = Entreprise_ServiceMain.databaseLocalAndRemote) { 
+    constructor(_address:getRouteRemoteAddressFromServiceNameAndIdRoute <t_serviceName_entreprise_ , t_str_main > = Entreprise_ServiceMain.address ,_databaseLocalAndRemote :DatabaseLocalAndRemote<t_serviceName_entreprise_>  = Entreprise_ServiceMain.databaseLocalAndRemote) { /*console.log("DEBUG_ME",getCurrentLine());*/
         if(Entreprise_ServiceMain.address === undefined )Entreprise_ServiceMain.address = _address
         if(_address == undefined) throw new Error("address is undefined")
 
-        if(Entreprise_ServiceMain.databaseLocalAndRemote === undefined ){ 
+        if(Entreprise_ServiceMain.databaseLocalAndRemote === undefined ){ /*console.log("DEBUG_ME",getCurrentLine());*/
             Entreprise_ServiceMain.databaseLocalAndRemote = _databaseLocalAndRemote
             HA_Entreprise_ServiceMain.getDatabaseLocalAndRemote = ()=>Entreprise_ServiceMain.databaseLocalAndRemote
         }
@@ -44,11 +44,11 @@ export class Entreprise_ServiceMain extends _Entreprise_ServiceMain implements I
         return [...HA_Entreprise_ServiceMain.namesOfPipelineFunction()] as const
     }
 
-    getLocalPipelineFunction(req : req_main,res:res_main )  { 
+    getLocalPipelineFunction(req : req_main,res:res_main )  { /*console.log("DEBUG_ME",getCurrentLine());*/
         return null 
     }
 
-    getServicePipelineFunction(req : req_main,res:res_main )  { 
+    getServicePipelineFunction(req : req_main,res:res_main )  { /*console.log("DEBUG_ME",getCurrentLine());*/
         type t_arr_fcts = ReturnType< typeof this.getNamesOfPipelineFunction>
         return pipelineBuilder.createPipeline<t_arr_fcts> (req.body.pipeline.body as any ,req.body.pipeline.op as any)
     }

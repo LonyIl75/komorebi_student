@@ -39,16 +39,16 @@ extends mPage<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,Ar
  
     eventMap : Map<string , Map<string , any>> ;
 
-    constructor(json:IJsonWithScrapingComponents<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>&_t_eventMap  ){ 
+    constructor(json:IJsonWithScrapingComponents<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>&_t_eventMap  ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super(json);
         this.eventMap =  new Map<string , Map<string , any>>(json.eventMap);
     }
-    static cst_from_json<UnionRegex  extends t_strRegex ,UnionIdPath  extends string,ArrUnionClassNameType extends readonly [t_rootClassName,... readonly string [] ] ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component <unionClassNameType> ,T extends _IJsonComponents< unionClassNameType> >(json:IJsonWithScrapingComponents<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>&_t_eventMap){ 
+    static cst_from_json<UnionRegex  extends t_strRegex ,UnionIdPath  extends string,ArrUnionClassNameType extends readonly [t_rootClassName,... readonly string [] ] ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component <unionClassNameType> ,T extends _IJsonComponents< unionClassNameType> >(json:IJsonWithScrapingComponents<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>&_t_eventMap){ /*console.log("DEBUG_ME",getCurrentLine());*/
         return new mPageWithEventMap(json);
     }
 
     
-    static async cst_before_evaluate <UnionRegex  extends t_strRegex ,UnionIdPath  extends string,ArrUnionClassNameType extends readonly [t_rootClassName,... readonly string [] ] ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component <unionClassNameType> ,T extends _IJsonComponents< unionClassNameType> >(page:Page , json:IJsonWithScrapingComponents<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>&_t_eventMap){ 
+    static async cst_before_evaluate <UnionRegex  extends t_strRegex ,UnionIdPath  extends string,ArrUnionClassNameType extends readonly [t_rootClassName,... readonly string [] ] ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component <unionClassNameType> ,T extends _IJsonComponents< unionClassNameType> >(page:Page , json:IJsonWithScrapingComponents<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>&_t_eventMap){ /*console.log("DEBUG_ME",getCurrentLine());*/
         let obj = new mPageWithEventMap(json);
         await obj.setPage(page);
         await obj.setEssentialScripts();  
@@ -57,7 +57,7 @@ extends mPage<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,Ar
     }
 
 
-    async setPage(page:Page){ 
+    async setPage(page:Page){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super.setPage(page);
     }
 
@@ -71,14 +71,14 @@ extends mPage<UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,Ar
 
 
 
-    setEventMap(event:string , varname:string , value:any){ 
+    setEventMap(event:string , varname:string , value:any){ /*console.log("DEBUG_ME",getCurrentLine());*/
         if(!this.eventMap.has(event)) this.eventMap.set(event,new Map<string , any>());
         this.eventMap.get(event).set(varname,value);
     }
 
 
     
-    getEventMap(event :string , varname :string ){ 
+    getEventMap(event :string , varname :string ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         if(event == undefined) return this.eventMap;
         else if (varname == undefined) return this.eventMap.get(event)
         if(!this.eventMap.has(event)) return undefined;

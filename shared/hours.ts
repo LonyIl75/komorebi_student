@@ -31,9 +31,9 @@ export const hours = {
 }
 
 
-const timer = (num:number ): Promise<boolean> =>{ 
-    return new Promise(res =>{ 
-        setTimeout(() =>{ 
+const timer = (num:number ): Promise<boolean> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    return new Promise(res =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        setTimeout(() =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             res(true);
         }, num + randomIntFromInterval(-1000, 1000));
     });

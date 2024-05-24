@@ -15,7 +15,7 @@ export type t_childsSelectors =  [ ...  t_childSelector[] ] ;
 export  const  empty_childSelectors :[[]]  = [[]]
 export type t_empty_childsSelectors = typeof empty_childSelectors
 type t_isEmptyChildSelectors <T extends t_childsSelectors> = T extends t_empty_childsSelectors ? true : false
-export const isEmptyChildSelectors = <T extends t_childsSelectors>(childSelectors : T)  =>{ 
+export const isEmptyChildSelectors = <T extends t_childsSelectors>(childSelectors : T)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return (childSelectors.length == 1 && childSelectors[0].length == 0) as t_isEmptyChildSelectors<T>
 }
 
@@ -36,7 +36,7 @@ export const isNilValue = < T extends string> (value : T) => (value === nil_valu
 export const df_value = emptyStr 
 export type t_df_value = typeof df_value
 
-export const cannotInitializedValue = (value : string )=>{ 
+export const cannotInitializedValue = (value : string )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     if(value !== undefined && !isStrEmpty(value) ) throw new Error("Value cannot be initialized ")
     else value = df_value
     return value as t_df_value

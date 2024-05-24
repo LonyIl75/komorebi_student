@@ -39,12 +39,12 @@ export class RouteService<SN extends string , R extends string  > implements IRo
         }` as const 
     }
     getLocalPipelineFunction() {
-        return `getLocalPipelineFunction(req : req_${this._routeName},res:res_${this._routeName} )  { 
+        return `getLocalPipelineFunction(req : req_${this._routeName},res:res_${this._routeName} )  { /*console.log("DEBUG_ME",getCurrentLine());*/
             return null 
         }` as const 
     }
     getServicePipelineFunction() {
-        return `getServicePipelineFunction(req : req_${this._routeName},res:res_${this._routeName} )  { 
+        return `getServicePipelineFunction(req : req_${this._routeName},res:res_${this._routeName} )  { /*console.log("DEBUG_ME",getCurrentLine());*/
             type t_arr_fcts = ReturnType< typeof this.getNamesOfPipelineFunction>
             return pipelineBuilder.createPipeline<t_arr_fcts> (req.body.pipeline.body as any ,req.body.pipeline.op as any)
         }` as const 

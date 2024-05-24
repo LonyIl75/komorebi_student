@@ -37,8 +37,8 @@ export const debug_sep =package_config.debug_sep
 export const debug_join = <Arr extends readonly string[] >(arr_str : Arr)  => arr_str.join(debug_sep) as t_JoinChar<Arr,typeof debug_sep>
 
 
-const get_embedding = (propNames : string[] , json_obj:any) :string =>{ 
-let res = propNames.map((propName) =>{ 
+const get_embedding = (propNames : string[] , json_obj:any) :string =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+let res = propNames.map((propName) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     if(json_obj.hasOwnProperty(propName) ){
         if(typeof json_obj[propName] === "string" && json_obj[propName].length > 0 )return [propName ,json_obj[propName]].join(debug_sep) 
         if(typeof json_obj[propName] !== "string") return [propName ,json_obj[propName]].join(debug_sep) 

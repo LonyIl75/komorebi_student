@@ -11,7 +11,7 @@ class BaseRoutes<SN extends string , T1 extends readonly string[]> implements IB
     _serviceName :SN
     idRoutes: T1
 
-    constructor(_serviceName:SN,idRoutes:T1){ 
+    constructor(_serviceName:SN,idRoutes:T1){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this._serviceName = _serviceName
         validIdRoutesOrThrow(idRoutes)
         this.idRoutes = idRoutes

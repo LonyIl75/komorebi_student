@@ -57,22 +57,22 @@ export class NodeComponentValue extends haveSerializerAndEmptyInit<NodeComponent
     objectId:string|null
     [str_attributes]?:Array<ChildAttributeTypeValue>//13/03/24 ChildAttributeType &{[str_value]:string} 
 
-    static getJsonValue(nodeValue : INodeComponentValue){ 
+    static getJsonValue(nodeValue : INodeComponentValue){ /*console.log("DEBUG_ME",getCurrentLine());*/
         let json = {} as any 
         if(nodeValue.proper_value !== undefined )json[noFieldName] = nodeValue.proper_value
-        for( const attr of nodeValue[str_attributes]){ 
+        for( const attr of nodeValue[str_attributes]){ /*console.log("DEBUG_ME",getCurrentLine());*/
             json=  {...json,...attr.value}
         }
         return json as t_NodeComponentValue_getJsonValue
         
     }
 
-    static getNameFieldOfJsonStoredValue = <idPath extends string , attribute_name extends string >(_idPath : idPath , key : attribute_name) =>{ 
+    static getNameFieldOfJsonStoredValue = <idPath extends string , attribute_name extends string >(_idPath : idPath , key : attribute_name) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return join_underscore(_idPath ,key)
     }
 
     static jsonValueToJsonStoredValue = <idPath extends string ,t_value_idPath = string >
-      (trad_path : idPath, _jsonValue : t_NodeComponentValue_getJsonValue) =>{ 
+      (trad_path : idPath, _jsonValue : t_NodeComponentValue_getJsonValue) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
        const _obj  = {} as any
         for (const entry of Object.entries(_jsonValue)) {
           const [key,value] = entry
@@ -84,20 +84,20 @@ export class NodeComponentValue extends haveSerializerAndEmptyInit<NodeComponent
 
 
     static emptyObject : EmptyInit<NodeComponentValue>  = new EmptyInit<NodeComponentValue>(NodeComponentValue) ;
-    static getEmptyInit: () => NodeComponentValue = () =>{ 
+    static getEmptyInit: () => NodeComponentValue = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return NodeComponentValue.emptyObject.emptyInit() ;
     }
 
-    static getElmOfNodeComponentValue=(nodeComponentValue : INodeComponentValue ,page:Page)=>{ 
+    static getElmOfNodeComponentValue=(nodeComponentValue : INodeComponentValue ,page:Page)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         const {description} = nodeComponentValue
         return getElmFromArrSelector(page,description)
     }
 
-    getEmptyInit: () => NodeComponentValue = () =>{ 
+    getEmptyInit: () => NodeComponentValue = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return NodeComponentValue.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: AHaveSerializer<NodeComponentValue>) => boolean = (obj:AHaveSerializer<NodeComponentValue>)=>{ 
+    static isTypeof: (obj: AHaveSerializer<NodeComponentValue>) => boolean = (obj:AHaveSerializer<NodeComponentValue>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return haveSerializerAndEmptyInit._isTypeof(NodeComponentValue.getEmptyInit(),obj)
     }
 
@@ -108,7 +108,7 @@ export class NodeComponentValue extends haveSerializerAndEmptyInit<NodeComponent
         return {value:nodeComponentValue.value,proper_value:nodeComponentValue.proper_value,description:nodeComponentValue.description,objectId:nodeComponentValue.objectId,attributes:nodeComponentValue.attributes?.map((attribute) => attribute.toJson())} as const
     }
 
-    static fromJson = (json: IJson) : NodeComponentValue =>{ 
+    static fromJson = (json: IJson) : NodeComponentValue =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return new NodeComponentValue(json.value,json.proper_value,json.description,json.objectId,json.attributes)
     }
 
@@ -121,13 +121,13 @@ export class NodeComponentValue extends haveSerializerAndEmptyInit<NodeComponent
         this.attributes = attributes
     }
 
-    static async cst_fromElement_securized <unionclassname extends string = string ,UnionChilds extends string = string> (page_or_element : t_pageOrElementHN,component :IComponent<unionclassname,UnionChilds> ,arr_selectors : selectors[],selectors :selectors  ){ 
+    static async cst_fromElement_securized <unionclassname extends string = string ,UnionChilds extends string = string> (page_or_element : t_pageOrElementHN,component :IComponent<unionclassname,UnionChilds> ,arr_selectors : selectors[],selectors :selectors  ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         if(page_or_element instanceof   Page) throw new Error("page_or_element instanceof   Page")
         return NodeComponentValue.cst_fromElement(page_or_element, component,arr_selectors ,selectors)
     }
 
     // TODO : to include : element._remoteObject.description // can it serve ? objectId // what is this ?className
-    static async cst_fromElement <unionclassname extends string = string ,UnionChilds extends string = string> (element : t_ElementHN,component :IComponent<unionclassname,UnionChilds> ,arr_selectors : selectors[],selectors ?:selectors   ){ 
+    static async cst_fromElement <unionclassname extends string = string ,UnionChilds extends string = string> (element : t_ElementHN,component :IComponent<unionclassname,UnionChilds> ,arr_selectors : selectors[],selectors ?:selectors   ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         
         const value_init = component[str_value_init]
         let p_str_content_element =  Promise.resolve(value_init) 
@@ -135,7 +135,7 @@ export class NodeComponentValue extends haveSerializerAndEmptyInit<NodeComponent
             //TODO : extract (see TreeParsing function)
             const validation_strRegex = component[str_value_validation_strRegex]
             if(!isEmptyStrRegex(validation_strRegex)){
-                p_str_content_element = ((validation_regex : RegExp )=> getTextContent(element,selectors).then((text:string)=>{ 
+                p_str_content_element = ((validation_regex : RegExp )=> getTextContent(element,selectors).then((text:string)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     const arr_matching_regex = getMatchAndPosFromRegexMatchingInterval(text,validation_regex,[1]).reduce((_acc,_el)=>_el?._match ? [..._acc,_el._match] : _acc ,[])
                     const arr_res = value_init ? ([value_init,...arr_matching_regex]) : arr_matching_regex
                     return (arr_res).join(component[str_joinChar_group] ?? Component.df[str_joinChar_group] )
@@ -144,11 +144,11 @@ export class NodeComponentValue extends haveSerializerAndEmptyInit<NodeComponent
         }
         
         const n_arr_selectors = selectors ? [...arr_selectors,selectors] : arr_selectors 
-        return p_str_content_element.then((str_content_element)=>{ 
+        return p_str_content_element.then((str_content_element)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             let r = null 
             try {
             r = new NodeComponentValue(str_content_element, str_content_element ,n_arr_selectors,element.remoteObject().objectId)
-            } catch (error) { 
+            } catch (error) { /*console.log("DEBUG_ME",getCurrentLine());*/
             console.log("error_p_str_content_element",error)
             }
             return r 
@@ -208,12 +208,12 @@ export class NodeComponent< unionPathId extends string ,ArrUnionClassName extend
     static df_className : t_noneCompClassName = noneCompClassName
     static dfValue : NodeComponentValue = NodeComponentValue.getEmptyInit()
 
-    static isDfProp = <K extends keyof INodeComponentValue = keyof INodeComponentValue > (node_val:reshapeObject<INodeComponentValue,K>, name_prop : K) =>{ 
+    static isDfProp = <K extends keyof INodeComponentValue = keyof INodeComponentValue > (node_val:reshapeObject<INodeComponentValue,K>, name_prop : K) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return (node_val as any)[name_prop] == NodeComponent.dfValue[name_prop]
     }
 
-    static isDfValue = (node_val:t_nodeComponent_values[number]) =>{ 
-        for( const key in node_val){ 
+    static isDfValue = (node_val:t_nodeComponent_values[number]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        for( const key in node_val){ /*console.log("DEBUG_ME",getCurrentLine());*/
             if(!NodeComponent.isDfProp(node_val,key as keyof INodeComponentValue))return false
         }
         return true 
@@ -231,7 +231,7 @@ export class NodeComponent< unionPathId extends string ,ArrUnionClassName extend
 
         this.key_set = [] as Array<StrChildType.t_childType<unionChildClassname>>;
 
-        for (const type_child of type_childs) { 
+        for (const type_child of type_childs) { /*console.log("DEBUG_ME",getCurrentLine());*/
             this.addChilds(new TypeChilds<unionChildClassname>(type_child as  StrChildType.t_childType<unionChildClassname> ))
         }
         this.nodeValue = NodeComponentValue.fromJson(_nodeValue);
@@ -240,28 +240,28 @@ export class NodeComponent< unionPathId extends string ,ArrUnionClassName extend
     }
     static emptyObject : EmptyInit<t_any_nodeComponent>  = new EmptyInit<t_any_nodeComponent>(NodeComponent) ;
 
-    static getEmptyInit: () => t_any_nodeComponent = () =>{ 
+    static getEmptyInit: () => t_any_nodeComponent = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return NodeComponent.emptyObject.emptyInit() ;
     }
 
-    //isNotSetIdPath = () : boolean =>{ 
+    //isNotSetIdPath = () : boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         //return this.idPath === NodeComponent.df_idPath
     //}*/
 
-    isNotSetCompoPath = () : boolean =>{ 
+    isNotSetCompoPath = () : boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.compo_path === NodeComponent.df_compoPath
     }
 
-    getEmptyInit: () => t_any_nodeComponent = () =>{ 
+    getEmptyInit: () => t_any_nodeComponent = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return NodeComponent.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: AHaveSerializer<t_any_nodeComponent>) => boolean = (obj:AHaveSerializer<t_any_nodeComponent>)=>{ 
+    static isTypeof: (obj: AHaveSerializer<t_any_nodeComponent>) => boolean = (obj:AHaveSerializer<t_any_nodeComponent>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return haveSerializerAndEmptyInit._isTypeof(NodeComponent.getEmptyInit(),obj)
     }
     isTypeof = NodeComponent.isTypeof
 
-    static fromJson = (json : IJson) : t_any_nodeComponent =>{ 
+    static fromJson = (json : IJson) : t_any_nodeComponent =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return new NodeComponent(json.className ,  
             json.childs.map( (child : ReturnType< typeof TypeChilds.toJson> ) => TypeChilds.fromJson(child) ) , 
             json.id , 
@@ -269,7 +269,7 @@ export class NodeComponent< unionPathId extends string ,ArrUnionClassName extend
             json.compo_path)
     }
 
-    static toJson = (nodeComponent : t_any_nodeComponent)  =>{ 
+    static toJson = (nodeComponent : t_any_nodeComponent)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return {
             className : nodeComponent.className,
             childs : nodeComponent.childs.map( (child : TypeChilds<any>) => child.toJson() ),
@@ -281,7 +281,7 @@ export class NodeComponent< unionPathId extends string ,ArrUnionClassName extend
     }
 
 
-    static getIncrementId = () :number =>{ 
+    static getIncrementId = () :number =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return ++NodeComponent.auto_id ;
         }
 
@@ -291,7 +291,7 @@ export class NodeComponent< unionPathId extends string ,ArrUnionClassName extend
     : NodeComponent<unionPathId,ArrUnionClassName,unionClassname,unionChildClassname> {
         let _obj :NodeComponent<unionPathId,ArrUnionClassName,unionClassname,unionChildClassname> = 
         new NodeComponent<unionPathId,ArrUnionClassName,unionClassname,unionChildClassname>(  className, type_childs.map( (_child : TypeChilds<unionChildClassname>) => _child.type ) as any  , id , NodeComponent.completeNodeValue(value))
-        for( let i = 0 ; i < type_childs.length ; i++){ 
+        for( let i = 0 ; i < type_childs.length ; i++){ /*console.log("DEBUG_ME",getCurrentLine());*/
             if(_obj.childs.length < i )_obj.childs[i]=TypeChilds.cst_cpy(type_childs[i]) //TODO : just that is enough no need cond 
             else _obj.childs[i].ids = type_childs[i].ids
         }
@@ -318,15 +318,15 @@ export class NodeComponent< unionPathId extends string ,ArrUnionClassName extend
 
         
 
-    static getEmptyId = () :number =>{ 
+    static getEmptyId = () :number =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return -1 ;
       }
 
     static auto_id :number = NodeComponent.getEmptyId()
 
-    addChilds( typeChild:TypeChilds<unionChildClassname>){ 
+    addChilds( typeChild:TypeChilds<unionChildClassname>){ /*console.log("DEBUG_ME",getCurrentLine());*/
         let idx = this.key_set.indexOf(typeChild.type )
-        if( idx == -1 ){ 
+        if( idx == -1 ){ /*console.log("DEBUG_ME",getCurrentLine());*/
             this.childs.push(typeChild)
             this.key_set.push(typeChild.type)
         }
@@ -335,24 +335,24 @@ export class NodeComponent< unionPathId extends string ,ArrUnionClassName extend
         }
     }
 
-    static completeNodeValue = (nodeValue:reshapeObject<INodeComponentValue>):INodeComponentValue =>{ 
+    static completeNodeValue = (nodeValue:reshapeObject<INodeComponentValue>):INodeComponentValue =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return {...NodeComponent.dfValue,...nodeValue}
     }
 
     setNodeValueFromArrChildsValAndArrAttributes(arr_arr_nodeValue_childs :readonly (NodeComponentValue[])[] ,isMergedByValues : boolean = true ,  _attributes ?:Array<ChildAttributeTypeValue>  ){
         const isMergedByAttributes = !isMergedByValues
         if(_attributes !== undefined)this.nodeValue.attributes = [..._attributes]
-        if(isMergedByValues){ 
+        if(isMergedByValues){ /*console.log("DEBUG_ME",getCurrentLine());*/
             const joinCharOfSameSelectors = " "
             const joinCharOfDifferentSelectors = "\n"
             let tmp = arr_arr_nodeValue_childs.map((arr_nodeValue_childs) => 
-            arr_nodeValue_childs.filter((nodeValue)=>nodeValue.proper_value!== undefined).map((nodeValue) =>{ 
+            arr_nodeValue_childs.filter((nodeValue)=>nodeValue.proper_value!== undefined).map((nodeValue) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                 return nodeValue.proper_value
             }))
             tmp = tmp.filter((arr) => arr.length > 0)
             this.nodeValue.value = tmp.length >0 ? tmp.map((elm)=>elm.join(joinCharOfSameSelectors)).join(joinCharOfDifferentSelectors) : undefined
         }
-        if(!isMergedByValues || this.nodeValue[str_value] == "") { //isMergedByAttributes
+        if(!isMergedByValues || this.nodeValue[str_value] == "") { /*console.log("DEBUG_ME",getCurrentLine());*///isMergedByAttributes
 
             const joinCharOfAttributes = " "
             let tmp = _attributes.filter((attribute) => attribute[str_value] !== undefined).map((attribute) => attribute[str_value])
@@ -362,7 +362,7 @@ export class NodeComponent< unionPathId extends string ,ArrUnionClassName extend
     }
 
     
-    setNodeValueProperValue(_properValue:string){ 
+    setNodeValueProperValue(_properValue:string){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.nodeValue.proper_value = _properValue;
     }
 
@@ -370,7 +370,7 @@ export class NodeComponent< unionPathId extends string ,ArrUnionClassName extend
     
 
 
-    //setIdPath (trad_map : MapRegexToIdPath< t_strRegex , unionPathId ,ArrUnionClassName,unionClassname > ){ 
+    //setIdPath (trad_map : MapRegexToIdPath< t_strRegex , unionPathId ,ArrUnionClassName,unionClassname > ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         //this.idPath =  MapRegexToIdPath.arrPathToPathId<t_strRegex, unionPathId,ArrUnionClassNameType,unionClassNameType>.arrPathToPathId (trad_map,this.compo_path)
     //}
 

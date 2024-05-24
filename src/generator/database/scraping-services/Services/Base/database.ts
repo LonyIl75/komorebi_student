@@ -13,7 +13,7 @@ class BaseDatabase<SN extends string , R extends string > implements IBaseDataba
     _remoteDatabase : {type:t_DatabaseMeta_type ,name:string, cluster: t_jsonClusterMeta}
     _localDatabase :  {type:t_DatabaseMeta_type , name:string}
 
-    constructor(_serviceName:SN,_routeName:R,remoteDatabase : {type:t_DatabaseMeta_type , name:string, cluster: t_jsonClusterMeta},localDatabase : {type:t_DatabaseMeta_type , name:string}){ 
+    constructor(_serviceName:SN,_routeName:R,remoteDatabase : {type:t_DatabaseMeta_type , name:string, cluster: t_jsonClusterMeta},localDatabase : {type:t_DatabaseMeta_type , name:string}){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this._serviceName = _serviceName
         this._routeName = _routeName
 

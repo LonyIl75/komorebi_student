@@ -22,7 +22,7 @@ export const strVoidEnumFctHelpers = {
 } as const 
 
 type t_isEmptyEnumValue <T extends t_enum[keyof t_enum]> = T extends t_strEnum[keyof t_strEnum] ? true : false
-const isEmptyEnumValue = <T extends t_enum[keyof t_enum ]> (val:T) =>{ 
+const isEmptyEnumValue = <T extends t_enum[keyof t_enum ]> (val:T) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return (val === strVoidEnumFctHelpers.empty) as t_isEmptyEnumValue<T>
 
 }
@@ -64,27 +64,27 @@ interface IGetFctHelpers <U extends string , UEnum extends t_strEnumFctHelpers ,
 
 export class GetFctHelpers<U extends string  , UEnum extends t_strEnumFctHelpers , RU extends string > implements IGetFctHelpers<U, UEnum ,RU> {
 
-    has(e:string){ 
+    has(e:string){ /*console.log("DEBUG_ME",getCurrentLine());*/
         return (_str:string)=>_str+fct_mod_has(e)
     }
-    hasDirectChild(e:string){ 
+    hasDirectChild(e:string){ /*console.log("DEBUG_ME",getCurrentLine());*/
         return (_str:string)=>_str+fct_mod_hasDirectChild(e)
     }
-    not(e:string){ 
+    not(e:string){ /*console.log("DEBUG_ME",getCurrentLine());*/
         return (str : string ) => fct_mod_not(str)
     }
-    directChild(e:string){ 
+    directChild(e:string){ /*console.log("DEBUG_ME",getCurrentLine());*/
         return (_str:string)=>_str+fct_mod_directChild(e)
     }
 
-    joinChild(...es:readonly string[])  { 
+    joinChild(...es:readonly string[])  { /*console.log("DEBUG_ME",getCurrentLine());*/
         return (es.slice(1)).reduce((acc,e)=>acc+fct_mod_directChild(e),es[0])
     }
 
     arr_selector_join(arrArr_selectors : readonly (selectorEmbedInStrDebEnd)[],fct_join :(arr_str:readonly string[])=>string = fct_joinChild) : string {
-        return fct_join(arrArr_selectors.map((e:selectorEmbedInStrDebEnd)=>{ 
+        return fct_join(arrArr_selectors.map((e:selectorEmbedInStrDebEnd)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                         let res = e.selector.toString()
-                        if(e?.strDebRest){ 
+                        if(e?.strDebRest){ /*console.log("DEBUG_ME",getCurrentLine());*/
                             res = e.strDebRest[0]+res+e.strDebRest[1]
                         }
                         return res
@@ -139,7 +139,7 @@ export class GetFctHelpers<U extends string  , UEnum extends t_strEnumFctHelpers
     map_selector<T extends U , Enum extends UEnum[keyof UEnum] > ( enum_prop : Enum ,className: T , arr : readonly string[],fct_sup_mod?: (e:string) => t_fct_modSelectorProp, prop: string= classProp,  op: t_operator = containOp,tagg ?: t_HTMLTagg , fct_mod?: t_fct_modSelectorProp  ) : string[]  {
             //const childName = StrChildType.compClassnameToChildType(className) // A FAIRE .embed_service_selectorProp<T,Enum>(enum_prop,childName,false,prop,op,fct_mod) 
             return arr.map(
-                (e :string )=>{ 
+                (e :string )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     let _tmp :SelectorProp = this.embed_service_selectorProp<T,Enum>(enum_prop,className,true,prop,op,fct_mod) 
                     _tmp.fct_mod = fct_sup_mod(e)
                     return new Selector([_tmp], tagg ).toString()
@@ -156,7 +156,7 @@ export class GetFctHelpers<U extends string  , UEnum extends t_strEnumFctHelpers
         return this.selector<T,Enum>(enum_prop,className,prop,op,tagg,fct_mod).toString()
     }
 
-    _embed_service_selector < T extends U ,Enum extends UEnum[keyof UEnum]>(obj_select : Selector ,enum_prop : Enum ,  idx :number =0) { 
+    _embed_service_selector < T extends U ,Enum extends UEnum[keyof UEnum]>(obj_select : Selector ,enum_prop : Enum ,  idx :number =0) { /*console.log("DEBUG_ME",getCurrentLine());*/
         type t_str = StrChildType.t_childType<T>
         obj_select.getProperty(idx).replaceValue((_str: t_str)=>this._embed_service_enumStyle_str<T,t_str,Enum>(enum_prop,_str))
     }
@@ -172,7 +172,7 @@ export class GetFctHelpers<U extends string  , UEnum extends t_strEnumFctHelpers
         return new Selector([obj_selectProp],tagg)
     }
     
-    embed_service_str <T extends U , Enum extends UEnum[keyof UEnum] > (enum_prop : Enum ,name:T,isClassName : boolean = true, prop?: t_property, op?: t_operator , tagg ?: t_HTMLTagg , fct_mod?: t_fct_modSelectorProp) { 
+    embed_service_str <T extends U , Enum extends UEnum[keyof UEnum] > (enum_prop : Enum ,name:T,isClassName : boolean = true, prop?: t_property, op?: t_operator , tagg ?: t_HTMLTagg , fct_mod?: t_fct_modSelectorProp) { /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.embed_service_selector<T, Enum>(enum_prop,name,isClassName,prop,op,tagg,fct_mod).toString()
     }
     
@@ -181,7 +181,7 @@ export class GetFctHelpers<U extends string  , UEnum extends t_strEnumFctHelpers
         const childs_selectors = [[strToSelector_str<T>(name,isClassName,prop,op,tagg,fct_mod)]]
         return new _Component(selectors,childs_selectors)
     }
-    _embed_service_enumStyle_str <T extends U , TC extends StrChildType.t_childType<T> , Enum extends UEnum[keyof UEnum]> (str_enum : Enum,_str : TC )  { 
+    _embed_service_enumStyle_str <T extends U , TC extends StrChildType.t_childType<T> , Enum extends UEnum[keyof UEnum]> (str_enum : Enum,_str : TC )  { /*console.log("DEBUG_ME",getCurrentLine());*/
         return `${this._embed_service_style_str<Enum>(str_enum)} ${_str}` as `${ReturnType<typeof this._embed_service_style_str<Enum>>} ${TC}`
     }
 
@@ -198,6 +198,6 @@ export class GetFctHelpers<U extends string  , UEnum extends t_strEnumFctHelpers
 
 
 export type t_fct_cst_getFctHelpers <UEnum extends t_strEnumFctHelpers , RU extends string > = ((str_enum : UEnum[keyof UEnum] )=> RU)
-export const cst_getFctHelpers = <U extends string  , UEnum extends t_strEnumFctHelpers , RU extends string > (fct : t_fct_cst_getFctHelpers<UEnum,RU> )  : GetFctHelpers<U,UEnum,RU> =>{ 
+export const cst_getFctHelpers = <U extends string  , UEnum extends t_strEnumFctHelpers , RU extends string > (fct : t_fct_cst_getFctHelpers<UEnum,RU> )  : GetFctHelpers<U,UEnum,RU> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return new GetFctHelpers<U,UEnum,RU>(fct)
 }

@@ -13,7 +13,7 @@ export type t_enum_lespepitestech_style = typeof enum_lespepitestech_style
 
 
 export const getLespepitestechHelpers = <U extends string ,UEnum extends t_strEnumFctHelpers  = t_enum_lespepitestech_style , RU extends string = t_ret_embed_lespepitestech_style_str<UEnum>  >
-(fct: (t_fct_cst_getFctHelpers<UEnum,RU>|typeof _embed_lespepitestech_style_str) = _embed_lespepitestech_style_str  ) =>{ 
+(fct: (t_fct_cst_getFctHelpers<UEnum,RU>|typeof _embed_lespepitestech_style_str) = _embed_lespepitestech_style_str  ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
 
     type t_validateUEnum = UEnum //(typeof fct) extends ((str_enum : infer _UEnum ) => infer _) ? isEqual<UEnum ,_UEnum> extends true ? _UEnum : never : never
     type t_validateRU = RU //(typeof fct) extends ((str_enum : t_validateUEnum ) => infer _RU) ? isEqual<RU,_RU> extends true ? _RU : never : never

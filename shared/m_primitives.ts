@@ -18,24 +18,24 @@ export function _isNullOrUndefined<T>(value: T ) : value is nullOrUndefined {
 export const str_function = "function" as const
 
 export type t__isFunction<T> = isEqual<T,Function>
-export const _isFunction = (val: any): val is Function =>{ 
+export const _isFunction = (val: any): val is Function =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return typeof val === 'function';
 }
 
-//export const js_isFunction = (varToCheck) =>{ 
+//export const js_isFunction = (varToCheck) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     //return varToCheck && {}.toString.call(varToCheck) === "[object Function]"
 //}
 
 export type t__isObject<T> = isEqual<T,Object>
-export const _isObject = (val: any): val is Object =>{ 
+export const _isObject = (val: any): val is Object =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return typeof val === 'object';
 }
 export type t__isArray<T> = isEqual<T,Array<any>>
-export const _isArray = (val: any): val is Array<any> =>{ 
+export const _isArray = (val: any): val is Array<any> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return Array.isArray(val);
 }
 export type t_emptyCond<T> = (...args:any[])=>true
-export function emptyCond(...args) { 
+export function emptyCond(...args) { /*console.log("DEBUG_ME",getCurrentLine());*/
     return true
 }
 
@@ -47,15 +47,15 @@ export function isRetFunctionisNothing (res : any) : res is t_noReturnValue {
     return res === noReturnValue
 }
 
-export const  _undefined=  ():nullOrUndefined  =>{  return void 0; };
+export const  _undefined=  ():nullOrUndefined  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/ return void 0; };
 export type t__undefined = ReturnType<typeof _undefined>
 
-export const  _notFound = ():nullOrUndefined  =>{  return _undefined() ; };
+export const  _notFound = ():nullOrUndefined  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/ return _undefined() ; };
 export type t__notFound = ReturnType<typeof _notFound>
 
 
 export type t_is_notFound<T> = isEqual<T,t__notFound>
-export const  is_notFound= (element:any) : element is t__notFound =>{ 
+export const  is_notFound= (element:any) : element is t__notFound =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return element === _notFound();
 };
 
@@ -64,12 +64,12 @@ export const isNotFoundIdx = <T extends number>(idx:T) => (idx ===  _notFoundIdx
 
 
 export type t_m_isNil<T> = T extends null ? | T extends t__undefined ? true : false : false
-export const  m_isNil = <T>(element:T) :boolean =>{ 
+export const  m_isNil = <T>(element:T) :boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return element == null || element == _undefined();
 }; 
 
-export const  notFoundPromise = ():Promise<nullOrUndefined > =>{ 
-    return new Promise((resolve,reject) =>{ 
+export const  notFoundPromise = ():Promise<nullOrUndefined > =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    return new Promise((resolve,reject) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         reject(_notFound());
     })
 }
@@ -80,13 +80,13 @@ export type t_noFieldName = typeof noFieldName
 
 
 
-export const getConstructorNew = <_T, T extends abstract new (...args: any) => any > (cst : { new (...args:ConstructorParameters<T>): _T } , ...args : ConstructorParameters<T> ):_T =>{ 
+export const getConstructorNew = <_T, T extends abstract new (...args: any) => any > (cst : { new (...args:ConstructorParameters<T>): _T } , ...args : ConstructorParameters<T> ):_T =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return new cst(...args);
 }
 
 export type t_getConstructorNew <_T, T extends abstract new (...args: any) => any > = typeof getConstructorNew<_T,T>
 
-export const getFctConstructorNew = <_T, T extends abstract new (...args: any) => any > (cst : { new (...args:ConstructorParameters<T>): _T }  ) =>{ 
+export const getFctConstructorNew = <_T, T extends abstract new (...args: any) => any > (cst : { new (...args:ConstructorParameters<T>): _T }  ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return ( ...args : ConstructorParameters<T>) => new cst(...args);
 }
 
@@ -102,6 +102,6 @@ export const val_undefined_nullOrUndefined : nullOrUndefined = undefined;
 export function isNumeric (value : any) : boolean {
     return !isNaN(value - parseFloat(value));
 }
-export function isNotEmptyArray(arr) { 
+export function isNotEmptyArray(arr) { /*console.log("DEBUG_ME",getCurrentLine());*/
      return !_isNullOrUndefined(arr) && arr.length > 0
   }

@@ -46,7 +46,7 @@ function filterElementByTextContent(  regex : RegExp ) :  t_filterFunction  {
 
 export function filterArrElementByContent (elms : HTMLElement[] , filter_functions : Array<t_filterFunction> ) : HTMLElement[] {
     let arr_elms : HTMLElement[] = elms ;
-    for (const filter_function of filter_functions) { 
+    for (const filter_function of filter_functions) { /*console.log("DEBUG_ME",getCurrentLine());*/
         arr_elms = arr_elms.filter(filter_function);
     }
     return arr_elms ;

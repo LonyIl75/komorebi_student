@@ -60,7 +60,7 @@ export default class MRegExp<T extends string , F extends t_regexpFlags = undefi
     source : T
     flags : F
 
-    constructor(source : T , flags : F = undefined ) { 
+    constructor(source : T , flags : F = undefined ) { /*console.log("DEBUG_ME",getCurrentLine());*/
         super(source, flags)
     }
 

@@ -13,7 +13,7 @@ export abstract class ExposeObjectOrFunction<T extends t_exposeObject<T> | t_exp
     use_doc : boolean = false; //use document in param  => expose function + add script tag
 
 
-    constructor(objOrFunct:T, name ?: string ,scriptTag ?:FrameAddScriptTagOptions, required ?: FrameAddScriptTagOptions[]){ 
+    constructor(objOrFunct:T, name ?: string ,scriptTag ?:FrameAddScriptTagOptions, required ?: FrameAddScriptTagOptions[]){ /*console.log("DEBUG_ME",getCurrentLine());*/
 
         if(objOrFunct === undefined &&  (scriptTag?.path ==undefined || name==undefined)   ) {
             console.log("objOrFunct",objOrFunct, "scriptTag",scriptTag, "name",name)
@@ -29,16 +29,16 @@ export abstract class ExposeObjectOrFunction<T extends t_exposeObject<T> | t_exp
         this.name = name==undefined ?(objOrFunct instanceof Function? objOrFunct.name: objOrFunct.constructor.name ) : name;
         //console.log("objOrFunct ", objOrFunct, this.obj)
 
-        if(scriptTag != undefined) { 
+        if(scriptTag != undefined) { /*console.log("DEBUG_ME",getCurrentLine());*/
             if(scriptTag.id==undefined ) scriptTag.id =  scriptTag.path ? pathToJoinCharFileName(scriptTag.path,"."):this.name;//TODO 23/02/24
-            if(objOrFunct !==null && scriptTag.content == undefined && scriptTag.path  == undefined ) { 
+            if(objOrFunct !==null && scriptTag.content == undefined && scriptTag.path  == undefined ) { /*console.log("DEBUG_ME",getCurrentLine());*/
                 console.log("scriptTag",JSON.stringify(scriptTag))
                 throw new Error("scriptTag.content == undefined && scriptTag.path  == undefined")
             }
             
             this.scriptsTag = scriptTag;
         }
-        if(required !== undefined){ 
+        if(required !== undefined){ /*console.log("DEBUG_ME",getCurrentLine());*/
             this.required = [...required];
         }
     }

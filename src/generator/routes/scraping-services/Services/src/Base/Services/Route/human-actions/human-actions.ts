@@ -33,7 +33,7 @@ export class HABaseServiceRoute<SN extends string , R extends string , t_str_arr
     implements: [{id:`t_I${_Parent}`,generics:readonly [`t_serviceName_${SN}`,`t_str_${R}`,`req_${R}`,`res_${R}`,`t_unionRegex_mapRegex_${SN}_${R}` ,`t_unionIdPath_mapRegex_${SN}_${R}` , `t_arrClassName_${R}`,`t_unionClassName_${R}` ,`t_arrChilds_${R}` ,  `t_IJsonComponent_${R}`,`t_${t_str_arr_fct}`]}]
     isAbstract: false
 
-    constructor (_serviceName:SN,_routeName : R ,  str_arr_fct : t_str_arr_fct = HABaseServiceRoute_arr_fct_name as any ){ 
+    constructor (_serviceName:SN,_routeName : R ,  str_arr_fct : t_str_arr_fct = HABaseServiceRoute_arr_fct_name as any ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this._routeName = _routeName
         this._serviceName = _serviceName
         this.name = majFirstChar(this._serviceName)
@@ -82,7 +82,7 @@ export class HABaseServiceRoute<SN extends string , R extends string , t_str_arr
         }` as const 
     }
     getTree() {
-        return `getTree< BaseElement extends unionClassNameType  ,  UnionRegex  extends t_1  ,UnionIdPath  extends t_2 , ArrUnionClassNameType extends t_3 ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> & t_5  ,  T extends _IJsonComponents< unionClassNameType> & t_6  >(req:req_${this._routeName} , res : res_${this._routeName},_args:reshapeObject< t_${this.extends.id}_ArgsGetTree<t_serviceName_${this._serviceName},t_str_${this._routeName}, BaseElement,UnionRegex ,UnionIdPath , ArrUnionClassNameType,unionClassNameType ,ArrArr ,  T>>= {}  ){ 
+        return `getTree< BaseElement extends unionClassNameType  ,  UnionRegex  extends t_1  ,UnionIdPath  extends t_2 , ArrUnionClassNameType extends t_3 ,unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,ArrArr extends t_arr_component<unionClassNameType> & t_5  ,  T extends _IJsonComponents< unionClassNameType> & t_6  >(req:req_${this._routeName} , res : res_${this._routeName},_args:reshapeObject< t_${this.extends.id}_ArgsGetTree<t_serviceName_${this._serviceName},t_str_${this._routeName}, BaseElement,UnionRegex ,UnionIdPath , ArrUnionClassNameType,unionClassNameType ,ArrArr ,  T>>= {}  ){ /*console.log("DEBUG_ME",getCurrentLine());*/
             const params = this.getTreeParam(req,res,_args)
             return ${this.extends.id}._getTree<t_serviceName_${this._serviceName}, t_str_${this._routeName},  BaseElement,t_unionRegex_mapRegex_${this._serviceName}_${this._routeName} ,t_unionIdPath_mapRegex_${this._serviceName}_${this._routeName} , t_arrClassName_${this._routeName},t_unionClassName_${this._routeName} ,t_arrChilds_${this._routeName} ,  t_IJsonComponent_${this._routeName}>(...params)
         }` as const 
@@ -125,13 +125,13 @@ export class HABaseServiceRoute<SN extends string , R extends string , t_str_arr
 const HABaseServiceRoutePage_arr_fct_name = "df_arr_fct_name_withSavePage" as const
 type t_HABaseServiceRoutePage_arr_fct_name = typeof HABaseServiceRoutePage_arr_fct_name
 export class HABaseServiceRoutePage<SN extends string , R extends string, t_str_arr_fct extends string = t_HABaseServiceRoutePage_arr_fct_name, arr_fct extends readonly [...t_df_arr_fct_name_withSavePage,...string[]] = t_df_arr_fct_name_withSavePage> extends HABaseServiceRoute<SN,R,t_str_arr_fct,arr_fct> implements IHA<string,string,t_df_arr_fct_name_withSavePage> {
-    constructor (_serviceName:SN,_routeName : R ,  str_arr_fct : t_str_arr_fct = HABaseServiceRoutePage_arr_fct_name as any ){ 
+    constructor (_serviceName:SN,_routeName : R ,  str_arr_fct : t_str_arr_fct = HABaseServiceRoutePage_arr_fct_name as any ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super(_serviceName,_routeName,str_arr_fct)
     }
     
     save_serviceFunction() {
-        return `async save_serviceFunction ( req:req_${this._routeName} , res : res_${this._routeName}  )  { 
-            if(!req.header.isStreaming){ 
+        return `async save_serviceFunction ( req:req_${this._routeName} , res : res_${this._routeName}  )  { /*console.log("DEBUG_ME",getCurrentLine());*/
+            if(!req.header.isStreaming){ /*console.log("DEBUG_ME",getCurrentLine());*/
 
                 const prismaClient = this.getDatabaseLocalAndRemote()[AService.getPropsDBFromHeader(req)].getConnection()
 
@@ -158,7 +158,7 @@ export class HABaseServiceRoutePage<SN extends string , R extends string, t_str_
 const HAServiceNextPage_arr_fct_name = "df_arr_fct_name_withNextPage" as const
 type t_HAServiceNextPage_arr_fct_name = typeof HAServiceNextPage_arr_fct_name
 export class HAServiceNextPage<SN extends string , R extends string, t_str_arr_fct extends string = t_HAServiceNextPage_arr_fct_name, arr_fct extends readonly [...t_df_arr_fct_name_withNextPage,...string[]] =t_df_arr_fct_name_withNextPage > extends HABaseServiceRoutePage<SN,R,t_str_arr_fct,arr_fct> implements IHA<string,string,t_df_arr_fct_name_withNextPage> {
-    constructor (_serviceName:SN,_routeName : R ,  str_arr_fct : t_str_arr_fct = HAServiceNextPage_arr_fct_name as any ){ 
+    constructor (_serviceName:SN,_routeName : R ,  str_arr_fct : t_str_arr_fct = HAServiceNextPage_arr_fct_name as any ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super(_serviceName,_routeName,str_arr_fct)
     }
     
@@ -169,7 +169,7 @@ export class HAServiceNextPage<SN extends string , R extends string, t_str_arr_f
         }`as const 
     }
     nextPage() {
-        return `async nextPage(req:req_${this._routeName} , res : res_${this._routeName} )  { 
+        return `async nextPage(req:req_${this._routeName} , res : res_${this._routeName} )  { /*console.log("DEBUG_ME",getCurrentLine());*/
             return ${this.extends.id}._nextPage(this.getNextPageParam(req,res))
         }`as const 
     }
@@ -191,7 +191,7 @@ export class HAServiceNextPage<SN extends string , R extends string, t_str_arr_f
         }`as const 
     }
     getNextPageParam() {
-        return `getNextPageParam(req:req_${this._routeName} , res : res_${this._routeName}){ 
+        return `getNextPageParam(req:req_${this._routeName} , res : res_${this._routeName}){ /*console.log("DEBUG_ME",getCurrentLine());*/
             return ${this.extends.id}.getNextPageParam<t_serviceName_${this._serviceName},t_str_${this._routeName},req_${this._routeName},res_${this._routeName}>(req,res)
         }` as const 
     }

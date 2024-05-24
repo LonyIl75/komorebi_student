@@ -6,7 +6,7 @@ import { joinEndParamUrl, t_end_paramUrl } from "./types.js"
 import { filterNotElmArr, removeFirstArray } from "@shared/type.js"
 import { nullOrUndefined, t__isNullOrUndefined } from "@shared/m_primitives.js"
 
-export const getBodyUrlAndParamsReq = <T extends string>(url:T)=>{ 
+export const getBodyUrlAndParamsReq = <T extends string>(url:T)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const strRegex_match_bodyAndReq = regex_url.buildGroupRegexp({
         [str_bodyUrl]: { 
             _:EmbeddingPASGroup.name
@@ -25,7 +25,7 @@ export const getBodyUrlAndParamsReq = <T extends string>(url:T)=>{
     return {bodyUrl:_bodyUrl,paramsUrl:_paramsUrl}
 }
 
-export const getProtocolAndDomain= <T extends string>(url:T)=>{ 
+export const getProtocolAndDomain= <T extends string>(url:T)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const strRegex_match_protocolAndDomain = regex_url.buildGroupRegexp({
         [str_bodyUrl]: { 
             childs:{
@@ -47,7 +47,7 @@ export const getProtocolAndDomain= <T extends string>(url:T)=>{
     return {protocolUrl:_protocol,domainUrl:_domain}
 }
 
-export const getSubDomainAndSld= <T extends string>(url:T)=>{ 
+export const getSubDomainAndSld= <T extends string>(url:T)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const strRegex_match_protocolAndDomain = regex_url.buildGroupRegexp({
         [str_bodyUrl]: { 
             childs:{
@@ -81,7 +81,7 @@ Params extends readonly [infer A ,...infer R] ? R extends readonly string[] ? A 
 export type t_joinEndParamUrlIfNotEmpty <Params extends readonly string[]>= filterNotElmArr<Params,""|nullOrUndefined> extends infer R ?
 R extends readonly string[] ? _t_joinEndParamUrlIfNotEmpty<removeFirstArray<R>,R[0]> : never : ""
 
-export const joinEndParamUrlIfNotEmpty = <Params extends readonly string[]> (..._params:Params) =>{ 
+export const joinEndParamUrlIfNotEmpty = <Params extends readonly string[]> (..._params:Params) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const params = _params.filter((param)=>param) as filterNotElmArr<Params,""|nullOrUndefined>
     return params.length ? params.reduce((_str,cur_str)=>joinEndParamUrl(_str,cur_str)) : ""  as t_joinEndParamUrlIfNotEmpty<Params>
 }

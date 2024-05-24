@@ -12,7 +12,7 @@ const debug_pageParsing_utils : Debugger = debug(name_module)
 export function arrID_to_selector(_arr:ReturnType<typeof node_to_arrID > ):string {
     let selector = ""
     for (let i =0 ; i < _arr.length ; i++){ 
-        if(_arr[i].length > 0 ){ 
+        if(_arr[i].length > 0 ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         switch(i){ 
             case 0 : selector += _arr[i].toLowerCase() ; break;
             case 1 : selector += '[class*=\"'+ _arr[i] + '\"]' ; break; // ^= work , = don't work because of random \s in class name and id => *= even if isn't good

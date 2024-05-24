@@ -21,15 +21,15 @@ Describe all the human actions and their transcription on puppeteer
 
 */
 
-export const f_typing = async (page : t_pageOrElementHN  , txt_data :string,_selectors?: selectors  , delay: number = 30) =>{ 
-    let funct = async (element_or_page: t_pageOrElementHN)=>{ 
+export const f_typing = async (page : t_pageOrElementHN  , txt_data :string,_selectors?: selectors  , delay: number = 30) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    let funct = async (element_or_page: t_pageOrElementHN)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return await (element_or_page as any).evaluate((e:any,txt_data:string,delay: number)=>e!.type(txt_data, { delay: delay }),txt_data,delay)
     }
     return applyFunctionNextToTrySelectorF(trySelectors_any,funct, page ,_selectors )
 }
 
-export const f_clicking = async (page : t_pageOrElementHN  ,_selectors?: selectors, delay: number = 30 ) =>{ 
-    let funct = async (element_or_page: t_pageOrElementHN)=>{ 
+export const f_clicking = async (page : t_pageOrElementHN  ,_selectors?: selectors, delay: number = 30 ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    let funct = async (element_or_page: t_pageOrElementHN)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return await (element_or_page as any).evaluate((e:any,delay: number)=>e!.click({ delay: delay }),delay) 
     }
     return applyFunctionNextToTrySelectorF(trySelectors_any,funct, page ,_selectors )

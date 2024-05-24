@@ -11,7 +11,7 @@ class HelpersData<SN extends string> implements IHelpersData<SN>{
     _serviceName :SN
     _routeName = routename
 
-    constructor(_serviceName:SN){ 
+    constructor(_serviceName:SN){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this._serviceName = _serviceName
     }
     
@@ -26,7 +26,7 @@ class HelpersData<SN extends string> implements IHelpersData<SN>{
 
 
         export const get${majFirstChar(this._serviceName)}${majFirstChar(this._routeName)} = <U extends string ,UEnum extends t_strEnumFct${majFirstChar(this._routeName)}  = t_enum_${this._serviceName}_style , RU extends string = t_ret_embed_${this._serviceName}_style_str<UEnum>  >
-        (fct: (t_fct_cst_getFct${majFirstChar(this._routeName)}<UEnum,RU>|typeof _embed_${this._serviceName}_style_str) = _embed_${this._serviceName}_style_str  ) =>{ 
+        (fct: (t_fct_cst_getFct${majFirstChar(this._routeName)}<UEnum,RU>|typeof _embed_${this._serviceName}_style_str) = _embed_${this._serviceName}_style_str  ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
 
             type t_validateUEnum = UEnum
             type t_validateRU = RU

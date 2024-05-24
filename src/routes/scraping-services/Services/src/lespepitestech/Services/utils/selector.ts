@@ -33,13 +33,13 @@ export const lespepitestech_mainComponent_selectors = [/*Selector.cst_onePropAnd
 
 const pageLespepitestech_fct_getMainComponent = page_fct_getMainComponent(lespepitestech_mainComponent_selectors)
 
-export const getLespepitestechMainComponent = (page:t_pageOrElementHN , s_option ?:selectorsOptions )   =>{ 
+export const getLespepitestechMainComponent = (page:t_pageOrElementHN , s_option ?:selectorsOptions )   =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return pageLespepitestech_fct_getMainComponent(page,s_option)
 }
 
 
 
-export const waitForLespepitestechPageLoading = (page:t_pageOrElementHN, s_option ?:selectorsOptions ) : Promise<ElementHandle<Node>> =>{ 
+export const waitForLespepitestechPageLoading = (page:t_pageOrElementHN, s_option ?:selectorsOptions ) : Promise<ElementHandle<Node>> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return getLespepitestechMainComponent(page,s_option)
 }
 
@@ -57,7 +57,7 @@ const lespepitestech_loaded_selectors : selectors = [
 
 const pageLespepitestech_fct_isLoaded = page_fct_isLoaded( lespepitestech_loaded_selectors )
 
-export const isLoaded_lespepitestechPage =  (page:Page) :Promise<boolean>  =>{ 
+export const isLoaded_lespepitestechPage =  (page:Page) :Promise<boolean>  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return pageLespepitestech_fct_isLoaded( page )
 
 }

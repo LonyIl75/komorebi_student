@@ -8,7 +8,7 @@ class TypeHABaseServiceRoute<SN extends string , R extends string  >  implements
     _routeName :R 
     _serviceName :SN
 
-    constructor(routeName :R , serviceName :SN){ 
+    constructor(routeName :R , serviceName :SN){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this._routeName = routeName;
         this._serviceName = serviceName;
     }

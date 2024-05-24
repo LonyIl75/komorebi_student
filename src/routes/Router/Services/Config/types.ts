@@ -27,7 +27,7 @@ export type getResTypeFromServiceNameAndRoute <SN extends t_serviceName_MainServ
 
 
 
-export const cst_ServiceReqResType = <SN extends t_serviceName_MainService ,R extends getUnionRouteOfServiceFromServiceName <SN> , _Args extends  getReqResTypeFromServiceNameAndRoute<SN,R> =  getReqResTypeFromServiceNameAndRoute<SN,R> >(...args: _Args)  =>{ 
+export const cst_ServiceReqResType = <SN extends t_serviceName_MainService ,R extends getUnionRouteOfServiceFromServiceName <SN> , _Args extends  getReqResTypeFromServiceNameAndRoute<SN,R> =  getReqResTypeFromServiceNameAndRoute<SN,R> >(...args: _Args)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
        const r = cst_ReqAndResType(getReq<_Args>(args), getRes<_Args>(args) ) 
        return r as _Args   
 } ;

@@ -11,7 +11,7 @@ class _RouteData<SN extends string , R extends string > implements I_RouteData<S
     _serviceName :SN
     _routeName :R 
 
-    constructor(_serviceName:SN,_routeName:R){ 
+    constructor(_serviceName:SN,_routeName:R){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this._serviceName = _serviceName
         this._routeName = _routeName
     }

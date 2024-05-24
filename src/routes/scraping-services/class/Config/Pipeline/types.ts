@@ -103,12 +103,12 @@ export type t_HA < KCategory extends string , KFct extends string ,  MCF extends
     : never
  }
     
-const addElmsToCategory = < Elms extends readonly string[] ,C extends t_pipeline_all_category, ArrC extends readonly string[],T extends IJson & IJson<C,ArrC> >(_obj: T,cate : C, elms : Elms) =>{ 
+const addElmsToCategory = < Elms extends readonly string[] ,C extends t_pipeline_all_category, ArrC extends readonly string[],T extends IJson & IJson<C,ArrC> >(_obj: T,cate : C, elms : Elms) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     _obj[cate].push(...elms)
     return _obj as {[k in Exclude<keyof T,C>]:T[k]} & IJson<C,[...ArrC,...Elms]>
 }
 
-export const addElmsToCategoryInitIfNotExist = < Elms extends readonly string[] ,C extends t_pipeline_all_category,T extends IJson>(_obj: T,cate : C, elms : Elms) =>{ 
+export const addElmsToCategoryInitIfNotExist = < Elms extends readonly string[] ,C extends t_pipeline_all_category,T extends IJson>(_obj: T,cate : C, elms : Elms) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     if(!_obj.hasOwnProperty(cate))_obj[cate]=[] as any 
     return addElmsToCategory<Elms,C,C extends keyof T ? T[C] :[], T & IJson<C,[]>>(_obj,cate,elms)
 }

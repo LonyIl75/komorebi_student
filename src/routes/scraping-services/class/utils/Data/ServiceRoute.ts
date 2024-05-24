@@ -8,10 +8,10 @@ import { _isNullOrUndefined } from "@shared/m_primitives.js"
 import { removeLastArray, t_function_staticToMember, t_verifyStatic } from "@shared/type.js"
 
 export type t_saved<TSample extends IJson =IJson> =  {create:TSample[],update:TSample[]}
-export const buildSaved = <TSample extends IJson>(create:TSample[]=[],update:TSample[]=[]) =>{ 
+export const buildSaved = <TSample extends IJson>(create:TSample[]=[],update:TSample[]=[]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return {create,update}
 }
-export const mergeSaved = <TSample extends IJson>(saved1:t_saved<TSample>,saved2:t_saved<TSample>) =>{ 
+export const mergeSaved = <TSample extends IJson>(saved1:t_saved<TSample>,saved2:t_saved<TSample>) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return buildSaved([...saved1?.create||[],...saved2?.create||[]],[...saved1?.update||[],...saved2?.update||[]])
 }
 
@@ -37,7 +37,7 @@ export class ServiceRequestBodyBase extends t_configObject<ServiceRequestBodyBas
         saved : undefined
     }
     
-    constructor(pipeline : t_pipeline_json = {...ServiceRequestBodyBase.df.pipeline} ,fk:IJson =  {...ServiceRequestBodyBase.df.fk} ,  optionsScraping : IOptionScraping =  {...ServiceRequestBodyBase.df.optionsScraping} ,nexts: any[] = ServiceRequestBodyBase.df.nexts , browserId : t_browserId  =ServiceRequestBodyBase.df.browserId , targetId : t_targetId = ServiceRequestBodyBase.df.targetId ,  result : IJson = {...ServiceRequestBodyBase.df.result},saved : t_saved = ServiceRequestBodyBase.df.saved) { 
+    constructor(pipeline : t_pipeline_json = {...ServiceRequestBodyBase.df.pipeline} ,fk:IJson =  {...ServiceRequestBodyBase.df.fk} ,  optionsScraping : IOptionScraping =  {...ServiceRequestBodyBase.df.optionsScraping} ,nexts: any[] = ServiceRequestBodyBase.df.nexts , browserId : t_browserId  =ServiceRequestBodyBase.df.browserId , targetId : t_targetId = ServiceRequestBodyBase.df.targetId ,  result : IJson = {...ServiceRequestBodyBase.df.result},saved : t_saved = ServiceRequestBodyBase.df.saved) { /*console.log("DEBUG_ME",getCurrentLine());*/
         super({toJson:ServiceRequestBodyBase.toJson , fromJson:ServiceRequestBodyBase.fromJson});
         this.optionsScraping = optionsScraping
         this.result = result
@@ -49,15 +49,15 @@ export class ServiceRequestBodyBase extends t_configObject<ServiceRequestBodyBas
         if(saved)this.saved = saved
         
     }
-    static getEmptyInit: () =>ServiceRequestBodyBase= () =>{ 
+    static getEmptyInit: () =>ServiceRequestBodyBase= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return ServiceRequestBodyBase.emptyObject.emptyInit() ;
     }
 
-    getEmptyInit: () => ServiceRequestBodyBase= () =>{ 
+    getEmptyInit: () => ServiceRequestBodyBase= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return ServiceRequestBodyBase.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: AHaveSerializer<ServiceRequestBodyBase>) => boolean = (obj:AHaveSerializer<ServiceRequestBodyBase>)=>{ 
+    static isTypeof: (obj: AHaveSerializer<ServiceRequestBodyBase>) => boolean = (obj:AHaveSerializer<ServiceRequestBodyBase>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return haveSerializerAndEmptyInit._isTypeof(ServiceRequestBodyBase.getEmptyInit(),obj)
     }
 
@@ -75,7 +75,7 @@ export class ServiceRequestBodyBase extends t_configObject<ServiceRequestBodyBas
         return {pipeline  :obj.pipeline,fk:obj.fk, optionsScraping :obj.optionsScraping , result : obj.result,...probablyUndefined} as const 
     }
 
-    static fromJson = (json: IJson) : ServiceRequestBodyBase =>{ 
+    static fromJson = (json: IJson) : ServiceRequestBodyBase =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return new ServiceRequestBodyBase(json.pipeline,json.fk , json.optionsScraping,json?.nexts,json?.browserId,json?.targetId,json.result,json?.saved)
     }
 
@@ -127,15 +127,15 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
         this.setIsStreaming()
         
     }
-    static getEmptyInit: () =>ServiceRequestHeaderBase= () =>{ 
+    static getEmptyInit: () =>ServiceRequestHeaderBase= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return ServiceRequestHeaderBase.emptyObject.emptyInit() ;
     }
 
-    getEmptyInit: () => ServiceRequestHeaderBase= () =>{ 
+    getEmptyInit: () => ServiceRequestHeaderBase= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return ServiceRequestHeaderBase.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: AHaveSerializer<ServiceRequestHeaderBase>) => boolean = (obj:AHaveSerializer<ServiceRequestHeaderBase>)=>{ 
+    static isTypeof: (obj: AHaveSerializer<ServiceRequestHeaderBase>) => boolean = (obj:AHaveSerializer<ServiceRequestHeaderBase>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return haveSerializerAndEmptyInit._isTypeof(ServiceRequestHeaderBase.getEmptyInit(),obj)
     }
 
@@ -150,7 +150,7 @@ export class ServiceRequestHeaderBase extends t_configObject<ServiceRequestHeade
         return {serviceName : obj.serviceName ,routeName: obj.routeName,client_id :obj.client_id ,url : obj.url,url_toScrap :obj.url_toScrap,privacy:obj.privacy ,isStreaming : obj.isStreaming, needUpdate : obj.needUpdate , sld_name : obj.sld_name} as const 
     }
 
-    static fromJson = (json: IJson) : ServiceRequestHeaderBase =>{ 
+    static fromJson = (json: IJson) : ServiceRequestHeaderBase =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return new ServiceRequestHeaderBase(json.serviceName ,json.routeName ,json.client_id ,json.url,json.url_toScrap,json.privacy,json.isStreaming,json.needUpdate,json.sld_name)
     }
 
@@ -173,7 +173,7 @@ export namespace ServiceRequestHeaderBase  {
         return enum_privacy.public
     }
 
-    export function isPrivate(_privacy : enum_privacy ){ 
+    export function isPrivate(_privacy : enum_privacy ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         return _privacy == enum_privacy.private
     }
 }
@@ -197,18 +197,18 @@ export abstract class AServiceRequest<B extends t_configObject<B> = ServiceReque
     body :  B
     header : H
 
-    constructor(header:H,body:B , fromJson : t_function_staticToMember<typeof AServiceRequest.abstract_fromJson>,toJson : typeof AServiceRequest.toJson = AServiceRequest.toJson ){ 
+    constructor(header:H,body:B , fromJson : t_function_staticToMember<typeof AServiceRequest.abstract_fromJson>,toJson : typeof AServiceRequest.toJson = AServiceRequest.toJson ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super({toJson:toJson , fromJson:fromJson});
         this.body = body
         this.header = header
         
     }
 
-    getEmptyJson = () =>{ 
+    getEmptyJson = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.getEmptyInit().toJson()
     }
 
-    static abstract_fromJson = <B extends t_configObject<B> , H extends t_configObject<H>>(_class :  new (...args : [header:H,body:B]) => AServiceRequest<B,H>,json: IJson ) : AServiceRequest<any,any> =>{ 
+    static abstract_fromJson = <B extends t_configObject<B> , H extends t_configObject<H>>(_class :  new (...args : [header:H,body:B]) => AServiceRequest<B,H>,json: IJson ) : AServiceRequest<any,any> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return new _class(json.header,json.body )
     }
 

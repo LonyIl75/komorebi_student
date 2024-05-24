@@ -34,10 +34,10 @@ export type t_str_transformAfterNextPage = typeof str_transformAfterNextPage
 const name_queryParamNumberScrapPage = "pageScrap" as const 
 const name_queryParamNumberScrapItem = "itemScrap" as const 
 
-export const getUrlToScrap = (cur_url : string , result:IJson)=>{ 
+export const getUrlToScrap = (cur_url : string , result:IJson)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return m_regex_getContext.getIthContextSuffix(joinBegParamUrl(name_queryParamNumberScrapPage,""),cur_url,result,char_headQuery)
 }
 
-export const getUrlToScrapItem = <S extends string , PA extends string , Idx extends number > (cur_url : S ,paramsUrl : PA ,  idx: Idx )=>{ 
+export const getUrlToScrapItem = <S extends string , PA extends string , Idx extends number > (cur_url : S ,paramsUrl : PA ,  idx: Idx )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return joinReqUrl(cur_url,joinEndParamUrlIfNotEmpty(paramsUrl,joinBegParamUrl(name_queryParamNumberScrapItem,`${idx}`)))
 }

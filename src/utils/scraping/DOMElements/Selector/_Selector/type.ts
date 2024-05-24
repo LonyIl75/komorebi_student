@@ -93,14 +93,14 @@ export type t_getPropFromISelectorFunctionObject< T  , propName extends t_select
 
 
 export const getFunctionFromISelectorFunctionObject = 
-<T extends t_selectorFunction> ( selectorObject : T) =>{ 
+<T extends t_selectorFunction> ( selectorObject : T) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return selectorObject[str_ISelectorFunctionObject_props.function] as t_getPropFromISelectorFunctionObject<T,str_ISelectorFunctionObject_props.function>
 }   
 
 export type t_getFunctionFromISelectorFunctionObject < T extends t_selectorFunction>  = ReturnType<typeof getFunctionFromISelectorFunctionObject<T>>
 
 export const getRejectedValueFromISelectorFunctionObject = 
-<T extends t_selectorFunction>( selectorObject : T) =>{ 
+<T extends t_selectorFunction>( selectorObject : T) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return selectorObject[str_ISelectorFunctionObject_props.getRejectedValue] as t_getPropFromISelectorFunctionObject<T,str_ISelectorFunctionObject_props.getRejectedValue>
 }
 
@@ -108,7 +108,7 @@ export type t_getRejectedValueFromISelectorFunctionObject< T extends t_selectorF
 
 
 export const getIsRejectedFromISelectorFunctionObject =
-<T extends t_selectorFunction>( selectorObject : T) =>{ 
+<T extends t_selectorFunction>( selectorObject : T) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return selectorObject[str_ISelectorFunctionObject_props.isRejected] as t_getPropFromISelectorFunctionObject<T,str_ISelectorFunctionObject_props.isRejected>
 }
 
@@ -129,11 +129,11 @@ ISF extends jsonType<[UFN, t_selectorFunctionPropName]>  ?  findInJson <[UFN,t_s
 
 
 
-export function getSelectorJson< F extends t_function , R  extends t_function>(_function : F   , getRejectedValue :  R ){ 
+export function getSelectorJson< F extends t_function , R  extends t_function>(_function : F   , getRejectedValue :  R ){ /*console.log("DEBUG_ME",getCurrentLine());*/
     return {
         function : _function ,
          getRejectedValue : getRejectedValue,
-         isRejected :(arr:Awaited<ReturnType<F>>|R ) : boolean =>{ 
+         isRejected :(arr:Awaited<ReturnType<F>>|R ) : boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             return arr == getRejectedValue()
     
         }

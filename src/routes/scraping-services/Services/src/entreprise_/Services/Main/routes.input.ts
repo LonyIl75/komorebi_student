@@ -11,7 +11,7 @@ import { t_verifyStatic } from "@shared/type.js";
     body : ServiceRequestBodyBase
     header : ServiceRequestHeaderBase
 
-    getEmptyInit: () => AServiceRequest= () =>{ 
+    getEmptyInit: () => AServiceRequest= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return _req_main.getEmptyInit() ;
     }
 
@@ -24,16 +24,16 @@ import { t_verifyStatic } from "@shared/type.js";
 
     static emptyObject : EmptyInit<AServiceRequest>  = new EmptyInit<AServiceRequest>(_req_main ) ;
 
-    static getEmptyInit: () =>AServiceRequest= () =>{ 
+    static getEmptyInit: () =>AServiceRequest= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return _req_main.emptyObject.emptyInit() ;
     }
 
-    static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{ 
+    static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return haveSerializerAndEmptyInit._isTypeof(_req_main.getEmptyInit(),obj)
     }
 
 
-    static fromJson = (json: IJson) : AServiceRequest =>{ 
+    static fromJson = (json: IJson) : AServiceRequest =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return AServiceRequest.abstract_fromJson<ServiceRequestBodyBase,ServiceRequestHeaderBase>(_req_main,json)
     }
  
@@ -53,15 +53,15 @@ class _res_main extends AServiceRequest {
 
     static emptyObject : EmptyInit<AServiceRequest>  = new EmptyInit<AServiceRequest>(_res_main) ;
 
-    static getEmptyInit: () =>AServiceRequest= () =>{ 
+    static getEmptyInit: () =>AServiceRequest= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return _res_main.emptyObject.emptyInit() ;
     }
 
-    getEmptyInit: () => AServiceRequest= () =>{ 
+    getEmptyInit: () => AServiceRequest= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return _res_main.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{ 
+    static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return haveSerializerAndEmptyInit._isTypeof(_res_main.getEmptyInit(),obj)
     }
 
@@ -73,7 +73,7 @@ class _res_main extends AServiceRequest {
 
     }
 
-    static fromJson = (json: IJson) : AServiceRequest =>{ 
+    static fromJson = (json: IJson) : AServiceRequest =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return AServiceRequest.abstract_fromJson<ServiceRequestBodyBase,ServiceRequestHeaderBase>(_res_main,json)
     }
 }

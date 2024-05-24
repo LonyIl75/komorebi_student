@@ -12,7 +12,7 @@ class UtilMainData<SN extends string> implements IUtilMainData<SN>{
     _serviceName :SN
     _routeName = routename
 
-    constructor(_serviceName:SN){ 
+    constructor(_serviceName:SN){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this._serviceName = _serviceName
     }
     

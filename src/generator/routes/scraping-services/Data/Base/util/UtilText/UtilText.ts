@@ -12,7 +12,7 @@ class UtilTextData<SN extends string> implements IUtilTextData<SN>{
     _serviceName :SN
     _routeName = routename
 
-    constructor(_serviceName:SN){ 
+    constructor(_serviceName:SN){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this._serviceName = _serviceName
     }
     
@@ -47,7 +47,7 @@ class UtilTextData<SN extends string> implements IUtilTextData<SN>{
             childs_selectors : [${this._serviceName}_spanText_selectors],
         } as const 
         
-        const getDf${majFirstChar(this._serviceName)}${majFirstChar(this._routeName)}IJsonComponent = <arrClassName extends readonly t_union_classNameType_${this._serviceName}_${this._routeName}[] ,  t_idx extends  number >(arr_className : arrClassName ,idx:t_idx,isDfSelectors : boolean = true  , _json : _IComponent = df__IComponent_${this._serviceName}_${this._routeName} )  :_IComponent=>{ 
+        const getDf${majFirstChar(this._serviceName)}${majFirstChar(this._routeName)}IJsonComponent = <arrClassName extends readonly t_union_classNameType_${this._serviceName}_${this._routeName}[] ,  t_idx extends  number >(arr_className : arrClassName ,idx:t_idx,isDfSelectors : boolean = true  , _json : _IComponent = df__IComponent_${this._serviceName}_${this._routeName} )  :_IComponent=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             const className :arrClassName[t_idx] = isDfSelectors ? arr_className[idx] : undefined 
             const _selectors = className ? [${this._serviceName}_${this._routeName}_${routenameHelpers}.val_selector(className).toString()] : undefined 
             return new _Component(_selectors, _json.childs_selectors, _json.isScoped, [...ValTextContent.dfArgsCst], _json.childs_attributes)

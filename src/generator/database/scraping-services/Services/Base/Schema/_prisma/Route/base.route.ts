@@ -9,7 +9,7 @@ class BaseRoutePrismaSchema<SN extends string , R extends string > implements IB
     _serviceName :SN
     _routeName :R 
 
-    constructor(_serviceName:SN,_routeName:R){ 
+    constructor(_serviceName:SN,_routeName:R){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this._serviceName = _serviceName
         this._routeName = _routeName
     }

@@ -17,10 +17,10 @@ class SuccessMessage extends Message{
     message :string
     value :string
     static type : t_resp_message = "Success"
-    constructor( name_module:string , message :string , value :string ){ 
+    constructor( name_module:string , message :string , value :string ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super(SuccessMessage.type,name_module, message,value)
     } 
-    toJson = () =>{ 
+    toJson = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return {
             type : this.type,
             from : this.name_module,
@@ -28,10 +28,10 @@ class SuccessMessage extends Message{
             value : this.value
         }
     }
-    static fromJson = (json : t_jsonResponse) =>{ 
+    static fromJson = (json : t_jsonResponse) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return new SuccessMessage(json.from,json.message,json.value)
     }
-    static fromParamsToJson = (name_module:string , message :string , value :any ) =>{ 
+    static fromParamsToJson = (name_module:string , message :string , value :any ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         const valueStr = typeof value === "string" ? value : JSON.stringify(value)
         return new SuccessMessage(name_module,message,valueStr).toJson()
     }

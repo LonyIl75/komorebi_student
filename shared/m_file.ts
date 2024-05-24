@@ -12,39 +12,39 @@ const extensionJs = "js" as const
 export const concatExtension= <T extends string , Ext extends string  > (str:T,ext:Ext) => (`${str}.${ext}` as const )
 export const concatExtensionJs = <T extends string  > (str:T) => concatExtension(str,extensionJs)
 
-export function getFilename(_str:string){ 
+export function getFilename(_str:string){ /*console.log("DEBUG_ME",getCurrentLine());*/
     return _str.replace(/^.*[\\\/]/, '')
   }
   
-export function getFilenameWithoutExtension(_str:string){ 
+export function getFilenameWithoutExtension(_str:string){ /*console.log("DEBUG_ME",getCurrentLine());*/
     return getFilename(_str).replace(/\.[^.]+$/, '');
 }
 
 
-export const getExtFileName = (full_filename :string ):string =>{ 
+export const getExtFileName = (full_filename :string ):string =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return path.extname(full_filename);
 }
 
-export const getBaseFileName = (full_filename :string  , withExtension : boolean = false ):string =>{ 
+export const getBaseFileName = (full_filename :string  , withExtension : boolean = false ):string =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return withExtension ?  path.basename(full_filename ) : path.basename(full_filename , getExtFileName(full_filename));
 }
 
-export const getDirectoryPathFromFilePath = (full_filename :string ):string =>{ 
+export const getDirectoryPathFromFilePath = (full_filename :string ):string =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return path.dirname(full_filename);
 }
 
 type _t_removeExtension<T extends string, Acc extends string =""> = T extends `${infer A}.${infer R}` ? A extends string ? _t_removeExtension<R,`${Acc}.${A}`> : never : Acc
 type t_removeExtension<T extends string> = T extends `${infer A}.${infer R}` ? _t_removeExtension<R,A> : T
-export const removeExtension = < T extends string >(full_filename :T ) =>{ 
+export const removeExtension = < T extends string >(full_filename :T ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return full_filename.replace(/\.[^/.]+$/, "") as t_removeExtension<T>
 }
 
 export type t_removeDrive < T extends string > = T extends `${t_alphabetMaj}:${typeof path.sep}${infer R}` ? R : T
-export function removeDrive<T extends string>(filePath:T) { 
+export function removeDrive<T extends string>(filePath:T) { /*console.log("DEBUG_ME",getCurrentLine());*/
     const regex_drive = new MRegExp(`^[a-zA-Z]:${convertStrToRegexStr(path.sep)}`,"g")
     const match = filePath.match(regex_drive) 
     let res 
-    if (match) { 
+    if (match) { /*console.log("DEBUG_ME",getCurrentLine());*/
         res = filePath.substring(match[0].length);
     } else {
         res = filePath;
@@ -55,7 +55,7 @@ export function removeDrive<T extends string>(filePath:T) {
 
 export type t_pathToJoinCharFileName <T extends string, JoinChar extends string ="." > = t_removeExtension<t_removeDrive<T>> extends infer R ? 
 R extends string ? t_strApplyReplaceIfExtends <R ,typeof path.sep , JoinChar> : never : never 
-export function pathToJoinCharFileName<T extends string, JoinChar extends string ="." >(filePath : T , joinChar : JoinChar ="." as any ) { 
+export function pathToJoinCharFileName<T extends string, JoinChar extends string ="." >(filePath : T , joinChar : JoinChar ="." as any ) { /*console.log("DEBUG_ME",getCurrentLine());*/
     const  f_path = removeExtension(removeDrive(filePath));
     return f_path.replace(new MRegExp(convertStrToRegexStr(path.sep),"g"),joinChar) as t_pathToJoinCharFileName<T,JoinChar>
 }
@@ -63,19 +63,19 @@ export function pathToJoinCharFileName<T extends string, JoinChar extends string
 const prefix_file = "file:" as const
 type t_prefix_file = typeof prefix_file
 
-export const toPrefixFile = <T extends string>(file_path:T) =>{ 
+export const toPrefixFile = <T extends string>(file_path:T) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return `${prefix_file}${file_path}` as const ;
 }
 
-export const toFilePath = <T extends string>(file_path:T) : `${t_prefix_file}//${T}`=>{ 
+export const toFilePath = <T extends string>(file_path:T) : `${t_prefix_file}//${T}`=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return toPrefixFile(`//${file_path}`);
 }
 
-export const joinFilePath = (...paths : string[]):string =>{ 
+export const joinFilePath = (...paths : string[]):string =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return path.join(...paths);
 }
 //A FAIRE-MATCHERS : ?isinstanceof
-export const isValidPathSyntax = (_path :string ):boolean =>{  
+export const isValidPathSyntax = (_path :string ):boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/ 
     const pathRegex = /^(?:[A-Z]:)?[\/\\]{0,2}(?:[.\/\\ ](?![.\/\\\n])|[^<>:"|?*.\/\\ \n])+$/;
     return pathRegex.test(_path);
 }
@@ -88,40 +88,40 @@ export  type t_readFileSync_options = {encoding: BufferEncoding;flag?: string;}
 export  type t_strFile = ReturnType<typeof getInvalid_File_Read > | string ;
 
 
-export const mreadFile = ( path_toFeatureFile : string , options:t_readFileSync_options={ encoding: 'utf8' } ):string =>{  
+export const mreadFile = ( path_toFeatureFile : string , options:t_readFileSync_options={ encoding: 'utf8' } ):string =>{ /*console.log("DEBUG_ME",getCurrentLine());*/ 
     const data = fs.readFileSync(path_toFeatureFile, options)
     return data;
 }
 
-export const mwriteFile = ( path_toFeatureFile : string , data:string , options:fs.WriteFileOptions={ encoding: 'utf8' } ) =>{  
+export const mwriteFile = ( path_toFeatureFile : string , data:string , options:fs.WriteFileOptions={ encoding: 'utf8' } ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/ 
    return fs.writeFileSync(path_toFeatureFile,data, options)
 }
 
-export function mwriteFileExtra(...args: Parameters<typeof mwriteFile>) { 
+export function mwriteFileExtra(...args: Parameters<typeof mwriteFile>) { /*console.log("DEBUG_ME",getCurrentLine());*/
     const file_path = args[0];const dir_path = getDirectoryPathFromFilePath(file_path);
     if(!isFolderExist(dir_path))fs.mkdirSync(dir_path, {recursive: true})
     return mwriteFile(...args)
 }
 
-export const isFileExist = (full_path :fs.PathLike ):boolean =>{ 
+export const isFileExist = (full_path :fs.PathLike ):boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return fs.existsSync(full_path)
 }
 
-export const isFolderExist = (full_path :fs.PathLike ):boolean =>{ 
+export const isFolderExist = (full_path :fs.PathLike ):boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return isFileExist(full_path)
 }
 
-export const ifFileExistRetReadData = (full_path :string , options:t_readFileSync_options={ encoding: 'utf8' }  ): t_strFile =>{ 
+export const ifFileExistRetReadData = (full_path :string , options:t_readFileSync_options={ encoding: 'utf8' }  ): t_strFile =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     //const options : t_readFileSync_options= _options==undefined ? { encoding: 'utf8' } :_options ;  
     const data =isFileExist(full_path) ? fs.readFileSync(full_path, options ) : getInvalid_File_Read();
     return data;
 }
 
-export const strFileToJson = (str : ReturnType<typeof ifFileExistRetReadData>  ):IJson =>{ 
+export const strFileToJson = (str : ReturnType<typeof ifFileExistRetReadData>  ):IJson =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return isInvalid_File_Read(str) ? getEmptyJson() : JSON.parse(str);
 }
 
-export const ifFileExistRetReadDataJSON = (full_path :string , options:t_readFileSync_options={ encoding: 'utf8' }  ):IJson =>{ 
+export const ifFileExistRetReadDataJSON = (full_path :string , options:t_readFileSync_options={ encoding: 'utf8' }  ):IJson =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     //const options : t_readFileSync_options= _options==undefined ? { encoding: 'utf8' } :_options ;  
     const data =ifFileExistRetReadData(full_path , options ) ;
     return JSON.parse(data );
@@ -131,8 +131,8 @@ export const ifFileExistRetReadDataJSON = (full_path :string , options:t_readFil
 export type t_fileLock = number 
 const okLock :t_fileLock = 1
 //TODO : 
-export const releaseFileLock = (lock:t_fileLock) : void =>{  return ; }
-export const getFileLock = async (fileFullPath : string ) : Promise<t_fileLock> =>{  return Promise.resolve(okLock) ; }
+export const releaseFileLock = (lock:t_fileLock) : void =>{ /*console.log("DEBUG_ME",getCurrentLine());*/ return ; }
+export const getFileLock = async (fileFullPath : string ) : Promise<t_fileLock> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/ return Promise.resolve(okLock) ; }
 
 
 export type t_functionNeedFile_fileAdrAndLock <T extends  IJson> = (full_fileAddress :string , lock :t_fileLock ) => Promise<T> 
@@ -146,7 +146,7 @@ export abstract class ImFileStream<T extends IJson > {
     
     content!: { json?: T; str?: string; };
 
-    static setter<T extends IJson > (obj:ImFileStream<T> , _file_path : string ){ 
+    static setter<T extends IJson > (obj:ImFileStream<T> , _file_path : string ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         obj.file_path = _file_path;
         obj.content = {} as {json:T ,str ?: string} ;
     }
@@ -160,7 +160,7 @@ export abstract class ImFileStream<T extends IJson > {
         return JSON.stringify(content_json)
     }
 
-    setContent (_str :string ){ 
+    setContent (_str :string ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.content.str = _str;
         this.content.json = this.strToContent(_str);
     }
@@ -181,7 +181,7 @@ export abstract class ImFileStream<T extends IJson > {
         try{
             mwriteFile(this.file_path, new_file_str);
             this.setContent(new_file_str); 
-        }catch(e ){ 
+        }catch(e ){ /*console.log("DEBUG_ME",getCurrentLine());*/
             printError(this,e)
             throw e
         }

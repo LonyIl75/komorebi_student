@@ -55,13 +55,13 @@ export type t_execution_selectors_result <T extends mode_of_executionSelector.t_
         :never :never 
     : never 
 
-export const moded_execution_selectors_reject = <T extends mode_of_executionSelector.t_enum , FN extends t_name_selectorFunction > (mode_resolution : T ,function_selector_name:FN) =>{ 
+export const moded_execution_selectors_reject = <T extends mode_of_executionSelector.t_enum , FN extends t_name_selectorFunction > (mode_resolution : T ,function_selector_name:FN) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     type t_reject = t_getCatchValueOfFunctSelector<T,FN> 
     const reject = getCatchFunctionOfFunctSelector<T,FN>(mode_resolution,function_selector_name) (new Error(""))  as t_reject
     const res = (modeResolution_needEnvVar<T>(mode_resolution) ?  [getEmptyJson(), reject] :[reject] )as ([t_pipeline_env_var,t_reject] |[t_reject]) extends infer _A ?  t_modeResolution_needEnvVar<T> extends infer _B ? boolean extends _B ? _A : _B extends true ? Exclude<_A, [t_reject]> :Exclude<_A, [t_pipeline_env_var,t_reject]> : never :never
     return res
 }
-export const  isRejected_modedExecutionSelectors = < T extends mode_of_executionSelector.t_enum ,FN extends t_name_selectorFunction >(value : any,mode_resolution : T,name : FN ) =>{ 
+export const  isRejected_modedExecutionSelectors = < T extends mode_of_executionSelector.t_enum ,FN extends t_name_selectorFunction >(value : any,mode_resolution : T,name : FN ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return isCatchFValueOfFunctSelector<T,FN>(value,mode_resolution,name) 
 }
 
@@ -91,7 +91,7 @@ export type t_moded_execution_selectors_afterFilter<T extends mode_of_executionS
 FN extends t_name_selectorFunction= t_name_selectorFunction , R = t_moded_execution_selectors<T,FN>  > = R extends any[] ? t_filter_arrType<R> : R  
 
 
-const getErrFunction:()=>t_errFunction = ()=>{ return (err:any) =>{ throw err}  }
+const getErrFunction:()=>t_errFunction = ()=>{ /*console.log("DEBUG_ME",getCurrentLine());*/return (err:any) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/throw err}  }
 
 export function execution_selectors <T extends mode_of_executionSelector.t_enum , FN extends t_name_selectorFunction ,  IsCatch extends boolean = false >(
     page_or_element: t_pageOrElementHN ,  
@@ -123,11 +123,11 @@ export function execution_selectors <T extends mode_of_executionSelector.t_enum 
         return funct(page_or_element).catch(fct_catch)/*as t_promise_of_functionArray*/
     })  ) as t_promise_array_seq )
     //:mode_resolution ==mode_of_executionSelector.val_any?
-    //(arr_selector_functions.map((funct:t_funct,idx :number)=>{ 
+    //(arr_selector_functions.map((funct:t_funct,idx :number)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         //return funct(page_or_element).then((_)=>[idx,_]).catch(fct_catch) as any
     //}) as t_promise_array_notChainAndSeq )
     
-    :(arr_selector_functions.map((funct:t_funct)=>{ 
+    :(arr_selector_functions.map((funct:t_funct)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return funct(page_or_element).catch(fct_catch) as any
     }) as t_promise_array_notChainAndSeq )
 
@@ -174,9 +174,9 @@ export function moded_execution_selectors< T extends mode_of_executionSelector.t
 
             let prom_res_allSettled : Promise<t_allSettled> =  
                 Promise.allSettled<t_resFunction_allSettled[]>(arr_promises as t_resFunction_allSettled[]).then( 
-                    (res:PromiseSettledResult<Awaited<t_resFunction_allSettled>>[]) =>{ 
-                        return  res.map((result:PromiseSettledResult<Awaited<t_resFunction_allSettled>>) =>{ 
-                            if (result.status === 'fulfilled') { 
+                    (res:PromiseSettledResult<Awaited<t_resFunction_allSettled>>[]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+                        return  res.map((result:PromiseSettledResult<Awaited<t_resFunction_allSettled>>) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+                            if (result.status === 'fulfilled') { /*console.log("DEBUG_ME",getCurrentLine());*/
                                 const res_result : PromiseFulfilledResult<Awaited<t_resFunction_allSettled>> = result 
                                 return res_result.value as  Awaited<t_resFunction_allSettled>;
                             }
@@ -192,7 +192,7 @@ export function moded_execution_selectors< T extends mode_of_executionSelector.t
 
             let prom_res_sequential : Promise<[t_pipeline_env_var,t_sequential]> =  
             runSequentialPromiseArray<[],[Awaited<t_resFunction_sequential>]>( //<Awaited<t_promise_of_functionArray>,t_moded_execution_selectors <T,FN>>
-                (arr_promises as t_execution_selectors_param_promiseArray<mode_of_executionSelector.t_sequential,t_name_selectorFunction>[]).map((p)=>{ 
+                (arr_promises as t_execution_selectors_param_promiseArray<mode_of_executionSelector.t_sequential,t_name_selectorFunction>[]).map((p)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return async (...args:[t_pipeline_env_var])=>(([...args,await p()] ) as [t_pipeline_env_var,Awaited<t_resFunction_sequential>])
                 })as any
             ).then((res)=>res );
@@ -210,7 +210,7 @@ export function moded_execution_selectors< T extends mode_of_executionSelector.t
             const init_chaining = ([getEmptyJson(),[page_or_element]] as [t_pipeline_env_var,t_pageOrElementHN[]])
             let prom_res_chaining  = 
             runChainingPromiseArray< t_chainingParam_init<FN>,t_reject_qSelector,t_chainingParam<FN>,t_retgetCatchFunctionOfFunctSelector<mode_of_executionSelector.t_chaining,FN>>(
-                (arr_promises as t_resFunction_chaining[]).map((p)=>{ 
+                (arr_promises as t_resFunction_chaining[]).map((p)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return async (...args:[t_pipeline_env_var, t_pageOrElementHN[]])=>(([...args,await p] ) as [t_pipeline_env_var,t_pageOrElementHN[],Awaited<t_resFunction_chaining>])
                 })as any
                 ,Promise.resolve( [init_chaining] )
@@ -240,8 +240,8 @@ export function getArrFunctSelector<  T extends mode_of_executionSelector.t_enum
     let func_selector : t_functSelector_fromFunctionName<t_name_selectorFunction>  = _func_selector as t_functSelector_fromFunctionName<FN>; 
 
 
-    const promise_arr :t_new_funct[] = lst_selector.map((selector) =>{ 
-        return ((_page_or_element : t_pageOrElementHN  )  =>{  
+    const promise_arr :t_new_funct[] = lst_selector.map((selector) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        return ((_page_or_element : t_pageOrElementHN  )  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/ 
             return func_selector(_page_or_element,selector) 
         })as t_new_funct 
     }) 
@@ -271,7 +271,7 @@ isFilter extends boolean = true , F_fltr extends t_functSelectorIsRejected = t_n
         //type fdsfds = t_moded_execution_selectors<mode_of_executionSelector.t_any, FSelector.name_functionSelector.querySelector>
         //[t_pipeline_env_var, any[]] | [t_pipeline_env_var, ...any[]] | [t_pipeline_env_var, t_resSelector]
         //ICI 26
-        return getPromiseArrQuerySelector<T,FN,IsCatch>(page_or_element,lst_selector,mode_resolution,function_selector_name,is_catch).then((res: t_moded_execution_selectors<T, FN>) =>{  
+        return getPromiseArrQuerySelector<T,FN,IsCatch>(page_or_element,lst_selector,mode_resolution,function_selector_name,is_catch).then((res: t_moded_execution_selectors<T, FN>) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/ 
             //type fvdscxv = Awaited<t_execution_selectors_result<enum_promise_execution.all | enum_promise_execution.allSettled | enum_promise_execution.chaining, FSelector.name_functionSelector>>[] 
             //| NestedArray<Awaited<t_execution_selectors_result<enum_promise_execution.all | enum_promise_execution.allSettled | enum_promise_execution.chaining, FN>>>[]
             type t_arrModedExecutionSelectors = t_moded_execution_selectors<Exclude <mode_of_executionSelector.t_enum ,t_modeOfExecutionNotArr>,FN> 
@@ -288,10 +288,10 @@ isFilter extends boolean = true , F_fltr extends t_functSelectorIsRejected = t_n
 //A FAIRE : remove just for debugging
 export const print_moded_execution_selectors =< T extends mode_of_executionSelector.t_enum ,  FN extends t_name_selectorFunction > (
     res:Promise<t_moded_execution_selectors<T,FN>>,
-    )=>{ 
-        res.then((arrNested)=>{  
+    )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        res.then((arrNested)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/ 
             //@ts-ignore
-            arrNested.flat(Infinity).map((elm)=>{ 
+            arrNested.flat(Infinity).map((elm)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                 elm.evaluate((_node)=>_node.outerHTML).then((htmlCode)=>console.log('htmlCode',htmlCode))
             })
                     

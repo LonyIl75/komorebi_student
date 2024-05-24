@@ -34,11 +34,11 @@ import { t_verifyStatic } from "@shared/type.js";
                     super(header,body,_res_main.fromJson);
             
                 }
-                static fromJson = (json: IJson) : AServiceRequest =>{ 
+                static fromJson = (json: IJson) : AServiceRequest =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return AServiceRequest.abstract_fromJson<ServiceRequestBodyBase,ServiceRequestHeaderBase>(_res_main,json)
                 }
 
-                getEmptyInit: () => AServiceRequest= () =>{ 
+                getEmptyInit: () => AServiceRequest= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return _res_main.getEmptyInit() ;
                 }
 
@@ -47,11 +47,11 @@ import { t_verifyStatic } from "@shared/type.js";
                 static emptyObject : EmptyInit<AServiceRequest>  = new EmptyInit<AServiceRequest>(_res_main ) ;
         
 
-                static getEmptyInit: () =>AServiceRequest= () =>{ 
+                static getEmptyInit: () =>AServiceRequest= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return _res_main.emptyObject.emptyInit() ;
                 }
 
-                static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{ 
+                static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return haveSerializerAndEmptyInit._isTypeof(_res_main.getEmptyInit(),obj)
                 }
                 static toJson = AServiceRequest.toJson
@@ -73,15 +73,15 @@ import { t_verifyStatic } from "@shared/type.js";
             
                 static emptyObject : EmptyInit<AServiceRequest>  = new EmptyInit<AServiceRequest>(_req_main ) ;
             
-                static getEmptyInit: () =>AServiceRequest= () =>{ 
+                static getEmptyInit: () =>AServiceRequest= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return _req_main.emptyObject.emptyInit() ;
                 }
             
-                getEmptyInit: () => AServiceRequest= () =>{ 
+                getEmptyInit: () => AServiceRequest= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return _req_main.getEmptyInit() ;
                 }
             
-                static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{ 
+                static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return haveSerializerAndEmptyInit._isTypeof(_req_main.getEmptyInit(),obj)
                 }
             
@@ -93,7 +93,7 @@ import { t_verifyStatic } from "@shared/type.js";
             
                 }
             
-                static fromJson = (json: IJson) : AServiceRequest =>{ 
+                static fromJson = (json: IJson) : AServiceRequest =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return AServiceRequest.abstract_fromJson<ServiceRequestBodyBase,ServiceRequestHeaderBase>(_req_main,json)
                 }
                 
@@ -130,15 +130,15 @@ import { t_verifyStatic } from "@shared/type.js";
             
                 static emptyObject : EmptyInit< _req_body_login<any,any>>  = new EmptyInit< _req_body_login<any,any>>(_req_body_login) ;
             
-                static getEmptyInit: () =>  _req_body_login<any,any>= () =>{ 
+                static getEmptyInit: () =>  _req_body_login<any,any>= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return  _req_body_login.emptyObject.emptyInit() ;
                 }
             
-                getEmptyInit: () =>  _req_body_login<any,any>= () =>{ 
+                getEmptyInit: () =>  _req_body_login<any,any>= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return  _req_body_login.getEmptyInit() ;
                 }
 
-                static isTypeof: (obj: AHaveSerializer<t_configObject<_req_body_login<any,any>>>) => boolean = (obj:AHaveSerializer<t_configObject<_req_body_login<any,any>>>)=>{ 
+                static isTypeof: (obj: AHaveSerializer<t_configObject<_req_body_login<any,any>>>) => boolean = (obj:AHaveSerializer<t_configObject<_req_body_login<any,any>>>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return haveSerializerAndEmptyInit._isTypeof(_req_body_login.getEmptyInit(),obj)
                 }
 
@@ -153,7 +153,7 @@ import { t_verifyStatic } from "@shared/type.js";
                 result : IJson
                 pipeline :P
 
-                setClientId(client_id : t_clientId){ 
+                setClientId(client_id : t_clientId){ /*console.log("DEBUG_ME",getCurrentLine());*/
                     this.client_id = client_id ;
                 }
             
@@ -162,7 +162,7 @@ import { t_verifyStatic } from "@shared/type.js";
                     login_data : L ; // needed to login 
                 */
             
-                constructor( login_data : L =  {... _passAndEmail.df} as L  ,optionsScraping : IOptionScraping =  {...  OptionScraping.df}, pipeline :P = {...df_pipeline_json} as P  ,browserId ?: t_browserId  , targetId ?: t_targetId , result : IJson = {}) { 
+                constructor( login_data : L =  {... _passAndEmail.df} as L  ,optionsScraping : IOptionScraping =  {...  OptionScraping.df}, pipeline :P = {...df_pipeline_json} as P  ,browserId ?: t_browserId  , targetId ?: t_targetId , result : IJson = {}) { /*console.log("DEBUG_ME",getCurrentLine());*/
                     super( {toJson: _req_body_login.toJson , fromJson: _req_body_login.fromJson});
                     this.optionsScraping = optionsScraping
                     this.login_data = login_data ;
@@ -184,7 +184,7 @@ import { t_verifyStatic } from "@shared/type.js";
                     return { optionsScraping : {...obj.optionsScraping} , login_data : obj.login_data , result : obj.result,...probablyUndefined}
                 }
             
-                static fromJson = (json: IJson) :  _req_body_login<any,any> =>{ 
+                static fromJson = (json: IJson) :  _req_body_login<any,any> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return new  _req_body_login (  json.login_data , json.optionsScraping ,json?.browserId, json?.targetId ,json.result)
                 }
             
@@ -206,16 +206,16 @@ import { t_verifyStatic } from "@shared/type.js";
             
                 static emptyObject : EmptyInit<t_login_ext_AserviceRequest>  = new EmptyInit<t_login_ext_AserviceRequest>(_req_login) ;
             
-                static getEmptyInit: () =>t_login_ext_AserviceRequest= () =>{ 
+                static getEmptyInit: () =>t_login_ext_AserviceRequest= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return _req_login.emptyObject.emptyInit() ;
                 }
             
-                getEmptyInit: () => t_login_ext_AserviceRequest = () =>{ 
+                getEmptyInit: () => t_login_ext_AserviceRequest = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return _req_login.getEmptyInit() ;
                 }
 
                 
-                static isTypeof: (obj: AHaveSerializer<t_login_ext_AserviceRequest>) => boolean = (obj:AHaveSerializer<t_login_ext_AserviceRequest>)=>{ 
+                static isTypeof: (obj: AHaveSerializer<t_login_ext_AserviceRequest>) => boolean = (obj:AHaveSerializer<t_login_ext_AserviceRequest>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return haveSerializerAndEmptyInit._isTypeof(_req_login.getEmptyInit(),obj)
                 }
 
@@ -226,7 +226,7 @@ import { t_verifyStatic } from "@shared/type.js";
                     
                 }
             
-                static fromJson = (json: IJson) : t_login_ext_AserviceRequest =>{ 
+                static fromJson = (json: IJson) : t_login_ext_AserviceRequest =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return AServiceRequest.abstract_fromJson<req_body_login<any,any>,ServiceRequestHeaderBase>(_req_login,json)
                 }
             }
@@ -248,15 +248,15 @@ import { t_verifyStatic } from "@shared/type.js";
             
                 static emptyObject : EmptyInit<AServiceRequest>  = new EmptyInit<AServiceRequest>(_res_login ) ;
             
-                static getEmptyInit: () =>AServiceRequest= () =>{ 
+                static getEmptyInit: () =>AServiceRequest= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return _res_login.emptyObject.emptyInit() ;
                 }
             
-                getEmptyInit: () => AServiceRequest= () =>{ 
+                getEmptyInit: () => AServiceRequest= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return _res_login.getEmptyInit() ;
                 }
             
-                static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{ 
+                static isTypeof: (obj: AHaveSerializer<AServiceRequest>) => boolean = (obj:AHaveSerializer<AServiceRequest>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return haveSerializerAndEmptyInit._isTypeof(_res_login.getEmptyInit(),obj)
                 }
             
@@ -268,7 +268,7 @@ import { t_verifyStatic } from "@shared/type.js";
             
                 }
             
-                static fromJson = (json: IJson) : AServiceRequest =>{ 
+                static fromJson = (json: IJson) : AServiceRequest =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     return AServiceRequest.abstract_fromJson<ServiceRequestBodyBase,ServiceRequestHeaderBase>(_res_login,json)
                 }
                 

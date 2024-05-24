@@ -25,7 +25,7 @@ export class reqOrRes_route<SN extends string , R extends string ,Ext extends st
     implements: {id:string,generics:readonly string[]}[]
     isAbstract: false
 
-    constructor(reqOrRes : "req"|"res", _serviceName:SN,_routeName:R,_body:TBd,_header:Thd,ext_id : Ext = "AServiceRequest" as any,ext_generics: readonly string[] = []){ 
+    constructor(reqOrRes : "req"|"res", _serviceName:SN,_routeName:R,_body:TBd,_header:Thd,ext_id : Ext = "AServiceRequest" as any,ext_generics: readonly string[] = []){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this._serviceName = _serviceName
         this._routeName = _routeName
         this.name = `${reqOrRes}_${this._routeName}`
@@ -55,19 +55,19 @@ export class reqOrRes_route<SN extends string , R extends string ,Ext extends st
     }
 
     st_getEmptyInit (){
-        return`static getEmptyInit: () =>${genericValueToString(this.extends)}= () =>{ 
+        return`static getEmptyInit: () =>${genericValueToString(this.extends)}= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             return ${this.name}.emptyObject.emptyInit() ;
         }` as const
     }
 
     getEmptyInit(){
-        return`getEmptyInit: () => ${genericValueToString(this.extends)}= () =>{ 
+        return`getEmptyInit: () => ${genericValueToString(this.extends)}= () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             return ${this.name}.getEmptyInit() ;
         }`as const 
     }
 
     st_isTypeof(){
-        return `static isTypeof: (obj: AHaveSerializer<${genericValueToString(this.extends)}>) => boolean = (obj:AHaveSerializer<${genericValueToString(this.extends)}>)=>{ 
+        return `static isTypeof: (obj: AHaveSerializer<${genericValueToString(this.extends)}>) => boolean = (obj:AHaveSerializer<${genericValueToString(this.extends)}>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             return haveSerializerAndEmptyInit._isTypeof(${this.name}.getEmptyInit(),obj)
         }`  as const 
     }
@@ -76,20 +76,20 @@ export class reqOrRes_route<SN extends string , R extends string ,Ext extends st
         return `isTypeof = ${this.name}.isTypeof` as const 
     }
     st_fromJson(){
-        return `static fromJson = (json: IJson) : ${genericValueToString(this.extends)} =>{ 
+        return `static fromJson = (json: IJson) : ${genericValueToString(this.extends)} =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             return ${genericValueToString(this.extends)}.abstract_fromJson<${this._body},${this._header}>(json,${this.name})
         }` as const 
     }
 }
 
 export class req_route<SN extends string , R extends string ,Ext extends string = "AServiceRequest" , TBd extends string ="ServiceRequestBodyBase", Thd extends string ="ServiceRequestHeaderBase"  > extends reqOrRes_route<SN,R,Ext,TBd,Thd> {
-    constructor(_serviceName:SN,_routeName:R,_body:TBd,_header:Thd,ext_id : Ext = "AServiceRequest" as any,ext_generics: readonly string[] = []){ 
+    constructor(_serviceName:SN,_routeName:R,_body:TBd,_header:Thd,ext_id : Ext = "AServiceRequest" as any,ext_generics: readonly string[] = []){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super("req",_serviceName,_routeName,_body,_header,ext_id,ext_generics)
     }
 }
 
 export class res_route<SN extends string , R extends string ,Ext extends string = "AServiceRequest" , TBd extends string ="ServiceRequestBodyBase", Thd extends string ="ServiceRequestHeaderBase"  > extends reqOrRes_route<SN,R,Ext,TBd,Thd> {
-    constructor(_serviceName:SN,_routeName:R,_body:TBd,_header:Thd,ext_id : Ext = "AServiceRequest" as any,ext_generics: readonly string[] = []){ 
+    constructor(_serviceName:SN,_routeName:R,_body:TBd,_header:Thd,ext_id : Ext = "AServiceRequest" as any,ext_generics: readonly string[] = []){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super("res",_serviceName,_routeName,_body,_header,ext_id,ext_generics)
     }
 }
@@ -110,7 +110,7 @@ export class req_login<SN extends string , R extends string ,Ext extends string 
     implements: {id:string,generics:readonly string[]}[]
     isAbstract: false
 
-    constructor(_serviceName:SN,_routeName:R,_body:TBd,_header:Thd,ext_id : Ext = "AServiceRequest<req_body_login<any,any>>" as any,ext_generics: readonly string[] = []){ 
+    constructor(_serviceName:SN,_routeName:R,_body:TBd,_header:Thd,ext_id : Ext = "AServiceRequest<req_body_login<any,any>>" as any,ext_generics: readonly string[] = []){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super(_serviceName,_routeName,_body,_header,ext_id,ext_generics)
     }
 }

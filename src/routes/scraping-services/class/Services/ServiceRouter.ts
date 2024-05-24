@@ -41,9 +41,9 @@ export type serviceRoutesHandler< SN extends _validateServiceName , T1 extends _
     session : any ;// A FAIRE ?login_data
 
 
-    //constructor( className :string,remoteName :string ,remoteAddress :R  , login_data : IJson , FilePathSession ?: FilePathSession , debug_service ?: DebugScrapingService<debug_scrapingServiceKeys> ) { 
+    //constructor( className :string,remoteName :string ,remoteAddress :R  , login_data : IJson , FilePathSession ?: FilePathSession , debug_service ?: DebugScrapingService<debug_scrapingServiceKeys> ) { /*console.log("DEBUG_ME",getCurrentLine());*/
 
-    constructor(service : _Mainservice,body_scrapingService : t_body_scrapingService <SN,R,H,T1,RA> ,routesConfig :JsonReqRes  , login_data : IJson , FilePathSession ?: FilePathSession , debug_service ?: DebugScrapingService<debug_scrapingServiceKeys>   ){ 
+    constructor(service : _Mainservice,body_scrapingService : t_body_scrapingService <SN,R,H,T1,RA> ,routesConfig :JsonReqRes  , login_data : IJson , FilePathSession ?: FilePathSession , debug_service ?: DebugScrapingService<debug_scrapingServiceKeys>   ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.service = service ;
         this.router = new RouterDeclaration<SN,R,H,T1,RA>(body_scrapingService,routesConfig);
         this.router.setRoutes(service) ;

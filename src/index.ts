@@ -22,7 +22,7 @@ const str_fk = "fk" as const
 const base_url = "https://lespepitestech.com/startup/montpellier?page=2"  as const 
 const step_1_isStream = false as const
 
-const step_1 = async (url:string,rest_pipeline:Omit<t_pipeline_json_any,"body">={op:str_while,initEnv : {counter:0,max:11}}) =>{ 
+const step_1 = async (url:string,rest_pipeline:Omit<t_pipeline_json_any,"body">={op:str_while,initEnv : {counter:0,max:11}}) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const routeName = str_startupsMtp  
     const serviceName = "lespepitestech" as const
     let header = new ServiceRequestHeaderBase(serviceName,routeName,df_client_id,url,undefined,ServiceRequestHeaderBase.enum_privacy.public,step_1_isStream)
@@ -44,13 +44,13 @@ type StartupsMtpCreateInput = {
   }
 
 const name_step_2 = "step_2" as const
-const step_2 = async (ret_step_1:Awaited<ReturnType<typeof step_1>>,_name=name_step_2) =>{ 
+const step_2 = async (ret_step_1:Awaited<ReturnType<typeof step_1>>,_name=name_step_2) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const { success: step_1_res, reject: step_1_reject } = ret_step_1;
 
     let arr_items  = step_1_res.body?.saved  as t_saved<StartupsMtpCreateInput>
-    if(step_1_isStream ){ 
+    if(step_1_isStream ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         if(isEmptyJson(step_1_res.body?.saved)){
-            arr_items =  buildSaved(Object.values(step_1_res.body.result).reduce((acc:string[],samplePage)=>{ 
+            arr_items =  buildSaved(Object.values(step_1_res.body.result).reduce((acc:string[],samplePage)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                 return [...acc,...Object.values(samplePage[id_item])]
             },[]))
         }else {
@@ -71,14 +71,14 @@ const step_2 = async (ret_step_1:Awaited<ReturnType<typeof step_1>>,_name=name_s
 
     let arr_trace = []
     //let arr_result = []
-    for( const item of arr_items.create){ 
+    for( const item of arr_items.create){ /*console.log("DEBUG_ME",getCurrentLine());*/
        
         const url : string = item.StartupsMtpLink_href 
         if(url === undefined) continue
         arr_trace.push(url)
         header.url = url
         req.body.fk = applyFctToObjectKeys({["id"]:item["id"], [id_field] : item[id_field]},(key)=>`${str_fk}_${str_StartupsMtp}_${key}`)
-        const  p =  doServiceEntreprise_(routeName,"process" ,  req,res).then((_)=> arr_success.push({url:url})).catch((e)=>{  console.log(e);arr_error.push({url:url,error_message:e})})
+        const  p =  doServiceEntreprise_(routeName,"process" ,  req,res).then((_)=> arr_success.push({url:url})).catch((e)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/ console.log(e);arr_error.push({url:url,error_message:e})})
         console.log("P",url)
         await p //arr_result.push(p)
         
@@ -86,7 +86,7 @@ const step_2 = async (ret_step_1:Awaited<ReturnType<typeof step_1>>,_name=name_s
     //write in a file arr_trace 
     await fs.writeFileSync(`${_name}.json`,JSON.stringify(arr_trace))
     return {success:res,reject:arr_error}
-    //return await Promise.all(arr_result).then((_)=>({success:res,reject:error})).catch((e)=>{ 
+    //return await Promise.all(arr_result).then((_)=>({success:res,reject:error})).catch((e)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         //console.log("AERR",e)
         //return ({success:res,reject:error})
     //})

@@ -15,7 +15,7 @@ class PipelineService<IdRouteReq extends readonly string[] , IdRouteRes extends 
     _req : IdRouteReq;
     _res : IdRouteRes;
 
-    constructor(routeName :string , serviceName :string,req : IdRouteReq,res : IdRouteRes){ 
+    constructor(routeName :string , serviceName :string,req : IdRouteReq,res : IdRouteRes){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this._routeName = routeName;
         this._serviceName = serviceName;
         validIdRoutesOrThrow(req,'req')

@@ -177,7 +177,7 @@ implements t_IAHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassN
 
     abstract namesOfPipelineFunction(): readonly [...arr_HA_df_fct_name,...arr_restFct] //TODO extract type 
 
-    getIdRequiredField(idField :t_removeConcatRouteNameClassName<R,unionClassNameType> & t_union_required_field ){ 
+    getIdRequiredField(idField :t_removeConcatRouteNameClassName<R,unionClassNameType> & t_union_required_field ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         return concatRouteNameClassName(this.routeName,idField)
     }
 
@@ -208,7 +208,7 @@ implements t_IAHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassN
 
         console.log("url_toScrap",url_toScrap)
         //TODO : extract in browserPage gotoPage and load
-            if(!mpage.cur_url){ 
+            if(!mpage.cur_url){ /*console.log("DEBUG_ME",getCurrentLine());*/
                 await mpage.goto(url_toScrap)
                 //await mpage.goto(url_toScrap.slice(0,url_toScrap.length-2))
                 /*await mpage.goto(url_toScrap)
@@ -227,7 +227,7 @@ implements t_IAHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassN
                 await fct_loading.waitForPageLoading(page)
 
                 console.log( `waiting for fully load : ${url_toScrap}` ) ;
-                await fct_loading.waitForPageFullLoading(page).then(async (_)=>{ 
+                await fct_loading.waitForPageFullLoading(page).then(async (_)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     //await time.timer(1000)
                 })
 
@@ -282,17 +282,17 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
         routeName : R 
         serviceName : SN
 
-        static _nextsJson (_json :t_nextJson<true>) { 
+        static _nextsJson (_json :t_nextJson<true>) { /*console.log("DEBUG_ME",getCurrentLine());*/
             const selected_pagination = _json[pagination_field[1]]
             const nextPagination = _json[pagination_field[0]]
 
             let _nextPagination_values = nextPagination
-            if(_nextPagination_values.length > 1){ 
+            if(_nextPagination_values.length > 1){ /*console.log("DEBUG_ME",getCurrentLine());*/
                 let nextPagination_values = _nextPagination_values as t_nextJson<true,false>[t_pagination_field[0]]
                 const json = _json as t_nextJson<true,false>
                 const limit = parseInt(getRootPropFromValue(pagination_field[1],json as any ))//TODO 
                 
-                nextPagination_values = nextPagination_values.filter((element)=>{ 
+                nextPagination_values = nextPagination_values.filter((element)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     const prop = pagination_field[0]
                     if(element.hasOwnProperty(prop)){
                         const json_value = getRootPropFromValue(prop,element)
@@ -300,7 +300,7 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
                     }
                     return false 
                 })
-                nextPagination_values = nextPagination_values.sort(function(a:t_nextJson_nextPagination<true,true>, b :t_nextJson_nextPagination<true,true>) { 
+                nextPagination_values = nextPagination_values.sort(function(a:t_nextJson_nextPagination<true,true>, b :t_nextJson_nextPagination<true,true>) { /*console.log("DEBUG_ME",getCurrentLine());*/
                     const a_val = parseInt(getRootPropFromValue(pagination_field[0],a))
                     const b_val = parseInt(getRootPropFromValue(pagination_field[0],b))
                     return a_val - b_val
@@ -317,7 +317,7 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
 
         }
 
-        static _bodyNextsJson(json:IJson,nextPaginationKey : string , selectedPaginationKey : string){ 
+        static _bodyNextsJson(json:IJson,nextPaginationKey : string , selectedPaginationKey : string){ /*console.log("DEBUG_ME",getCurrentLine());*/
             let _nextPagination = {} as any   
                             
             if(isStrictArray(json[nextPaginationKey])){                                                             
@@ -338,7 +338,7 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
                 })[pagination_field[0]]
         }
         static async _getNextPage < SN extends string , R extends string,BaseElement extends unionClassNameType,  UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends  readonly [t_rootClassName,... readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
-        ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>>( param:t_AHA_Service_ParamGetTree<SN,R,BaseElement,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>, fct_loading : t_AHA_Service_FctLoadingGetTree){ 
+        ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents< unionClassNameType>>( param:t_AHA_Service_ParamGetTree<SN,R,BaseElement,UnionRegex,UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,T>, fct_loading : t_AHA_Service_FctLoadingGetTree){ /*console.log("DEBUG_ME",getCurrentLine());*/
 
 
             type t_1 = UnionRegex
@@ -358,7 +358,7 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
             const mapPathPatternToId : MapRegexToIdPath<UnionRegex, UnionIdPath,ArrUnionClassNameType,unionClassNameType> = scrapingComponent.getMapPathPatternToId()
             const paths_to_nextComponent  = scrapingComponent.getFwJsonComponent().findPathOfIdComponent(nextPageId)
             
-            for( const _path_to_nextComponent of paths_to_nextComponent){ 
+            for( const _path_to_nextComponent of paths_to_nextComponent){ /*console.log("DEBUG_ME",getCurrentLine());*/
                 const path_to_nextComponent = _path_to_nextComponent as t_agreg_path<unionClassNameType>
                 let _res =  MapRegexToIdPath.arrPathToPathId<UnionRegex, UnionIdPath,ArrUnionClassNameType,unionClassNameType> (mapPathPatternToId,path_to_nextComponent,nextPageId)
                 if(_isNullOrUndefined(_res)) continue 
@@ -393,7 +393,7 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
         }
         
         //A FAIRE : refactor see if part isnt be better in another file and also be static // this nextPage is only relevant for not scrolling next => enum.next => [scroll , click , goto ]
-        static async _nextPage<SN extends string ,R extends string >(param:t_AHA_Service_ParamNextPage<SN,R>){ 
+        static async _nextPage<SN extends string ,R extends string >(param:t_AHA_Service_ParamNextPage<SN,R>){ /*console.log("DEBUG_ME",getCurrentLine());*/
             const nexts =param.nexts
             if(_isNullOrUndefined(nexts))throw Error(`No nexts ${nexts}`)
 
@@ -404,9 +404,9 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
             let  res_nextPagenextPage :t_json_nextPage= {} as any 
             
             const keys_attribute_url = arr_url_attributeName.map((url_attributeName)=>NodeComponentValue.getNameFieldOfJsonStoredValue(pagination_field[0],url_attributeName))
-            const regex_keys_attribute_url = keys_attribute_url.map((key_attribute_url)=>{ return new RegExp(embedBeginAndEndOfLineStrOrRegex(convertStrToRegexStr(key_attribute_url),true))})
+            const regex_keys_attribute_url = keys_attribute_url.map((key_attribute_url)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/return new RegExp(embedBeginAndEndOfLineStrOrRegex(convertStrToRegexStr(key_attribute_url),true))})
             
-            for (const _nodeComponentValue of nexts){ 
+            for (const _nodeComponentValue of nexts){ /*console.log("DEBUG_ME",getCurrentLine());*/
                 const nodeComponentValue = _nodeComponentValue[pagination_field[0]]
                 const json_attribute_url = createSubJsonFromArrRegex<string,IJson<string,string>>(nodeComponentValue[str_json_value],regex_keys_attribute_url)
 
@@ -414,28 +414,28 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
                     let success_goto = false
                     let url = mpage.cur_url
                     const urls = Object.values(json_attribute_url)
-                    for(let i = 0 ; i<urls.length && !success_goto;i++){ 
+                    for(let i = 0 ; i<urls.length && !success_goto;i++){ /*console.log("DEBUG_ME",getCurrentLine());*/
                         url = urls[i].startsWith(char_join_pathRoutes) ? mpage.base_url + urls[i] : urls[i]
                         //await time.timer(15000)
                         success_goto = await mpage.goto(url).then(()=>true).catch(()=>false)
                     }
-                    if(success_goto) { //throw new Error(`No url found for ${nodeComponentValue.description}`)
+                    if(success_goto) { /*console.log("DEBUG_ME",getCurrentLine());*///throw new Error(`No url found for ${nodeComponentValue.description}`)
                         const url_toScrap = url
                         res_nextPagenextPage = {nexts:[],nextCategory :nextCategories[0],url,url_toScrap} //A FAIRE : nexts:nexts.pop()
                         break
                     }
                 }   
-                if(nodeComponentValue.description.length>0 && nodeComponentValue.description[0].length>0){ 
+                if(nodeComponentValue.description.length>0 && nodeComponentValue.description[0].length>0){ /*console.log("DEBUG_ME",getCurrentLine());*/
                     const elements :t_ElementHN[] = await NodeComponentValue.getElmOfNodeComponentValue(nodeComponentValue,page)//\d+
-                    let element =  await Promise.any (elements.map((_element)=>{ 
-                        return getTextContent(_element).then((text)=>{ 
+                    let element =  await Promise.any (elements.map((_element)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+                        return getTextContent(_element).then((text)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                             if(nodeComponentValue.proper_value != text) throw Error(`text ${text} is not equal to proper_value ${nodeComponentValue.proper_value}`)
                             else return _element
                             })
                     })).then((element)=>element).catch(()=>null)
                     
                     
-                    if(element){ 
+                    if(element){ /*console.log("DEBUG_ME",getCurrentLine());*/
                         const url = mpage.cur_url
                         //await time.timer(15000)
                         await f_clicking(element)
@@ -478,7 +478,7 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
             }
         }
         //TODO : allow array , atm on peut pas array sur sqlite car c purement relationnel donc il faut créer une relation , il faut modifier cette fonction pour que quand elle detecte que c'est un array elle creer tous les samples dans la remote database en le likant a l'objet courant 
-        static async _save_serviceFunction <TSample extends IJson ,TDbName extends string , TColId extends keyof TSample , TColDate extends keyof TSample , FK extends IJson = IVoid >(param : t_AHA_Service_ParamSavePage<TSample , TDbName , TColId , TColDate,FK>){ 
+        static async _save_serviceFunction <TSample extends IJson ,TDbName extends string , TColId extends keyof TSample , TColDate extends keyof TSample , FK extends IJson = IVoid >(param : t_AHA_Service_ParamSavePage<TSample , TDbName , TColId , TColDate,FK>){ /*console.log("DEBUG_ME",getCurrentLine());*/
                 
             const {prismaClient,name:database_name ,id:strId} = param.database
             const {date:strDate,period} = param.time
@@ -509,16 +509,16 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
             
             let createAndUpdateArr: t_saved<TSample> = buildSaved()
 
-            const fct_shortCut_nested = (sample , op : enum_prisma_op ) => Object.keys(sample).reduce((acc,key_sample)=>{ 
+            const fct_shortCut_nested = (sample , op : enum_prisma_op ) => Object.keys(sample).reduce((acc,key_sample)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                 const cur = sample[key_sample] 
                 acc[key_sample]= isArray(cur) ? isNullArray(cur) ? null : {[op] : cur} : cur
                 if(acc[key_sample] === null)delete acc[key_sample]
                 return acc
             },{})
 
-            createAndUpdateArr = rows.reduce((_createAndUpdateArr,sample) =>{ 
+            createAndUpdateArr = rows.reduce((_createAndUpdateArr,sample) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                 const existingSample = existingSamples[sample[strId]]
-                if(existingSample ){ 
+                if(existingSample ){ /*console.log("DEBUG_ME",getCurrentLine());*/
                     if(_isNullOrUndefined(period) || existingSample[strDate] + period >= sample[strDate] ){
                         _createAndUpdateArr["update"].push(fct_shortCut_nested(sample,enum_prisma_op["update"]) as TSample)
                     }
@@ -552,21 +552,21 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
                     })
             ) : _getEmptyArrPromise()
 
-            createAndUpdateArr['create'].map((_e)=>_e.catch(async(e)=>{ 
+            createAndUpdateArr['create'].map((_e)=>_e.catch(async(e)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                 console.log("create EEE3",e)
-                 fs.appendFile("create_error.txt",e, function (err) { 
+                 fs.appendFile("create_error.txt",e, function (err) { /*console.log("DEBUG_ME",getCurrentLine());*/
                     if (err) throw err;
                     console.log('Saved!');
                   });
  
              }))
-             createAndUpdateArr['update'].map((_e)=>_e.catch((e)=>{ 
+             createAndUpdateArr['update'].map((_e)=>_e.catch((e)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                 console.log("update EEE3",e)
                 
  
              }))
             //TODO-IMP createMany dont work in SQLite 
-            return Promise.all([Promise.all(createAndUpdateArr['create']),Promise.all(createAndUpdateArr['update'])]).then((_arr)=>{ 
+            return Promise.all([Promise.all(createAndUpdateArr['create']),Promise.all(createAndUpdateArr['update'])]).then((_arr)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
 
                 const arr = _arr.map((elm)=>_isEmptyAwaitedPromise(elm) ? [] : elm)
                 return buildSaved(...arr)
@@ -574,12 +574,12 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
 
         }
 
-        static embedItems <T extends IJson ,TUrl extends string , ItemField extends string  >(_json:T,url_toScrap:TUrl,item_field:ItemField){ 
+        static embedItems <T extends IJson ,TUrl extends string , ItemField extends string  >(_json:T,url_toScrap:TUrl,item_field:ItemField){ /*console.log("DEBUG_ME",getCurrentLine());*/
             let json = _json[url_toScrap]
             const _date = _json[date_field]
             const {bodyUrl,paramsUrl} = getBodyUrlAndParamsReq(url_toScrap)
             //TODO extract add req_param 
-            json[item_field]= json[item_field].reduce((acc,e,idx)=>{ return {...acc, [getUrlToScrapItem(bodyUrl,paramsUrl,idx)]:{...e,[date_field] : _date}}},{})//A FAIRE : extract 
+            json[item_field]= json[item_field].reduce((acc,e,idx)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/return {...acc, [getUrlToScrapItem(bodyUrl,paramsUrl,idx)]:{...e,[date_field] : _date}}},{})//A FAIRE : extract 
             delete json[date_field]
             return json
             

@@ -29,7 +29,7 @@ type t_prefix_service_name = typeof prefix_service_name ;
 type t_service_login_forclientId = any 
 
                                                                          
-export  function f_AMainService<C_SN extends _validateServiceName , C_FR extends FnValidateRemoteAddress , C_FH extends FnValidateIdHome   ,C_FT1 extends FnValidateRoute, C_FSN extends FnValidateServiceName=FnValidateServiceName ,C_FRA extends FnValidateRouteAndAddress=FnValidateRouteAndAddress , C_FServJson extends FnValidateServJson = FnValidateServJson >( ) { 
+export  function f_AMainService<C_SN extends _validateServiceName , C_FR extends FnValidateRemoteAddress , C_FH extends FnValidateIdHome   ,C_FT1 extends FnValidateRoute, C_FSN extends FnValidateServiceName=FnValidateServiceName ,C_FRA extends FnValidateRouteAndAddress=FnValidateRouteAndAddress , C_FServJson extends FnValidateServJson = FnValidateServJson >( ) { /*console.log("DEBUG_ME",getCurrentLine());*/
     abstract class AMainService<SN extends C_SN  , R extends _C_R<C_FR,[SN]> , H extends _C_H<C_FH,[SN]>  , T1 extends  _C_T1<C_FT1,[SN]> ,RA extends _C_RA<C_FRA,_C_SN_Result>  , ServJson extends _C_ServJson<C_FServJson,_C_SN_Result> = _C_ServJson<C_FServJson,(_C_SN<C_FSN,[SN]>& [SN, R, T1])>,_C_SN_Result extends (_C_SN<C_FSN,[SN]>& [SN, R, T1]) = (_C_SN<C_FSN,[SN]>& [SN, R, T1]) >   {
 
     
@@ -39,7 +39,7 @@ export  function f_AMainService<C_SN extends _validateServiceName , C_FR extends
         map_connection : Map<t_clientId,t_service_login_forclientId> = new Map() ; //client_id => cookie
         localAndRemote_database : DatabaseLocalAndRemote<SN>;
 
-            static async getImportClassService<SN extends C_SN , R extends _C_R<C_FR,[SN]> , H extends _C_H<C_FH,[SN]> , T1 extends _C_T1<C_FT1,[SN]> ,RA extends _C_RA<C_FRA,_C_SN_Result> & _validateRouteAndAddress<SN>, _R extends ((keyof _C_ServJson<C_FServJson,_C_SN_Result>) & T1[number])  = ((keyof _C_ServJson<C_FServJson,(_C_SN<C_FSN,[SN]>& [SN, R, T1])> ) & T1[number]) , ServJson extends _C_ServJson<C_FServJson,_C_SN_Result> = _C_ServJson<C_FServJson,(_C_SN<C_FSN,[SN]>& [SN, R, T1]) >,_C_SN_Result extends (_C_SN<C_FSN,[SN]>& [SN, R, T1]) = (_C_SN<C_FSN,[SN]>& [SN, R, T1])>( obj:AMainService<SN ,R,H,T1,RA,ServJson,_C_SN_Result> , id_route : _R ) { 
+            static async getImportClassService<SN extends C_SN , R extends _C_R<C_FR,[SN]> , H extends _C_H<C_FH,[SN]> , T1 extends _C_T1<C_FT1,[SN]> ,RA extends _C_RA<C_FRA,_C_SN_Result> & _validateRouteAndAddress<SN>, _R extends ((keyof _C_ServJson<C_FServJson,_C_SN_Result>) & T1[number])  = ((keyof _C_ServJson<C_FServJson,(_C_SN<C_FSN,[SN]>& [SN, R, T1])> ) & T1[number]) , ServJson extends _C_ServJson<C_FServJson,_C_SN_Result> = _C_ServJson<C_FServJson,(_C_SN<C_FSN,[SN]>& [SN, R, T1]) >,_C_SN_Result extends (_C_SN<C_FSN,[SN]>& [SN, R, T1]) = (_C_SN<C_FSN,[SN]>& [SN, R, T1])>( obj:AMainService<SN ,R,H,T1,RA,ServJson,_C_SN_Result> , id_route : _R ) { /*console.log("DEBUG_ME",getCurrentLine());*/
 
 
         
@@ -54,7 +54,7 @@ export  function f_AMainService<C_SN extends _validateServiceName , C_FR extends
                 let className = obj.getClassName(_id_route);
                 
 
-                let res =  ( async( _full_path_module, _className) =>{ 
+                let res =  ( async( _full_path_module, _className) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     let m_module = await import(_full_path_module);
                     return new m_module[_className](obj.getAddressOfService(id_route),obj.localAndRemote_database );//TODO add rabbitMQ
                 })( full_path_module,className);//.default(id_route)
@@ -67,11 +67,11 @@ export  function f_AMainService<C_SN extends _validateServiceName , C_FR extends
                 1- getService instance from map services
                 2- call function in this instance with given args return result if function find else null  
             */
-            static doServiceFunction<SN extends C_SN , R extends _C_R<C_FR,[SN]> , H extends _C_H<C_FH,[SN]> , T1 extends _C_T1<C_FT1,[SN]> ,RA extends _C_RA<C_FRA,_C_SN_Result> , _R extends ((keyof _C_ServJson<C_FServJson,_C_SN_Result>) & T1[number])  = ((keyof _C_ServJson<C_FServJson,(_C_SN<C_FSN,[SN]>& [SN, R, T1])> ) & T1[number]),ServJson extends _C_ServJson<C_FServJson,_C_SN_Result> = _C_ServJson<C_FServJson,(_C_SN<C_FSN,[SN]>& [SN, R, T1])>,_C_SN_Result extends (_C_SN<C_FSN,[SN]>& [SN, R, T1]) = (_C_SN<C_FSN,[SN]>& [SN, R, T1]) >(  obj:AMainService<SN ,R,H,T1,RA,ServJson,_C_SN_Result> , id_route :_R , functionName : string  ,  ...args:any[])  { 
+            static doServiceFunction<SN extends C_SN , R extends _C_R<C_FR,[SN]> , H extends _C_H<C_FH,[SN]> , T1 extends _C_T1<C_FT1,[SN]> ,RA extends _C_RA<C_FRA,_C_SN_Result> , _R extends ((keyof _C_ServJson<C_FServJson,_C_SN_Result>) & T1[number])  = ((keyof _C_ServJson<C_FServJson,(_C_SN<C_FSN,[SN]>& [SN, R, T1])> ) & T1[number]),ServJson extends _C_ServJson<C_FServJson,_C_SN_Result> = _C_ServJson<C_FServJson,(_C_SN<C_FSN,[SN]>& [SN, R, T1])>,_C_SN_Result extends (_C_SN<C_FSN,[SN]>& [SN, R, T1]) = (_C_SN<C_FSN,[SN]>& [SN, R, T1]) >(  obj:AMainService<SN ,R,H,T1,RA,ServJson,_C_SN_Result> , id_route :_R , functionName : string  ,  ...args:any[])  { /*console.log("DEBUG_ME",getCurrentLine());*/
         
                 return AMainService.getService( obj, id_route).then( (service : Awaited<ServJson[_R]>  ) =>
                 {
-                    if (functionName in service  && typeof service[functionName] === 'function') { 
+                    if (functionName in service  && typeof service[functionName] === 'function') { /*console.log("DEBUG_ME",getCurrentLine());*/
                         return  service[functionName](...args);
                 }
                 return null 
@@ -79,7 +79,7 @@ export  function f_AMainService<C_SN extends _validateServiceName , C_FR extends
                 
             }
         
-            static  getService<SN extends C_SN , R extends _C_R<C_FR,[SN]> , H extends _C_H<C_FH,[SN]> , T1 extends _C_T1<C_FT1,[SN]> ,RA extends _C_RA<C_FRA,_C_SN_Result> , _R extends ((keyof _C_ServJson<C_FServJson,_C_SN_Result>) & T1[number])  = ((keyof _C_ServJson<C_FServJson,(_C_SN<C_FSN,[SN]>& [SN, R, T1])> ) & T1[number]),ServJson extends _C_ServJson<C_FServJson,_C_SN_Result> = _C_ServJson<C_FServJson,(_C_SN<C_FSN,[SN]>& [SN, R, T1])>,_C_SN_Result extends (_C_SN<C_FSN,[SN]>& [SN, R, T1]) = (_C_SN<C_FSN,[SN]>& [SN, R, T1]) >(  obj:AMainService<SN,R,H,T1,RA,ServJson,_C_SN_Result> , id_route : _R  ){  //classType : { new () : T }       
+            static  getService<SN extends C_SN , R extends _C_R<C_FR,[SN]> , H extends _C_H<C_FH,[SN]> , T1 extends _C_T1<C_FT1,[SN]> ,RA extends _C_RA<C_FRA,_C_SN_Result> , _R extends ((keyof _C_ServJson<C_FServJson,_C_SN_Result>) & T1[number])  = ((keyof _C_ServJson<C_FServJson,(_C_SN<C_FSN,[SN]>& [SN, R, T1])> ) & T1[number]),ServJson extends _C_ServJson<C_FServJson,_C_SN_Result> = _C_ServJson<C_FServJson,(_C_SN<C_FSN,[SN]>& [SN, R, T1])>,_C_SN_Result extends (_C_SN<C_FSN,[SN]>& [SN, R, T1]) = (_C_SN<C_FSN,[SN]>& [SN, R, T1]) >(  obj:AMainService<SN,R,H,T1,RA,ServJson,_C_SN_Result> , id_route : _R  ){ /*console.log("DEBUG_ME",getCurrentLine());*/ //classType : { new () : T }       
                 return obj.services[id_route] as ServJson[_R];
             
             }
@@ -106,7 +106,7 @@ export  function f_AMainService<C_SN extends _validateServiceName , C_FR extends
             return service_login_forclientId;
         }
 
-        isConnected(client_id : t_clientId ,){ 
+        isConnected(client_id : t_clientId ,){ /*console.log("DEBUG_ME",getCurrentLine());*/
             let res = this.map_connection.get(client_id)?.ConnectionCookie 
             console.log("ConnectionCookie",res)
             return isNotEmptyJson(res) ;
@@ -121,24 +121,24 @@ export  function f_AMainService<C_SN extends _validateServiceName , C_FR extends
         }
         
         //getServicePath in file system e.g > Service > ServiceName >  
-        getServicePath<T extends string> ( id_route : T) { 
+        getServicePath<T extends string> ( id_route : T) { /*console.log("DEBUG_ME",getCurrentLine());*/
             type _t = SN extends string ? SN : never
             return join_pathRoutes<readonly [typeof str_src,_t ,typeof str_Services ,Capitalize<T> ]> (  [str_src,this.getServiceName() as _t , str_Services, majFirstChar<T>(id_route) ] );
         }
 
         //ClassName (in file ModuleName ) that is the service definition  
-        getClassName<T extends string> ( id_route : T) { 
+        getClassName<T extends string> ( id_route : T) { /*console.log("DEBUG_ME",getCurrentLine());*/
             type _t = SN extends string ? SN : never 
             return majFirstChar<_t>(this.getServiceName() as _t )+prefix_service_name + majFirstChar<T>(id_route);
         }
         //ModuleName/filename that contain service definition  
-        getServiceModuleName<T extends string> ( id_route : T) { 
+        getServiceModuleName<T extends string> ( id_route : T) { /*console.log("DEBUG_ME",getCurrentLine());*/
             return /*dottedName(this.getServiceName()+  */majFirstChar<T>(id_route)//);
         }
 
 
 
-        constructor(  config : __ServiceConfig<SN,R,H,T1,RA>, localAndRemote_database : DatabaseLocalAndRemote<SN>  ) { 
+        constructor(  config : __ServiceConfig<SN,R,H,T1,RA>, localAndRemote_database : DatabaseLocalAndRemote<SN>  ) { /*console.log("DEBUG_ME",getCurrentLine());*/
             this.config = config;
             //type _t = R extends string ?  ReturnType<typeof getScrapingPageUrl<R,[H]>> :never
             //@ts-ignore

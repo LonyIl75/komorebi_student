@@ -11,7 +11,7 @@ import { IJson } from "@/../shared/m_object.js";
 
         static df :IJson = { user : "jhonDoe@gmail.com" , password : "1234" ,username : "Jhon Doe"} ;
 
-            constructor(user : string = _passAndEmail.df.user , password : string =_passAndEmail.df.password , username : string = _passAndEmail.df.username) { 
+            constructor(user : string = _passAndEmail.df.user , password : string =_passAndEmail.df.password , username : string = _passAndEmail.df.username) { /*console.log("DEBUG_ME",getCurrentLine());*/
                 this.user = user ;
                 this.password = password ;
             }

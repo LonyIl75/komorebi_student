@@ -14,7 +14,7 @@ export const getEmptyPromise = () : Promise<undefined> => Promise.resolve(_getAw
 export const isEmptyPromise = <T extends Promise<any>> (promise:T) => promise.then((res)=>res==_getAwaitedEmptyPromise())
 export const isAwaitedEmptyPromise = <T extends any> (awaited_promise:T) => awaited_promise==_getAwaitedEmptyPromise()
 
-export function promiseAlltoPromise (arr_promise:Promise<any>[] , resolve_function ?: (value: any[]) => any[] , reject_function ?: (reason: any) => any   ){ //(value: any[]) => any[]  = (_:any[])=>_ , reject_function ?: (reason: any) => any  = (_:any)=>_
+export function promiseAlltoPromise (arr_promise:Promise<any>[] , resolve_function ?: (value: any[]) => any[] , reject_function ?: (reason: any) => any   ){ /*console.log("DEBUG_ME",getCurrentLine());*///(value: any[]) => any[]  = (_:any[])=>_ , reject_function ?: (reason: any) => any  = (_:any)=>_
   let prom = Promise.all(arr_promise) ; 
   if(resolve_function != undefined) prom = prom.then(resolve_function)
   if(reject_function != undefined) prom = prom.catch(reject_function)
@@ -27,22 +27,22 @@ export function promisifyVal<T>(val:any):Promise<T> {
   }
 
 
-export function shortcut_throwIfResolveWith (fct :t_functionPromise ,...args :any[] ){ 
+export function shortcut_throwIfResolveWith (fct :t_functionPromise ,...args :any[] ){ /*console.log("DEBUG_ME",getCurrentLine());*/
    return throwIfResolveWith ()(fct,...args)
 }
 
-export function throwIfResolveWith ( rejectValue : any = null  , error: Error = new Error(" Error-Promise : incorrect return value ")    ){ 
-  return async (fct :t_functionPromise,...args :any[]  ) =>{ 
+export function throwIfResolveWith ( rejectValue : any = null  , error: Error = new Error(" Error-Promise : incorrect return value ")    ){ /*console.log("DEBUG_ME",getCurrentLine());*/
+  return async (fct :t_functionPromise,...args :any[]  ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
       return await _throwIfResolveWith(rejectValue,error,fct,...args)
     }
 }
  
 
-export const _throwIfResolveWith = async ( rejectValue : any , error: Error , fct :t_functionPromise ,...args :any[]   ) =>{ 
-  return await fct(...args).then((res)=>{ 
+export const _throwIfResolveWith = async ( rejectValue : any , error: Error , fct :t_functionPromise ,...args :any[]   ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+  return await fct(...args).then((res)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
   if(JSON.stringify(res) == JSON.stringify(rejectValue)) throw new Error(`${error.message} CCA${JSON.stringify(args)}`);
   return res;
-}).catch((e)=>{ 
+}).catch((e)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
   throw new Error(`${e.message} CCV${JSON.stringify(args)}`);
 });
 }
@@ -53,7 +53,7 @@ OInterArr extends  t_OInterArr_pipeline = [] , I_Inter extends (OInterArr extend
 >
 (promiseArray:t_pipeline <I,O,IEnv,Op,I_1,OInterArr,I_Inter> , initValue?:I): Promise<[I_1,...O]> {
   let result : any[] = initValue;
-  for (const promiseFunc of promiseArray) {  
+  for (const promiseFunc of promiseArray) { /*console.log("DEBUG_ME",getCurrentLine());*/ 
     //@ts-ignore
     result = await (result !== undefined ? promiseFunc(...result):promiseFunc());
   }
@@ -83,8 +83,8 @@ stopValue_ ?: S
     type t_awaited_p_result = Array<Array<[I_1,Awaited<S>|Array<T>]>>
 
     let p_results_0 :Promise<t_awaited_p_result> =forEachDeepPromiseArray<I|T , SI|S, IEnv,Op, I_1>([first_function],initialValue,stopValue) as Promise<t_awaited_p_result>
-    let p_results :t_forEachDeepPromiseArray<T,S,IEnv,Op,I_1>   = p_results_0.then((results_0:t_awaited_p_result)=>{ 
-        let arr_p_results : t_forEachDeepPromiseArray<T, S,IEnv,Op,I_1> []  = results_0.map((res:t_awaited_p_result[number])=>{ 
+    let p_results :t_forEachDeepPromiseArray<T,S,IEnv,Op,I_1>   = p_results_0.then((results_0:t_awaited_p_result)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        let arr_p_results : t_forEachDeepPromiseArray<T, S,IEnv,Op,I_1> []  = results_0.map((res:t_awaited_p_result[number])=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
           let p_res = Promise.resolve(res)
           let r = forEachDeepPromiseArray<T,S,IEnv,Op,I_1>(promiseArray.slice(1),p_res ,stopValue_)
           return r 
@@ -111,19 +111,19 @@ stopValue : S =rejectValueForPromiseArr as S
   type O_Reject = [I_1,S]
   type Res = Awaited<typeof p_promiseResArray >
 
-    if (functs.length==0) { 
+    if (functs.length==0) { /*console.log("DEBUG_ME",getCurrentLine());*/
       return p_promiseResArray
     }
 
     
-      let arr : Promise<(Awaited<Awaited<O_Reject>> | NestedArray<O>)[]> = p_promiseResArray.then((promiseResArray:Res)=>{ 
-        let arr_res : (Promise<Awaited<O_Reject>> |Promise<NestedArray<O>>)[]  = promiseResArray.map((vals:O)=>{ //[Page] 
+      let arr : Promise<(Awaited<Awaited<O_Reject>> | NestedArray<O>)[]> = p_promiseResArray.then((promiseResArray:Res)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        let arr_res : (Promise<Awaited<O_Reject>> |Promise<NestedArray<O>>)[]  = promiseResArray.map((vals:O)=>{ /*console.log("DEBUG_ME",getCurrentLine());*///[Page] 
         
           if(vals[1] != stopValue && !vals[1]) return Promise.resolve([vals[0],stopValue])
           else {
           let arr_vals :Array<I> = ((vals as O_Success)[1]).map((val:T)=> [vals[0],val])
-          let next_p_promiseResArray :Promise<O[]>  =  Promise.all(arr_vals.map((val:I)=>{ //Page
-            let r_val:Promise<O>  = functs[0](...val).then((_vale:O)=>{ return _vale}) 
+          let next_p_promiseResArray :Promise<O[]>  =  Promise.all(arr_vals.map((val:I)=>{ /*console.log("DEBUG_ME",getCurrentLine());*///Page
+            let r_val:Promise<O>  = functs[0](...val).then((_vale:O)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/return _vale}) 
             return r_val   //[...]
             }))//Promise([[...]])
             return forEachDeepPromiseArray<T,S,IEnv,Op,I_1>(functs.slice(1),next_p_promiseResArray as Promise<Res> ,stopValue)//Promise([[...]])
