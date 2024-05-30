@@ -128,7 +128,7 @@ class HA_Entreprise_ServiceMain  extends  AHA_Service<t_serviceName_entreprise_,
         const scrapingComponent  = mpage.getScrapingComponent()
         let json = null
         let _date = null
-        const max_retry = 4
+        const max_retry = 3
         let retry = 0
         while(retry < max_retry && isEmptyJson(json)){
             console.log("RETRY",retry)
@@ -156,29 +156,48 @@ class HA_Entreprise_ServiceMain  extends  AHA_Service<t_serviceName_entreprise_,
 
         let tmp_json = {} as any 
         const url_toScrap = req.header.url_toScrap || req.header.url
-        const json = _json[url_toScrap][arr_classNameType_entreprise__main[2]].reduce((acc,attribute)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
-            if(attribute?.hasOwnProperty("AllLinks_href") /*!== null*/ ){
-                const attribute_value = attribute["AllLinks_href"]
-                const idx_split = attribute_value.lastIndexOf(attribute_value[str_joinChar_group] || ChildAttributeType.df[str_joinChar_group])
-                const tmp_arr  = [attribute_value.substring(0,idx_split),attribute_value.substring(idx_split+1)].map((_)=>_.trim()) as [t_union_socials , string ]
-                const [ url_socials,name_socials] = isStrEmpty(tmp_arr[0]) ? [tmp_arr[1],"email"] : tmp_arr
-                if(acc.hasOwnProperty(name_socials)){
-                        if(isEmptyJson(tmp_json)){
-                            const entreprise_name = req.header.sld_name || Object.values(getSubDomainAndSld(url_toScrap)).join(convertStrRegexToStr(regex_join_domain))
-                            const all_possibleName = generateName(entreprise_name)
-                            const all_possibleName_strRegex = embedCapturingGroupStrOrRegex(getUnionNonMatchingGroups(...all_possibleName.map((name)=>convertStrToRegexStr(name))),true)
-                            const all_possibleName_regex = new RegExp(all_possibleName_strRegex)
-                            tmp_json= {entreprise_name , all_possibleName_regex}
+        const json = Object.keys(_json[url_toScrap]).reduce((acc,key)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+            const arr_attribute = _json[url_toScrap][key]
+            if(key === arr_classNameType_entreprise__main[2] ){
+                const text_body = arr_attribute.reduce((_acc,attribute)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+                    if(attribute?.hasOwnProperty("TextMainContent_getChildsTextContent")) {
+                        const attribute_value = attribute["TextMainContent_getChildsTextContent"]
+                        const val = attribute_value.replace(/\s+/g," ").trim()
+                        if(val.length > 0) _acc += "\n" + val //__IJsonComponents_leaf_entreprise__main join_char_group ? 
+                    }
+                    return _acc
+                },"").trim()
+                acc["TextMainContent"] = text_body
+            }
+            else if(key === arr_classNameType_entreprise__main[3] ){
+                const json_socials = arr_attribute.reduce((_acc , attribute)=>{
+                    if(attribute?.hasOwnProperty("AllLinks_href") /*!== null*/ ){ /*console.log("DEBUG_ME",getCurrentLine());*/
+                        const attribute_value = attribute["AllLinks_href"]
+                        const idx_split = attribute_value.lastIndexOf(attribute_value[str_joinChar_group] || ChildAttributeType.df[str_joinChar_group])
+                        const tmp_arr  = [attribute_value.substring(0,idx_split),attribute_value.substring(idx_split+1)].map((_)=>_.trim()) as [t_union_socials , string ]
+                        const [ url_socials,name_socials] = isStrEmpty(tmp_arr[0]) ? [tmp_arr[1],"email"] : tmp_arr
+                        if(_acc.hasOwnProperty(name_socials)){
+                                if(isEmptyJson(tmp_json)){
+                                    const entreprise_name = req.header.sld_name || Object.values(getSubDomainAndSld(url_toScrap)).join(convertStrRegexToStr(regex_join_domain))
+                                    const all_possibleName = generateName(entreprise_name)
+                                    const all_possibleName_strRegex = embedCapturingGroupStrOrRegex(getUnionNonMatchingGroups(...all_possibleName.map((name)=>convertStrToRegexStr(name))),true)
+                                    const all_possibleName_regex = new RegExp(all_possibleName_strRegex)
+                                    tmp_json= {entreprise_name , all_possibleName_regex}
+                                }
+                                const [b1,b2] = [tmp_json["all_possibleName_regex"].test(_acc[name_socials]),tmp_json["all_possibleName_regex"].test(url_socials)]
+                                const blen = _acc[name_socials].length > url_socials.length
+                                if( (b2 && ((b1 &&  blen) || !b1 )) || (blen)  ) _acc[name_socials] = url_socials
                         }
-                        const [b1,b2] = [tmp_json["all_possibleName_regex"].test(acc[name_socials]),tmp_json["all_possibleName_regex"].test(url_socials)]
-                        const blen = acc[name_socials].length > url_socials.length
-                        if( (b2 && ((b1 &&  blen) || !b1 )) || (blen)  ) acc[name_socials] = url_socials
-                }
-                else acc[name_socials] = url_socials
-                
+                        else _acc[name_socials] = url_socials
+                    }
+                    return _acc
+                },{})
+                acc = {...acc,...json_socials}
             }
             return acc 
         },{})
+
+
         res.body.result[url_toScrap] = {...res.body?.result?.[url_toScrap] || {},...json,...req.body.fk}
         return [req,res]as ReqAndResType<req_main , res_main>
 

@@ -9,7 +9,7 @@ import {FunctionalWrapperJsonComponentConfig, IFunctionalWrapperJsonComponent}fr
 import { fieldName_st_cst_buildFromFWJson, str_get_arrClassName } from "@/utils/scraping/PageParsing/Schema/FunctionalWrapperJsonComponents/JsonComponents/types.js";
 import { _IJsonComponents } from "@/utils/scraping/PageParsing/Schema/FunctionalWrapperJsonComponents/_JsonComponents/_JsonComponents.js";
 import { _IComponent, _Component } from "@/utils/scraping/PageParsing/Schema/_Component/_Component.js";
-import { Selector, char_child, classProp, containOp, fct_mod_hasDirectChild, fct_mod_not, idProp } from "@/utils/scraping/PageParsing/Schema/primitives/Selector.js";
+import { Selector, char_child, classProp, containOp, fct_mod_has, fct_mod_hasDirectChild, fct_mod_not, idProp } from "@/utils/scraping/PageParsing/Schema/primitives/Selector.js";
 import { nil_value, str_childs_selectors } from "@/utils/scraping/PageParsing/Schema/_Component/types.js";
 import { getConfig } from "@shared/m_json.js";
 import { getEntreprise_Helpers } from "../../util/helpers.js";
@@ -23,9 +23,10 @@ import { embedBeginAndEndOfLineStrOrRegex, embedCapturingGroupStrOrRegex, getGro
 import { regex_domain_tld, regex_head_http_https, regex_head_http_https_complete, regex_join_domain, regex_subdomain } from "@shared/validate-url/regexp.js";
 import { str_StartupsMtp } from "@/routes/scraping-services/Services/src/lespepitestech/Services/StartupsMtp/human-actions.js";
 import {id_field as id_field_StartupsMtp} from "@/routes/scraping-services/Data/lespepitestech/Services/StartupsMtp/StartupsMtp.js";
+import { elem_selector, str_footer, str_header, str_script } from "@/utils/scraping/PageParsing/Schema/utils/misc.js";
 
 export const arr_classNameType_entreprise__main = [
-    rootClassName,entreprise__main_rootClassName,"_AllLinks"
+    rootClassName,entreprise__main_rootClassName,"_TextMainContent","_AllLinks"
 ] as const  
 
 
@@ -45,8 +46,9 @@ const [] = getTypesFromImportedComponentAndFct<t_imported_classNameTypeParent_en
 export const arr_entreprise__main  = 
     [
         getChildArr<t_arr_classNameType_entreprise__main,0,[1]>(arr_classNameType_entreprise__main,0,[1]),
-        getChildArr<t_arr_classNameType_entreprise__main,1,[2]>(arr_classNameType_entreprise__main,1,[2]),
+        getChildArr<t_arr_classNameType_entreprise__main,1,[2,3]>(arr_classNameType_entreprise__main,1,[2,3]),
         getChildArr<t_arr_classNameType_entreprise__main,2>(arr_classNameType_entreprise__main,2),
+        getChildArr<t_arr_classNameType_entreprise__main,3>(arr_classNameType_entreprise__main,3),
     ] as const
 
 export type t_arr_entreprise__main = typeof arr_entreprise__main
@@ -81,8 +83,22 @@ const notCapturing_name_email = "[a-zA-Z0-9_.+-]+"
 const capturing_mail_social = `(?:mailto:)?${embedCapturingGroupStrOrRegex(`${notCapturing_name_email}@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+`,true)}`
 const capturing_social = getUnionNonMatchingGroups(capturing_url_social,capturing_mail_social)
 
+
+
+const arr_t = elem_selector[str_footer].map(fct_mod_hasDirectChild).map((_str)=>elem_selector[str_footer].map(fct_mod_not).join("")+_str + ">" + 
+elem_selector[str_footer].map(fct_mod_not).join("") + elem_selector[str_header].map(fct_mod_not).join("") 
++" "+elem_selector[str_script].map(fct_mod_not).join("")+ elem_selector[str_script].map((_str)=>fct_mod_not(fct_mod_has(_str))).join("")).join(",")
+
+
+
 const __IJsonComponents_leaf_entreprise__main : _IJsonComponents<t_classNameType_leaf_entreprise__main> = {
     [arr_classNameType_entreprise__main[2]]:{
+        childs_selectors : Component.df[str_childs_selectors],
+        childs_attributes : [{[str_attribute_name_function] : "getChildsTextContent"}],
+        value_init : nil_value,
+        //joinChar_group : "\n"
+    },
+    [arr_classNameType_entreprise__main[3]]:{
         childs_selectors : Component.df[str_childs_selectors],
         value_init : nil_value,
         childs_attributes : [{[str_attribute_name] : "href",value_validation_strRegex : capturing_social}]
@@ -98,6 +114,7 @@ const __IJsonComponents_entreprise__main : _IJsonComponents<t_union_classNameTyp
     },
     [arr_classNameType_entreprise__main[1]] :{
         childs_selectors : [
+            [arr_t],
             [           
                 Selector.cst_onePropAndTagg("",'',"a").toString(),
             ]
@@ -146,7 +163,7 @@ const fct_fk = <T extends string > (key :T)=>`${str_fk}_${str_StartupsMtp}_${key
 export const id_field = fct_fk(id_field_StartupsMtp)
 
 const required_field = [] as const 
-const optional_field = ["AllLinks"] as const
+const optional_field = ["TextMainContent","AllLinks"] as const
 
 const arr_pathId = [...required_field,...optional_field,...pagination_field] as const 
 type t_arr_pathId =  typeof arr_pathId
@@ -160,7 +177,8 @@ export type t_resParsing = {
 }
 
 const _mapRegexPathIds_entreprise__main = [
-    [[rootClassName,arr_classNameType_entreprise__main[1],[arr_classNameType_entreprise__main[2]]],["AllLinks"]],
+    [[rootClassName,arr_classNameType_entreprise__main[1],[arr_classNameType_entreprise__main[2]]],["TextMainContent"]],
+    [[rootClassName,arr_classNameType_entreprise__main[1],[arr_classNameType_entreprise__main[3]]],["AllLinks"]],
  ] as const 
 
 //t_mapRegexToIdPath< UnionRegex,UnionIdPath ,ArrUnionClassNameType

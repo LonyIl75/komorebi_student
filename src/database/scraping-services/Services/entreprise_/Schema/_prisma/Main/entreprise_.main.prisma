@@ -18,6 +18,7 @@ model Main {
   tiktok String? 
   youtube String? 
   twitch String? 
+  TextMainContent String?
   fk_StartupsMtp_StartupsMtpType String @unique
   fk_StartupsMtp_id String @unique
 }

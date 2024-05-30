@@ -15,14 +15,17 @@ import { _getAwaitedEmptyPromise } from "@shared/m_promise.js";
 import { str_startupsMtp,str_StartupsMtp } from "./routes/scraping-services/Data/lespepitestech/Services/StartupsMtp/types.js";
 import { getProtocolAndDomain } from "@shared/validate-url/functions.js";
 import fs from "fs"
-import { trySelectors_any } from "./utils/scraping/DOMElements/Selector/main.js";
+import { trySelectors_allSettled_all, trySelectors_any, trySelectors_any_all } from "./utils/scraping/DOMElements/Selector/main.js";
+import { _getMongoDBClusterKOBSuffix, _getMongoDBClusterKOBUrl } from "./config/envVar.js";
+import { getLogFolderPath } from "./config/pathFolder/otherPath.js";
+import path from "path"
 
 const str_fk = "fk" as const
 
-const base_url = "https://lespepitestech.com/startup/montpellier?page=2"  as const 
+const base_url = "https://lespepitestech.com/startup/montpellier"  as const 
 const step_1_isStream = false as const
 
-const step_1 = async (url:string,rest_pipeline:Omit<t_pipeline_json_any,"body">={op:str_while,initEnv : {counter:0,max:11}}) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+const step_1 = async (url:string,rest_pipeline:Omit<t_pipeline_json_any,"body">={op:str_while,initEnv : {counter:0,max:13}}) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const routeName = str_startupsMtp  
     const serviceName = "lespepitestech" as const
     let header = new ServiceRequestHeaderBase(serviceName,routeName,df_client_id,url,undefined,ServiceRequestHeaderBase.enum_privacy.public,step_1_isStream)
@@ -84,7 +87,7 @@ const step_2 = async (ret_step_1:Awaited<ReturnType<typeof step_1>>,_name=name_s
         
     }
     //write in a file arr_trace 
-    await fs.writeFileSync(`${_name}.json`,JSON.stringify(arr_trace))
+    await fs.writeFileSync(path.join(getLogFolderPath(),`${_name}.json`),JSON.stringify(arr_trace))
     return {success:res,reject:arr_error}
     //return await Promise.all(arr_result).then((_)=>({success:res,reject:error})).catch((e)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         //console.log("AERR",e)
@@ -99,3 +102,101 @@ const res_step_2 = _res_step_2.success
 console.log(res_step_2)
 await closeBrowsers()
 console.log("END")
+
+
+/*
+const url = "https://www.mynelis.com/fr"
+
+let header = new ServiceRequestHeaderBase("entreprise_","_",df_client_id,undefined,url,ServiceRequestHeaderBase.enum_privacy.public,true)
+const arr_fct_name =HA_Entreprise_ServiceMain.namesOfPipelineFunction()
+let body = new ServiceRequestBodyBase({body:[arr_fct_name[0],arr_fct_name[2],arr_fct_name[3]]} as any) 
+let res = new res_main(header)
+let req = new req_main(header,body)
+await doServiceEntreprise_("_","process" ,  req,res)
+console.log(res.body.result)
+await closeBrowsers()*/
+/*
+const gl_page = await getNewPage({clientId:df_client_id})
+const mpage = gl_page.mpage
+const response = await mpage.goto(url)
+const page = mpage.page
+
+//await page.setContent((await response.buffer()).toString('utf8'));
+const ttt = [
+    ["html"],
+    [
+         ":not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>footer),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[id*=\"footer\"]),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[class*=\"footer\"])>:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]) :not(script):not(noscript):not(:has(script)):not(:has(noscript))"//>:not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]) :not(script):not(noscript):not(:has(script)):not(:has(noscript))",
+        //":not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>footer),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[id*=\"footer\"]),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[class*=\"footer\"])>:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]) :not(script):not(noscript):not(:has(script)):not(:has(noscript))",
+    ]
+]
+//:not(footer):not([id*="footer"]):not([class*="footer"]):has(>footer)>:not(footer):not([id*="footer"]):not([class*="footer"]):not(header):not([id*="header"]):not([class*="header"]):not(menu):not([id*="menu"]):not([class*="menu"]):not(nav):not([id*="nav"]):not([class*="nav"]) :not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style)),:not(footer):not([id*="footer"]):not([class*="footer"]):has(>[id*="footer"])>:not(footer):not([id*="footer"]):not([class*="footer"]):not(header):not([id*="header"]):not([class*="header"]):not(menu):not([id*="menu"]):not([class*="menu"]):not(nav):not([id*="nav"]):not([class*="nav"]) :not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style)),:not(footer):not([id*="footer"]):not([class*="footer"]):has(>[class*="footer"])>:not(footer):not([id*="footer"]):not([class*="footer"]):not(header):not([id*="header"]):not([class*="header"]):not(menu):not([id*="menu"]):not([class*="menu"]):not(nav):not([id*="nav"]):not([class*="nav"]) :not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style))
+[
+  ":not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>footer),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[id*=\"footer\"]),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[class*=\"footer\"])>:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]):not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style))",
+]
+let elms  :any[]= await trySelectors_any(page,ttt[0])
+let idx = 0 
+for (const selecs of ttt.slice(1)) {
+    elms = await  Promise.all(elms.map((_elm)=>trySelectors_any_all(_elm,selecs)))
+    elms = elms.flat(Infinity).filter((e)=>Array.isArray(e) ? e.length > 0 : e)
+    if(idx == 0) {
+        let text = ""
+        console.log("elms ",elms.length == 1 ? await elms[0].evaluate((e)=>e.outerHTML) : elms.length)
+        for(const elm of elms){
+            text += await  elm.evaluate((_elm)=>{
+                let _text = '';
+                for (const node of _elm.childNodes) {
+                    if (node.nodeType === Node.TEXT_NODE) {
+                    _text += node.textContent
+                    }
+                }
+                return _text.trim();
+            })
+        }
+        console.log("text ",text)
+    }
+    idx++
+}
+
+await closeBrowsers()
+*/
+/*const txts_body = await Promise.all(elms_body.map((elm_body)=> (page as any).evaluate((e)=>{
+    let text = '';
+    for (const node of e.childNodes) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          text += node.textContent
+        }
+      }
+      return text.trim();
+},elm_body)))
+
+const txt_body = txts_body.join("").replace(/\s+/g, ' ').trim()
+await closeBrowsers()
+
+
+import { MongoClient } from "mongodb";
+
+const mongo_base_url = _getMongoDBClusterKOBUrl()
+const mongo_url = mongo_base_url + "/?" + _getMongoDBClusterKOBSuffix()
+
+//windows-1252
+//UTF-8
+//write to file in utf8
+const client = new MongoClient(mongo_url);
+const database = client.db("database0x0000000000000000");
+const haiku = database.collection("tet");
+
+
+const doc = {
+    text: txt_body,
+}
+// Insert the defined document into the "haiku" collection
+const result = await haiku.insertOne(doc);
+
+console.log( `A document was inserted with the _id: ${result.insertedId}` );
+
+fs.writeFileSync("txt_body.txt",txt_body,{encoding:"utf8"})
+
+await client.close();
+
+
+*/

@@ -282,7 +282,7 @@ export default class mTree<unionPathId extends string ,ArrUnionClassNameType ext
     
       if(!res._b.issetSetCond()) res.res_childs = invalid_childs
       //@ts-ignore
-      return res_value || isNotEmptyJson(res.res_childs) ? {res_value:res_value , res_childs : res.res_childs} : invalid_getJsonValue 
+      return (isObject(res_value) ? isNotEmptyJson(res_value) : res_value) || isNotEmptyJson(res.res_childs) ? {res_value:res_value , res_childs : res.res_childs} : invalid_getJsonValue 
   
     }
   

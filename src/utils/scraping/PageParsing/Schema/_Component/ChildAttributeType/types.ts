@@ -81,7 +81,7 @@ export type t_none_attribute_name_function_val = typeof none_attribute_name_func
 export const none_attribute_name_function = {[str_attribute_name_function]:none_attribute_name_function_val} as const 
 export type t_none_attribute_name_function = typeof none_attribute_name_function
 
-export const arr_attribute_name_function_val_ = [none_attribute_name_function_val,"index","getCustomAttribute"] as const
+export const arr_attribute_name_function_val_ = [none_attribute_name_function_val,"index","getCustomAttribute","getChildsTextContent"] as const
 export type t_arr_attribute_name_function_val_ = typeof arr_attribute_name_function_val_
 export type t_union_attribute_name_function_val_ = arrToUnion<t_arr_attribute_name_function_val_>
 
@@ -250,6 +250,12 @@ export const cst_args_getCustomAttribute =  (...args:getArrValuesFromObject<t_ar
     return {name_attribute_from,name_attribute_to}
 }
 
+type t_args_getChildsTextContent = {}
+
+export const cst_args_getChildsTextContent =  (...args:getArrValuesFromObject<t_args_getCustomAttribute>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    return {}
+}
+
 export const arr_function_attribute_function :t_Object_withAttributeNameValue<true,false,t_attributeFunctionName<true>>
 = {
     [arr_attribute_name_function_val_strict[0]]: (node:any) =>  node.evaluate((e:any)=>JSON.stringify(Array.from(e.parentNode.children).indexOf(e))).then((_str:string)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
@@ -259,6 +265,20 @@ export const arr_function_attribute_function :t_Object_withAttributeNameValue<tr
     node.evaluate((e:any,_name_attribute_from:string)=>e.getAttribute(_name_attribute_from),args.name_attribute_from).then((_str:string)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return {[args.name_attribute_to]:_str}
     }),
+    [arr_attribute_name_function_val_strict[2]]: async (node:any,args:t_args_getChildsTextContent) =>  {
+        const r =  await node.evaluate((e:any)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        let text = '';
+        for (const node of e.childNodes) {
+            if (node.nodeType === Node.TEXT_NODE) {
+              text += node.textContent
+            }
+          }
+        return text
+        }).then((_str:string)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+            return {[arr_attribute_name_function_val_strict[2]]:_str}
+        })
+        return r
+    },
     [attribute_name_all] : df_fct_attribute_name_function ,
 }
 

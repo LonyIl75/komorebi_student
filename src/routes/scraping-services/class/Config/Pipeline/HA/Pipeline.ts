@@ -208,48 +208,24 @@ implements t_IAHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassN
 
         console.log("url_toScrap",url_toScrap)
         //TODO : extract in browserPage gotoPage and load
-            if(!mpage.cur_url){ /*console.log("DEBUG_ME",getCurrentLine());*/
-                await mpage.goto(url_toScrap)
-                //await mpage.goto(url_toScrap.slice(0,url_toScrap.length-2))
-                /*await mpage.goto(url_toScrap)
-                mpage.setCurUrl(url_toScrap);*/
-            }
-            
-
-            //await take_screenshot(page,"content_debug.png",2)
-            
-            //if(!this.isLoaded)
-                await page.mouse.move(0, 0);
-                //await time.timer(10000)
-                
-                console.log( `waiting for first load : ${url_toScrap}` ) 
-                //await (trySelectors_any(page,['body:has(div[class*="region"]):has( div[class*="view-content"])'])
-                await fct_loading.waitForPageLoading(page)
-
-                console.log( `waiting for fully load : ${url_toScrap}` ) ;
-                await fct_loading.waitForPageFullLoading(page).then(async (_)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
-                    //await time.timer(1000)
-                })
-
-            
-                await trySelectors_any(page,param.prop_base_selectors)
-                await take_screenshot(page,"content_debug.png",3)
-                console.log( `waiting for base_getParsingTree : ${url_toScrap}` )
-                //toggle(this.isLoaded)
-
-        //TODO : Verify with hasexpose :
-        /*await mpage.addExposeFunction(new ExposeFunction (null,"subsetPage",[],{path:joinFilePath(getPathPageParsing(),"subsetPage.js")}))
-        await mpage.addExposeFunction(new ExposeFunction (null,"TreeParsing",[],{path:joinFilePath(getPathPageParsing(),"TreeParsing.js")}))
-        if(!mpage.scriptFunctionMap.scriptMap.get("base_getParsingTree"))await mpage.page.exposeFunction("base_getParsingTree",base_getParsingTree)
-        if(!mpage.scriptFunctionMap.scriptMap.get("_buildParsingTree"))await mpage.page.exposeFunction("_buildParsingTree",_buildParsingTree)*/
-        //NOTE : expose is already done in initMPage (in BrowsersPools)
-        let tree =  await base_getParsingTree<UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,BaseElement>(mpage,param.prop_base ,param.mapFilter, true )
-
-        while(tree.len <= 1){
-            console.log("waiting for tree")
-            await time.timer(1000)
-            tree =  await base_getParsingTree<UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,BaseElement>(mpage,param.prop_base ,param.mapFilter, true )
+        if(!mpage.cur_url){ /*console.log("DEBUG_ME",getCurrentLine());*/
+            await mpage.goto(url_toScrap)
         }
+        
+        await page.mouse.move(0, 0);
+        
+        console.log( `waiting for first load : ${url_toScrap}` ) 
+        await fct_loading.waitForPageLoading(page)
+
+        console.log( `waiting for fully load : ${url_toScrap}` ) ;
+        await fct_loading.waitForPageFullLoading(page)
+
+    
+        await trySelectors_any(page,param.prop_base_selectors)
+        console.log( `waiting for base_getParsingTree : ${url_toScrap}` )
+
+        let tree =  await base_getParsingTree<UnionIdPath,ArrUnionClassNameType,unionClassNameType,ArrArr,BaseElement>(mpage,param.prop_base ,param.mapFilter, true )
+        if(tree.len <= 1)throw new Error("tree is empty")
         //console.log("tree",tree)
 
         return tree 

@@ -37,6 +37,11 @@ export const trySelectors : t_trySelectorFunction = <T extends mode_of_execution
     return getPromiseArrQuerySelectorFilter(page_or_element, lst_selector, mode_resolution,FSelector.name_functionSelector.querySelector,is_catch ) as   Promise<t_moded_execution_selectors_afterFilter<T, FN>> as ReturnType<t_funct_selector_withCatch<T,FN> >
 }
 
+export const trySelectors_allSettled_all  /*:ITrySelector*/  = async <IsCatch extends boolean = false>(page_or_element: t_pageOrElementHN , lst_selector: Readonly<selectors>, is_catch :IsCatch = false   as IsCatch,  isFiltered : boolean = true   )  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    return getPromiseArrQuerySelectorFilter(page_or_element, lst_selector,mode_of_executionSelector.val_allSettled, FSelectorAll.name_functionSelector.querySelectorAll ,is_catch,isFiltered) as Promise<t_moded_execution_selectors<mode_of_executionSelector.t_any, FSelectorAll.name_functionSelector.querySelectorAll>>  as ReturnType<t_funct_selector_withCatch<mode_of_executionSelector.t_any,FSelectorAll.name_functionSelector.querySelectorAll>>
+
+}
+
 
 export const trySelectors_any_all  /*:ITrySelector*/  = async <IsCatch extends boolean = false>(page_or_element: t_pageOrElementHN , lst_selector: Readonly<selectors>, is_catch :IsCatch = false   as IsCatch,  isFiltered : boolean = true   )  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return getPromiseArrQuerySelectorFilter(page_or_element, lst_selector,mode_of_executionSelector.val_any, FSelectorAll.name_functionSelector.querySelectorAll ,is_catch,isFiltered) as Promise<t_moded_execution_selectors<mode_of_executionSelector.t_any, FSelectorAll.name_functionSelector.querySelectorAll>>  as ReturnType<t_funct_selector_withCatch<mode_of_executionSelector.t_any,FSelectorAll.name_functionSelector.querySelectorAll>>

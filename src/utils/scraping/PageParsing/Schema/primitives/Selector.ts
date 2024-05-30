@@ -33,16 +33,21 @@ export const fct_joinChild = (es:readonly string[]) =>{ /*console.log("DEBUG_ME"
     return (es.slice(1)).reduce((acc,e)=>acc+fct_mod_directChild(e),es[0])
 }
 
-export class PropertyAndOperator{
-    prop:t_property
-    op:t_operator
-    value : string 
+const _propertyAndOperator_toString = < T extends t_property = t_property , Op extends t_operator = t_operator , Val extends string = string > (prop:T,value : Val , op : Op )  =>   `[${prop}${op}\"${value}\"]` as const 
+ 
+export type t_PropertyAndOperator_toString< T extends t_property = t_property , Op extends t_operator = t_operator , Val extends string = string > = 
+T extends undefined ? "" : Val extends undefined ? "" : ReturnType<typeof _propertyAndOperator_toString<T,Op,Val>>
+
+export class PropertyAndOperator<T extends t_property = t_property , Op extends t_operator = t_operator , Val extends string = string  >{
+    prop:T
+    op:Op
+    value : Val 
 
     static df  = {
         op: noOp 
     }
 
-    constructor(prop : t_property,value : string , op : t_operator = PropertyAndOperator.df.op){ /*console.log("DEBUG_ME",getCurrentLine());*/
+    constructor(prop : T,value : Val , op : Op = PropertyAndOperator.df.op as Op){ /*console.log("DEBUG_ME",getCurrentLine());*/
         if(!prop && (value || op )) throw new Error("PropertyAndOperator constructor : prop or value or op is undefined")
         if(!(value && op) && (value || op )) throw new Error("PropertyAndOperator constructor : prop or value or op is undefined")
         this.prop = prop
@@ -50,16 +55,16 @@ export class PropertyAndOperator{
         this.value = value
     }
     toString(){
-        return this.prop && this.value ? `[${this.prop}${this.op}\"${this.value}\"]` :""
+        return (this.prop && this.value ? `[${this.prop}${this.op}\"${this.value}\"]` :"") as t_PropertyAndOperator_toString<T , Op , Val>
     }
 
-    setProp(prop : t_property){ /*console.log("DEBUG_ME",getCurrentLine());*/
+    setProp(prop : T){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.prop = prop
     }
-    setValue(value : string){ /*console.log("DEBUG_ME",getCurrentLine());*/
+    setValue(value : Val){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.value = value
     }
-    setOp(op : t_operator){ /*console.log("DEBUG_ME",getCurrentLine());*/
+    setOp(op : Op){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.op = op
     }
 }

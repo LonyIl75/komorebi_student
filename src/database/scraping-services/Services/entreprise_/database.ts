@@ -7,7 +7,7 @@ const name_module :string  = getNameModule("database","entreprise__database")
 const debug_entreprise__database : Debugger = debug(name_module)
 
 
-import { _getLespepitestechDatabaseName, _getMongoDBSuffix } from "@/config/envVar.js";
+import { _getEntreprise_DatabaseName, _getMongoDBSuffix } from "@/config/envVar.js";
 import { IDatabaseMetaMongoDB,DatabaseMetaMongoDB,IDatabaseMetaSQLite ,DatabaseMetaSQLite, IDatabaseMetaPrisma, DatabaseMetaPrisma, DatabaseAndPrismaMeta, IDatabaseMetaDBMongoDB, DatabaseLocalAndRemote, IDatabaseMetaDBPrisma, IDatabaseMetaDBSQLite, IDatabaseAndPrismaMeta } from "@shared/m_database.js";
 import { getJsonClusterKOB } from "@/config/database.js";
 import { serviceName_entreprise_, t_serviceName_entreprise_ } from '@/controller/scraping-services/Services/Config/entreprise_/config.js';
@@ -19,14 +19,14 @@ import { OptionalKeys, makeOptional, makeRequired, reshapeObject, reshapeObjectI
 
 
 const json_entreprise_RemoteDatabase  : IDatabaseMetaDBMongoDB =  {
-    name: _getLespepitestechDatabaseName(),
+    name: _getEntreprise_DatabaseName(),
     options : {suffix:_getMongoDBSuffix()},
     cluster: getJsonClusterKOB(),
     type : "MongoDB"
 }
 
 const json_entreprise_LocalDatabase  : IDatabaseMetaDBSQLite =  {
-    name: _getLespepitestechDatabaseName(),
+    name: _getEntreprise_DatabaseName(),
     url : getPathServiceSqliteDatabase(serviceName_entreprise_),
     type : "SQLite"
 }
@@ -34,7 +34,7 @@ const json_entreprise_LocalDatabase  : IDatabaseMetaDBSQLite =  {
 const df_isDev = false
 
 const json_entreprise_Prisma : IDatabaseMetaDBPrisma = {  
-    name: _getLespepitestechDatabaseName(),
+    name: _getEntreprise_DatabaseName(),
     url : getServicePathClientPrisma(serviceName_entreprise_,false,df_isDev),
     type : "Prisma"
 }

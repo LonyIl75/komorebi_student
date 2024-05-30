@@ -15,7 +15,8 @@ import { t_pageOrElementHN, selectors } from "@/utils/scraping/DOMElements/Selec
 import { Selector, classProp, containOp } from "@/utils/scraping/PageParsing/Schema/primitives/Selector.js";
 import { getEntreprise_Helpers } from "@/routes/scraping-services/Data/entreprise_/util/helpers.js";
 
-export const entreprise__loadingElements_selectors = ['[class*="pvs-loader"]','[aria-busy=*="true"]'] as const 
+//TODO : handle error or unsafe example : body[tag*="invalid-certificate"] ...
+export const entreprise__loadingElements_selectors = ['body[tag*="invalid-certificate"]','[class*="pvs-loader"]','[aria-busy=*="true"]'] as const 
 
 
 const pageEntreprise__fct_getLoadingElements = page_fct_getLoadingElements(entreprise__loadingElements_selectors)

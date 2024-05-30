@@ -29,6 +29,8 @@ import { t_strRegex } from '@shared/_regexp.js';
 import { embedBeginOfLineStrOrRegex } from '@shared/m_regex_prefixAndSuffix.js';
 import { getProtocolAndDomain } from '@shared/validate-url/functions.js';
 import { time } from '@shared/hours.js';
+//import { error_codes } from '@shared/m_error.js';
+import { is_notFound } from '@shared/m_primitives.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -129,9 +131,13 @@ T extends _IJsonComponents<unionClassNameType>,
 
     async goto(url:string){ /*console.log("DEBUG_ME",getCurrentLine());*/
         console.log("goto",url)
-        await this.page.goto(url);
-        console.log("goto_2",url)
-        this.setCurUrl(url);
+        const  response : any = await this.page.goto(url).then((r)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+            this.setCurUrl(url);
+            return r;
+        })
+        const error_codes = [404, 500, 401, 400, 403, 409]
+        let idx_error_code : number = error_codes.indexOf(response.status())
+        if(is_notFound(idx_error_code)) throw new Error(`Error ${error_codes[(idx_error_code as any)]} : ${url}`)
         //await time.timer(10000)
     }
 

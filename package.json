@@ -22,6 +22,7 @@
     "cpy-static": "node ./scripts/cpy_static.js",
     "after-build": "node ./scripts/after_build.js",
     "start": "node ./dist/src/index.js",
+    "start_debug": "node ./dist/src/index.js > ./logs/logs.txt",
     "build": "npm run clean  && tsc --project tsconfig.json && tsc-alias --project tsconfig.json && npm run cpy-static ",
     "build-and-after-build": "npm run build && npm run after-build",
     "start-server": "nodemon",
