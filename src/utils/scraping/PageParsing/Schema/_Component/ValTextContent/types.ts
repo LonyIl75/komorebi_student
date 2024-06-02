@@ -10,7 +10,7 @@ export const str_value_validation_strRegex = `${str_value}_${str_validation_strR
 export type t_str_value_validation_strRegex = typeof str_value_validation_strRegex
 export type t_value_validation_strRegex = t_strRegex
 
-export const df_value_validation_strRegex = embedBeginAndEndOfLineStrOrRegex(embedCapturingGroupStrOrRegex("[\\S\\s]*",true),true)
+export const df_value_validation_strRegex = embedBeginAndEndOfLineStrOrRegex(`\\s*${embedCapturingGroupStrOrRegex("[\\S\\s]*\\S",true)}\\s*`,true)
 export type t_df_value_validation_strRegex = typeof df_value_validation_strRegex
 
 export const str_joinChar_group = "joinChar_group" as const

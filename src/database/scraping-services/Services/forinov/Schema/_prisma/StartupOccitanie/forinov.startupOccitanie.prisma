@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+model StartupOccitanie {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  date Int
+  StartupOccitanieType String @unique
+  StartupOccitanieSummary String?
+  StartupOccitanieLink_href String?
+  StartupOccitanieFilterText String?
+  StartupOccitanieCreationDate String?
+  StartupOccitanieObjectifs String?
+  StartupOccitanieGeoloc String?
+  StartupOccitaniePresence String?
+  StartupOccitaniePeople String?
+  StartupOccitanieAdresse_1 String?
+  StartupOccitanieAddressed String?
+  StartupOccitanieContact String?
+  StartupOccitanieDateCreation String?
+  StartupOccitaniePaternaire String?
+  StartupOccitanieEffectif String?
+  StartupOccitanieClient String?
+  StartupOccitanieTechnologies String?
+  StartupOccitanieImmat String?
+  StartupOccitanieAdresse_2 String?
+  StartupOccitanieItemTargetSector StartupOccitanieTargetSector[] @relation("StartupOccitanie_TargetSector")
+  StartupOccitanieItemTargetJobs StartupOccitanieTargetJobs[] @relation("StartupOccitanie_TargetJobs")
+  StartupOccitanieItemPartnerShip StartupOccitaniePartnerShip[] @relation("StartupOccitanie_PartnerShip")
+  StartupOccitanieItemCategory StartupOccitanieCategory[] @relation("StartupOccitanie_Category")
+  StartupOccitanieItemContact StartupOccitanieContact[] @relation("StartupOccitanie_Contact")
+  fk_StartupsOccitanie_StartupsOccitanieType String @unique
+  fk_StartupsOccitanie_id String @unique
+}
+
+model StartupOccitanieCategory {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  StartupOccitanieCategory String
+  StartupOccitanieId String @db.ObjectId
+  StartupOccitanie StartupOccitanie @relation("StartupOccitanie_Category",fields: [StartupOccitanieId], references: [id])
+}
+
+model StartupOccitanieContact {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  StartupOccitanieContact String
+  StartupOccitanieContactType String
+  StartupOccitanieId String @db.ObjectId
+  StartupOccitanie StartupOccitanie @relation("StartupOccitanie_Contact",fields: [StartupOccitanieId], references: [id])
+}
+
+model StartupOccitaniePartnerShip {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  StartupOccitaniePartnerShip String
+  StartupOccitanieId String @db.ObjectId
+  StartupOccitanie StartupOccitanie @relation("StartupOccitanie_PartnerShip",fields: [StartupOccitanieId], references: [id])
+}
+
+model StartupOccitanieTargetJobs {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  StartupOccitanieTargetJobs String
+  StartupOccitanieId String @db.ObjectId
+  StartupOccitanie StartupOccitanie @relation("StartupOccitanie_TargetJobs",fields: [StartupOccitanieId], references: [id])
+}
+
+model StartupOccitanieTargetSector {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  StartupOccitanieTargetSector String
+  StartupOccitanieId String @db.ObjectId
+  StartupOccitanie StartupOccitanie @relation("StartupOccitanie_TargetSector",fields: [StartupOccitanieId], references: [id])
+}
+

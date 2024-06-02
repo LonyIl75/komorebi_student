@@ -27,7 +27,7 @@ import { _IJsonComponents } from '../PageParsing/Schema/FunctionalWrapperJsonCom
 import { removeCommentRegex, import_str_regex, getExportedFunctionNameRegex, getExportedClassNameRegex, getVariableNameRegex, getNameOfExportedSet } from '@shared/m_regex_comment.js';
 import { t_strRegex } from '@shared/_regexp.js';
 import { embedBeginOfLineStrOrRegex } from '@shared/m_regex_prefixAndSuffix.js';
-import { getProtocolAndDomain } from '@shared/validate-url/functions.js';
+import { joinGetProtocolAndDomain } from '@shared/validate-url/functions.js';
 import { time } from '@shared/hours.js';
 //import { error_codes } from '@shared/m_error.js';
 import { is_notFound } from '@shared/m_primitives.js';
@@ -124,8 +124,7 @@ T extends _IJsonComponents<unionClassNameType>,
     setCurUrl(url:string){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.cur_url = url;
         if(!url.startsWith(this.base_url)) {
-            const {protocolUrl,domainUrl} = getProtocolAndDomain(url);
-            this.base_url = protocolUrl+domainUrl;
+            this.base_url = joinGetProtocolAndDomain(url);
         }
     }
 

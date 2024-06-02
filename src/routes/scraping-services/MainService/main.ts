@@ -8,6 +8,13 @@ import { LespepitestechServiceMain } from "../Services/src/lespepitestech/Servic
 import { serviceName_entreprise_ } from "@/controller/scraping-services/Services/Config/entreprise_/config.js";
 import { Entreprise_ServiceLogin } from "../Services/src/entreprise_/Services/Login/Login.js";
 import { Entreprise_ServiceMain } from "../Services/src/entreprise_/Services/Main/Main.js";
+import { serviceName_forinov } from "@/controller/scraping-services/Services/Config/forinov/config.js";
+import { str_startupsOccitanie } from "../Services/src/forinov/Services/StartupsOccitanie/human-actions.js";
+import { ForinovServiceMain } from "../Services/src/forinov/Services/Main/Main.js";
+import { ForinovServiceLogin } from "../Services/src/forinov/Services/Login/Login.js";
+import { ForinovServiceStartupsOccitanie } from "../Services/src/forinov/Services/StartupsOccitanie/StartupsOccitanie.js";
+import { str_startupOccitanie } from "../Services/src/forinov/Services/StartupOccitanie/human-actions.js";
+import { ForinovServiceStartupOccitanie } from "../Services/src/forinov/Services/StartupOccitanie/StartupOccitanie.js";
 
 export const json_serviceRoute = {
     //#ADD NEW SERVICE HERE
@@ -19,5 +26,11 @@ export const json_serviceRoute = {
     [serviceName_entreprise_] :{
       [str_login]:Entreprise_ServiceLogin,
       [str_main]:Entreprise_ServiceMain,
-    }
+    },
+    [serviceName_forinov] :{
+      [str_login]:ForinovServiceLogin,
+      [str_main]:ForinovServiceMain,
+      [str_startupsOccitanie]:ForinovServiceStartupsOccitanie,
+      [str_startupOccitanie]:ForinovServiceStartupOccitanie,
+    },
   }

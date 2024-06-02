@@ -47,6 +47,10 @@ export const getProtocolAndDomain= <T extends string>(url:T)=>{ /*console.log("D
     return {protocolUrl:_protocol,domainUrl:_domain}
 }
 
+export const joinGetProtocolAndDomain = <T extends string>(url:T)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    const {protocolUrl,domainUrl} = getProtocolAndDomain(url)
+    return protocolUrl+domainUrl
+}
 export const getSubDomainAndSld= <T extends string>(url:T)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const strRegex_match_protocolAndDomain = regex_url.buildGroupRegexp({
         [str_bodyUrl]: { 

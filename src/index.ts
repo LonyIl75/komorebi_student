@@ -13,27 +13,30 @@ import { applyFctToObjectKeys, isEmptyJson } from "@shared/m_object.js";
 import { arrayIsEqual, isNullArray } from "@shared/m_array.js";
 import { _getAwaitedEmptyPromise } from "@shared/m_promise.js";
 import { str_startupsMtp,str_StartupsMtp } from "./routes/scraping-services/Data/lespepitestech/Services/StartupsMtp/types.js";
-import { getProtocolAndDomain } from "@shared/validate-url/functions.js";
 import fs from "fs"
 import { trySelectors_allSettled_all, trySelectors_any, trySelectors_any_all } from "./utils/scraping/DOMElements/Selector/main.js";
 import { _getMongoDBClusterKOBSuffix, _getMongoDBClusterKOBUrl } from "./config/envVar.js";
 import { getLogFolderPath } from "./config/pathFolder/otherPath.js";
 import path from "path"
+import { str_startupsOccitanie,str_StartupsOccitanie } from "./routes/scraping-services/Data/forinov/Services/StartupsOccitanie/types.js";
+import HA_ForinovServiceStartupsOccitanie from "./routes/scraping-services/Services/src/forinov/Services/StartupsOccitanie/human-actions.js";
+import { doServiceForinov } from "./controller/scraping-services/Services/src/forinov/Forinov.js";
+import { str_startupOccitanie } from "./routes/scraping-services/Data/forinov/Services/StartupOccitanie/types.js";
 
 const str_fk = "fk" as const
 
-const base_url = "https://lespepitestech.com/startup/montpellier"  as const 
+const base_url = "https://www.forinov.fr/startups/AgriTech_20/Abelio_3188/" as const//"https://www.forinov.fr/startups/france-Occitanie_3/" as const//"https://lespepitestech.com/startup/montpellier"  as const 
 const step_1_isStream = false as const
 
 const step_1 = async (url:string,rest_pipeline:Omit<t_pipeline_json_any,"body">={op:str_while,initEnv : {counter:0,max:13}}) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
-    const routeName = str_startupsMtp  
-    const serviceName = "lespepitestech" as const
+    const routeName = str_startupOccitanie//str_startupsOccitanie//str_startupsMtp  
+    const serviceName = "forinov"//"lespepitestech" as const
     let header = new ServiceRequestHeaderBase(serviceName,routeName,df_client_id,url,undefined,ServiceRequestHeaderBase.enum_privacy.public,step_1_isStream)
-    const arr_fct_name =HA_LespepitestechServiceStartupsMtp.namesOfPipelineFunction()
-    let body = new ServiceRequestBodyBase({body:[arr_fct_name[0],arr_fct_name[2],arr_fct_name[4],arr_fct_name[5],arr_fct_name[3],arr_fct_name[6],arr_fct_name[7]],...rest_pipeline} as any ) 
+    const arr_fct_name =HA_ForinovServiceStartupsOccitanie.namesOfPipelineFunction()//LespepitestechServiceStartupsMtp.namesOfPipelineFunction()
+    let body = new ServiceRequestBodyBase({body:[arr_fct_name[0],arr_fct_name[2],arr_fct_name[3]],...rest_pipeline} as any ) 
     let res = new res_startupsMtp(header)
     let req = new req_startupsMtp(header,body)
-    await doServiceLespepitestech(routeName,"process" ,  req,res)
+    await doServiceForinov(routeName,"process" ,  req,res)//doServiceLespepitestech(routeName,"process" ,  req,res)
     return {success:res,reject:[]}
 }
 
@@ -96,10 +99,10 @@ const step_2 = async (ret_step_1:Awaited<ReturnType<typeof step_1>>,_name=name_s
 }
 
 const res_step_1 = await step_1(base_url)
-const _res_step_2  = await step_2(res_step_1)
+/*const _res_step_2  = await step_2(res_step_1)
 //console.log(_res_step_2)
 const res_step_2 = _res_step_2.success
-console.log(res_step_2)
+console.log(res_step_2)*/
 await closeBrowsers()
 console.log("END")
 
@@ -115,50 +118,55 @@ let req = new req_main(header,body)
 await doServiceEntreprise_("_","process" ,  req,res)
 console.log(res.body.result)
 await closeBrowsers()*/
-/*
-const gl_page = await getNewPage({clientId:df_client_id})
-const mpage = gl_page.mpage
-const response = await mpage.goto(url)
-const page = mpage.page
 
-//await page.setContent((await response.buffer()).toString('utf8'));
-const ttt = [
-    ["html"],
-    [
-         ":not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>footer),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[id*=\"footer\"]),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[class*=\"footer\"])>:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]) :not(script):not(noscript):not(:has(script)):not(:has(noscript))"//>:not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]) :not(script):not(noscript):not(:has(script)):not(:has(noscript))",
-        //":not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>footer),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[id*=\"footer\"]),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[class*=\"footer\"])>:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]) :not(script):not(noscript):not(:has(script)):not(:has(noscript))",
-    ]
-]
-//:not(footer):not([id*="footer"]):not([class*="footer"]):has(>footer)>:not(footer):not([id*="footer"]):not([class*="footer"]):not(header):not([id*="header"]):not([class*="header"]):not(menu):not([id*="menu"]):not([class*="menu"]):not(nav):not([id*="nav"]):not([class*="nav"]) :not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style)),:not(footer):not([id*="footer"]):not([class*="footer"]):has(>[id*="footer"])>:not(footer):not([id*="footer"]):not([class*="footer"]):not(header):not([id*="header"]):not([class*="header"]):not(menu):not([id*="menu"]):not([class*="menu"]):not(nav):not([id*="nav"]):not([class*="nav"]) :not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style)),:not(footer):not([id*="footer"]):not([class*="footer"]):has(>[class*="footer"])>:not(footer):not([id*="footer"]):not([class*="footer"]):not(header):not([id*="header"]):not([class*="header"]):not(menu):not([id*="menu"]):not([class*="menu"]):not(nav):not([id*="nav"]):not([class*="nav"]) :not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style))
-[
-  ":not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>footer),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[id*=\"footer\"]),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[class*=\"footer\"])>:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]):not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style))",
-]
-let elms  :any[]= await trySelectors_any(page,ttt[0])
-let idx = 0 
-for (const selecs of ttt.slice(1)) {
-    elms = await  Promise.all(elms.map((_elm)=>trySelectors_any_all(_elm,selecs)))
-    elms = elms.flat(Infinity).filter((e)=>Array.isArray(e) ? e.length > 0 : e)
-    if(idx == 0) {
-        let text = ""
-        console.log("elms ",elms.length == 1 ? await elms[0].evaluate((e)=>e.outerHTML) : elms.length)
-        for(const elm of elms){
-            text += await  elm.evaluate((_elm)=>{
-                let _text = '';
-                for (const node of _elm.childNodes) {
-                    if (node.nodeType === Node.TEXT_NODE) {
-                    _text += node.textContent
-                    }
-                }
-                return _text.trim();
-            })
-        }
-        console.log("text ",text)
-    }
-    idx++
-}
+// const gl_page = await getNewPage({clientId:df_client_id})
+// const mpage = gl_page.mpage
+// const response = await mpage.goto(base_url)
+// const page = mpage.page
+// //await page.setContent((await response.buffer()).toString('utf8'));
+// const ttt = [
+//     ["html>body div[class*=\"row\"]>div[class*=\"col\"]"]//"html body div[class*=\"main-content\"]>div[class*=\"container-fluid\"]>div[class*=\"row\"]>div[class*=\"col\"]"],
+//     // ["div[class*=\"tab-content\"]>div[id*=\"tabPaneOne\"]"],
+//     // [":scope >div[class*=\"row\"]"],
+//     // [":scope div>div[class*=\"container-card-startup\"]"],
+//     // [":scope >a"]
+//     // [
+//     //     ":not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>footer),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[id*=\"footer\"]),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[class*=\"footer\"])>:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]) :not(script):not(noscript):not(:has(script)):not(:has(noscript))"//>:not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]) :not(script):not(noscript):not(:has(script)):not(:has(noscript))",
+//     //     //":not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>footer),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[id*=\"footer\"]),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[class*=\"footer\"])>:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]) :not(script):not(noscript):not(:has(script)):not(:has(noscript))",
+//     // ]
+// ]
+// //:not(footer):not([id*="footer"]):not([class*="footer"]):has(>footer)>:not(footer):not([id*="footer"]):not([class*="footer"]):not(header):not([id*="header"]):not([class*="header"]):not(menu):not([id*="menu"]):not([class*="menu"]):not(nav):not([id*="nav"]):not([class*="nav"]) :not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style)),:not(footer):not([id*="footer"]):not([class*="footer"]):has(>[id*="footer"])>:not(footer):not([id*="footer"]):not([class*="footer"]):not(header):not([id*="header"]):not([class*="header"]):not(menu):not([id*="menu"]):not([class*="menu"]):not(nav):not([id*="nav"]):not([class*="nav"]) :not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style)),:not(footer):not([id*="footer"]):not([class*="footer"]):has(>[class*="footer"])>:not(footer):not([id*="footer"]):not([class*="footer"]):not(header):not([id*="header"]):not([class*="header"]):not(menu):not([id*="menu"]):not([class*="menu"]):not(nav):not([id*="nav"]):not([class*="nav"]) :not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style))
+// // [
+// //   ":not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>footer),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[id*=\"footer\"]),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[class*=\"footer\"])>:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]):not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style))",
+// // ]
+// let elms  :any[]= await trySelectors_any_all(page,ttt[0])
+// let rr = await Promise.all(elms.map((elm)=> elm.evaluate((e)=>e.outerHTML) ))
+// rr.map((r)=>console.log(r))
+// let idx = 0 
+// for (const selecs of ttt.slice(1)) {
+//     elms = await  Promise.all(elms.map((_elm)=>trySelectors_any_all(_elm,selecs)))
+//     elms = elms.flat(Infinity).filter((e)=>Array.isArray(e) ? e.length > 0 : e)
+//     if(idx == 2 || idx == 3) {
+//         let text = ""
+//         console.log("elms ",await elms[0].evaluate((e)=>e.outerHTML) )
+//         for(const elm of elms){
+//             text += await  elm.evaluate((_elm)=>{
+//                 let _text = '';
+//                 for (const node of _elm.childNodes) {
+//                     if (node.nodeType === Node.TEXT_NODE) {
+//                     _text += node.textContent
+//                     }
+//                 }
+//                 return _text.trim();
+//             })
+//         }
+//         console.log("text ",text)
+//     }
+//     idx++
+// }
 
-await closeBrowsers()
-*/
+// await closeBrowsers()
+
 /*const txts_body = await Promise.all(elms_body.map((elm_body)=> (page as any).evaluate((e)=>{
     let text = '';
     for (const node of e.childNodes) {

@@ -204,6 +204,10 @@ export async function _buildParsingTree<
       console.log('_v',_v)
       if(!_v) return Promise.reject(NodeComponent.getEmptyInit())
       let mres : _t_nodeComponent = NodeComponent.getEmptyInit()
+    if(p_prop_base == "StartupOccitanieProfilHeader"){
+      console.log("StartupOccitanieProfilHeader" , await (p_page_or_element as any).evaluate((elem:any)=>elem.outerHTML))
+      
+    }
 
       let _isALeaf : boolean = Component.isEmptyChilds_components(_v)
 
@@ -249,7 +253,7 @@ export async function _buildParsingTree<
                           if(_v.isScoped)_selectors=_selectors.map((child_selector)=>embedding_selector_scope(child_selector)) 
 
                                 const p_nodeOrValues : Promise<t_res_1> = (async (idx:number,selectors:selectors,prop_base : unionclassname ,  component :IComponent<unionclassname,UnionChilds>,  agreg_path : t_agreg_path<unionclassname> , agreg_selector  : selectors[] ,  path_regex_idx :number , agreg_category :   ([t_union_attributeName_,string])[] ,isALeaf:boolean ,is_test :boolean )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
-                                  return trySelectors_any_all(p_page_or_element, selectors).then( (arr_of_elements : Awaited<ReturnType<typeof trySelectors_any_all>> ) : Promise<t_res_1> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+                                  return trySelectors_any_all(p_page_or_element, selectors).then((arr_of_elements : Awaited<ReturnType<typeof trySelectors_any_all>> ) : Promise<t_res_1> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                                   
                                     let i_child : readonly t_resSelector[] 
                                     //@ts-ignore
@@ -298,9 +302,9 @@ export async function _buildParsingTree<
     
                                     }
                                     return  Promise.resolve( TypeChilds.getEmptyInit()  ) 
-                                    
-                                  }).catch((err)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
-                                      return err_function_retPromNullTypeChild( `Error p_nodeOrValue ${JSON.stringify( Component.getChilds_components(component))} index_type : ${idx} on ${prop_base}` )(err)
+
+                                  }).catch(async (err)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+                                    return err_function_retPromNullTypeChild( `Error p_nodeOrValue ${JSON.stringify( Component.getChilds_components(component))} index_type : ${idx} on ${prop_base}` )(err)
                                 })
 
                                 })(getCpyNumber(_idx), [..._selectors],p_prop_base, {..._v} ,_agreg_path  ,[...p_agreg_selector],getCpyNumber(p_path_regex_idx),  [... p_agreg_category] ,_isALeaf ,is_test )

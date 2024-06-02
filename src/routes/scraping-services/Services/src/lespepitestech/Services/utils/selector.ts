@@ -12,11 +12,17 @@ import { selectorsOptions, getDfSelectorsOptions } from "@/utils/scraping/DOMEle
 import { Page, ElementHandle } from "puppeteer";
 import { page_fct_getLoadingElements, page_fct_getMainComponent, page_fct_isLoaded, page_fct_waitForPageFullLoading, waitForPageFullLoading } from "@/utils/scraping/DOMElements/page_selectors.js";
 import { t_pageOrElementHN, selectors } from "@/utils/scraping/DOMElements/Selector/_Selector/type.js";
-import { Selector, classProp, containOp } from "@/utils/scraping/PageParsing/Schema/primitives/Selector.js";
+import { Selector, char_child, classProp, containOp } from "@/utils/scraping/PageParsing/Schema/primitives/Selector.js";
 import { getLespepitestechHelpers } from "@/routes/scraping-services/Data/lespepitestech/util/helpers.js";
 import { root_startupsMtpPage_child_selectors } from "@/routes/scraping-services/Data/lespepitestech/Services/StartupsMtp/types.js";
 
-export const lespepitestech_loadingElements_selectors = root_startupsMtpPage_child_selectors
+export const root_selectors = [getLespepitestechHelpers<string>().arr_selector_join(
+    [
+        {selector:Selector.cst_onePropAndTagg("",'',"html")},
+        {selector:Selector.cst_onePropAndTagg("",'',"body")},
+    ],(arr:string[])=>arr.join(char_child))] as const 
+
+export const lespepitestech_loadingElements_selectors = root_selectors 
 
 
 const pageLespepitestech_fct_getLoadingElements = page_fct_getLoadingElements(lespepitestech_loadingElements_selectors)

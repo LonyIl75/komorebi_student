@@ -158,6 +158,7 @@ export default class mTree<unionPathId extends string ,ArrUnionClassNameType ext
       
 
       const  {cur_node,cur_idx,cur_trad_paths} = buildGetJsonValueRecurParam(this,trad_map,cur_recur)
+      if(!cur_node) return invalid_getJsonValue //TO FIX 
 
       let cur_idxPath_s = mTree.getChildsIdPath<unionPathId,ArrUnionClassNameType>(cur_node,cur_idx,trad_map)
 
