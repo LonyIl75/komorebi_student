@@ -8,12 +8,15 @@ import { t_json_ReqResType_entreprise_ } from "./entreprise_/ConfigReqRes.js";
 import { IsUnion } from "@shared/type.js";
 import { t_json_ReqResType_forinov } from "./forinov/ConfigReqRes.js";
 import { serviceName_forinov } from "@/controller/scraping-services/Services/Config/forinov/config.js";
+import { serviceName_societeTech } from "@/controller/scraping-services/Services/Config/societeTech/config.js";
+import { t_json_ReqResType_societeTech } from "./societeTech/ConfigReqRes.js";
 
 export type t_json_main_service_ReqRes ={
     //#ADD NEW SERVICE HERE
     [serviceName_lespepitestech] : t_json_ReqResType_lespepitestech,
     [serviceName_entreprise_] :  t_json_ReqResType_entreprise_,
     [serviceName_forinov] :  t_json_ReqResType_forinov,
+    [serviceName_societeTech] :  t_json_ReqResType_societeTech,
 }
 
     

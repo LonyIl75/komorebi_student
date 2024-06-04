@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+model StartupMtp {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  date Int
+  StartupMtpPresentation String?
+  StartupMtpType String
+  StartupMtpCEOs String?
+  StartupMtpCreationDate String?
+  StartupMtpHeadquarters String?
+  StartupMtpEmployeesNumber String?
+  StartupMtpActivitySectors String?
+  StartupMtpOtherActivitySectors String?
+  StartupMtpMarketClients String?
+  StartupMtpTech String?
+  StartupMtpFrenchTech String?
+  StartupMtpBusiness String?
+  StartupMtpJobsAdressed String?
+  StartupMtpProductsServices String?
+  StartupMtpMainClients String?
+  StartupMtpInternationalPresence String?
+  StartupMtpIncubatorsAccelerators String?
+  StartupMtpFundRaisingDate String?
+  StartupMtpFundRaisingType String?
+  StartupMtpFundRaisingAmount String?
+  StartupMtpInvestorsShareholders String?
+  StartupMtpLink_href String?
+}

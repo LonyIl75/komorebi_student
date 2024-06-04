@@ -116,6 +116,10 @@ export function enumerate <End extends number, Beg extends number = 0 > ( end :E
     return result as Enumerate<End,Beg>
 }
 
+export function repeat <T extends any>(elem :T , nb :number) { /*console.log("DEBUG_ME",getCurrentLine());*/
+    return Array.from({length: nb}, () => elem)
+}
+
 
 
 //credits : @M Oehm

@@ -49,7 +49,8 @@ class ServiceSelectors<SN extends string> implements IServiceSelectors<SN>{
                 [
                     {selector:Selector.cst_oneProp(classProp,'page_inner',containOp)},
                     {selector:Selector.cst_oneProp(classProp,'row',containOp)},
-                    {selector:Selector.cst_oneProp(classProp,'col',containOp)}
+                    {selector:Selector.cst_oneProp(classProp,'col',containOp)},
+                    selector:Selector.cst_oneProp(idProp,'content',containOp)}
                 ]
             ),
         ] 

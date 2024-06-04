@@ -248,6 +248,22 @@ export const embedOptionalStrOrRegex = <B extends boolean,_T extends (B extends 
     return addStrToRegexOrStr<B,_T,_t,_t_p,_t_s,undefined,_S,_F>(param_regexOrStr, prefixAndSuffix_optional, isStr)
 }
 
+  const prefixAndSuffix_class = new PrefixAndSuffix("[", "]")
+  export const embedClassStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   >(param_regexOrStr: _T, isStr : B ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    type _t = typeof prefixAndSuffix_class
+    type _t_p = t_getPPrefixAndSuffix<_t>
+    type _t_s = t_getSSuffixAndSuffix<_t>
+    return addStrToRegexOrStr<B,_T,_t,_t_p,_t_s,undefined,_S,_F>(param_regexOrStr, prefixAndSuffix_class, isStr)
+  }
+
+const prefixAndSuffix_negativeClass = new PrefixAndSuffix(`${prefixAndSuffix_class._prefix}^`, prefixAndSuffix_class._suffix)
+export const embedNegativeClassStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   >(param_regexOrStr: _T, isStr : B ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    type _t = typeof prefixAndSuffix_negativeClass
+    type _t_p = t_getPPrefixAndSuffix<_t>
+    type _t_s = t_getSSuffixAndSuffix<_t>
+    return addStrToRegexOrStr<B,_T,_t,_t_p,_t_s,undefined,_S,_F>(param_regexOrStr, prefixAndSuffix_negativeClass, isStr)
+}
+
 
 
 export const embedOptCapturingGroupStrOrRegex = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined   >(param_regexOrStr: _T, isStr : B ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/

@@ -4,7 +4,7 @@ import { closeBrowsers, df_client_id, getNewPage } from "./utils/browser/Browser
 import { str_while, t_pipeline_json_any } from "@shared/m_pipeline.js";
 import HA_LespepitestechServiceStartupsMtp from "./routes/scraping-services/Services/src/lespepitestech/Services/StartupsMtp/human-actions.js";
 import { doServiceLespepitestech } from "./controller/scraping-services/Services/src/lespepitestech/Lespepitestech.js";
-import { res_startupsMtp, req_startupsMtp } from "./routes/scraping-services/Services/src/lespepitestech/Services/StartupsMtp/routes.input.js";
+import { res_startupsMtp as res_startupsMtpLespepitestech, req_startupsMtp as req_startupsMtpLespepitestech} from "./routes/scraping-services/Services/src/lespepitestech/Services/StartupsMtp/routes.input.js";
 import HA_Entreprise_ServiceMain from "./routes/scraping-services/Services/src/entreprise_/Services/Main/human-actions.js";
 import { req_main, res_main } from "./routes/scraping-services/Services/src/entreprise_/Services/Main/routes.input.js";
 import { doServiceEntreprise_ } from "./controller/scraping-services/Services/src/entreprise_/Entreprise_.js";
@@ -19,24 +19,43 @@ import { _getMongoDBClusterKOBSuffix, _getMongoDBClusterKOBUrl } from "./config/
 import { getLogFolderPath } from "./config/pathFolder/otherPath.js";
 import path from "path"
 import { str_startupsOccitanie,str_StartupsOccitanie } from "./routes/scraping-services/Data/forinov/Services/StartupsOccitanie/types.js";
-import HA_ForinovServiceStartupsOccitanie from "./routes/scraping-services/Services/src/forinov/Services/StartupsOccitanie/human-actions.js";
+
+
 import { doServiceForinov } from "./controller/scraping-services/Services/src/forinov/Forinov.js";
-import { str_startupOccitanie } from "./routes/scraping-services/Data/forinov/Services/StartupOccitanie/types.js";
+
+import HA_ForinovServiceStartupsOccitanie from "./routes/scraping-services/Services/src/forinov/Services/StartupsOccitanie/human-actions.js";
+import { res_startupsOccitanie as res_startupsOccitanieForinov, req_startupsOccitanie as req_startupsOccitanieForinov} from "./routes/scraping-services/Services/src/forinov/Services/StartupsOccitanie/routes.input.js";
+import { str_startupsOccitanie as str_startupsOccitanieForinov} from "./routes/scraping-services/Data/forinov/Services/StartupsOccitanie/types.js";
+
+import HA_ForinovServiceStartupOccitanie from "./routes/scraping-services/Services/src/forinov/Services/StartupOccitanie/human-actions.js";
+import { res_startupOccitanie as res_startupOccitanieForinov, req_startupOccitanie as req_startupOccitanieForinov} from "./routes/scraping-services/Services/src/forinov/Services/StartupOccitanie/routes.input.js";
+import { str_startupOccitanie as str_startupOccitanieForinov} from "./routes/scraping-services/Data/forinov/Services/StartupOccitanie/types.js";
+
+
+
+
+import HA_SocieteTechServiceStartupsMtp from "./routes/scraping-services/Services/src/societeTech/Services/StartupsMtp/human-actions.js";
+import { doServiceSocieteTech } from "./controller/scraping-services/Services/src/societeTech/SocieteTech.js";
+import { res_startupsMtp as res_startupsMtpSocieteTech, req_startupsMtp as req_startupsMtpSocieteTech} from "./routes/scraping-services/Services/src/societeTech/Services/StartupsMtp/routes.input.js";
+import { res_startupMtp as res_startupMtpSocieteTech, req_startupMtp as req_startupMtpSocieteTech} from "./routes/scraping-services/Services/src/societeTech/Services/StartupMtp/routes.input.js";
+import { societeTech_startupsMtp_mainOfComponents, str_startupsMtp as str_startupsMtpSocieteTech } from "./routes/scraping-services/Data/societeTech/Services/StartupsMtp/types.js";
+import {str_startupMtp as str_startupMtpSocieteTech} from "./routes/scraping-services/Data/societeTech/Services/StartupMtp/types.js";
 
 const str_fk = "fk" as const
 
-const base_url = "https://www.forinov.fr/startups/AgriTech_20/Abelio_3188/" as const//"https://www.forinov.fr/startups/france-Occitanie_3/" as const//"https://lespepitestech.com/startup/montpellier"  as const 
+const base_url = "https://www.forinov.fr/startups/france-Occitanie_3/" as const //"https://www.forinov.fr/startups/AgriTech_20/Abelio_3188/" as const //"https://www.societe.tech/actu/hiotee-levee-de-fonds-de-0-64-millions-deuros/" as const //"https://www.societe.tech/actus/startup-du-monde/startup-europe/startup-france/startup-occitanie/startup-herault/startup-montpellier/" as const//"https://lespepitestech.com/startup/montpellier"  as const 
 const step_1_isStream = false as const
 
-const step_1 = async (url:string,rest_pipeline:Omit<t_pipeline_json_any,"body">={op:str_while,initEnv : {counter:0,max:13}}) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
-    const routeName = str_startupOccitanie//str_startupsOccitanie//str_startupsMtp  
-    const serviceName = "forinov"//"lespepitestech" as const
+const step_1 = async (url:string,rest_pipeline={}//:Omit<t_pipeline_json_any,"body">={op:str_while,initEnv : {counter:0,max:13}}
+)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    const routeName = str_startupsOccitanieForinov//str_startupOccitanieForinov//str_startupMtpSocieteTech//str_startupsMtpSocieteTech//str_startupsOccitanie//str_startupsMtp  
+    const serviceName = "forinov" as const//"societeTech" as const//"lespepitestech" as const
     let header = new ServiceRequestHeaderBase(serviceName,routeName,df_client_id,url,undefined,ServiceRequestHeaderBase.enum_privacy.public,step_1_isStream)
-    const arr_fct_name =HA_ForinovServiceStartupsOccitanie.namesOfPipelineFunction()//LespepitestechServiceStartupsMtp.namesOfPipelineFunction()
-    let body = new ServiceRequestBodyBase({body:[arr_fct_name[0],arr_fct_name[2],arr_fct_name[3]],...rest_pipeline} as any ) 
-    let res = new res_startupsMtp(header)
-    let req = new req_startupsMtp(header,body)
-    await doServiceForinov(routeName,"process" ,  req,res)//doServiceLespepitestech(routeName,"process" ,  req,res)
+    const arr_fct_name = HA_ForinovServiceStartupsOccitanie.namesOfPipelineFunction() //HA_ForinovServiceStartupOccitanie.namesOfPipelineFunction() //HA_SocieteTechServiceStartupMtp.namesOfPipelineFunction()//HA_SocieteTechServiceStartupsMtp.namesOfPipelineFunction()//LespepitestechServiceStartupsMtp.namesOfPipelineFunction()
+    let body = new ServiceRequestBodyBase({body:[arr_fct_name[0],arr_fct_name[2],arr_fct_name[3]],...rest_pipeline} as any ) //new ServiceRequestBodyBase({body:[arr_fct_name[0],arr_fct_name[2],arr_fct_name[3],arr_fct_name[4],arr_fct_name[5],arr_fct_name[6],arr_fct_name[7]],...rest_pipeline} as any ) 
+    let res = new req_startupsOccitanieForinov(header)//new req_startupOccitanieForinov(header)//new res_startupMtpSocieteTech(header)//new res_startupsMtpSocieteTech(header)
+    let req = new res_startupsOccitanieForinov(header,body)//new res_startupOccitanieForinov(header,body)//new req_startupMtpSocieteTech(header,body)//new req_startupsMtpSocieteTech(header,body)
+    await doServiceForinov(routeName,"process" ,  req,res)//await doServiceSocieteTech(routeName,"process" ,  req,res)//doServiceLespepitestech(routeName,"process" ,  req,res)
     return {success:res,reject:[]}
 }
 
@@ -125,14 +144,29 @@ await closeBrowsers()*/
 // const page = mpage.page
 // //await page.setContent((await response.buffer()).toString('utf8'));
 // const ttt = [
-//     ["html>body div[class*=\"row\"]>div[class*=\"col\"]"]//"html body div[class*=\"main-content\"]>div[class*=\"container-fluid\"]>div[class*=\"row\"]>div[class*=\"col\"]"],
+//     ["div[class*=\"content-woo-section--description\"]"],
+//     /*[
+//         "li[class*=\"active\"]",
+//         "li:has(>span[class*=\"active\"])",
+//         "li[class*=\"current\"]",
+//         "li:has(>span[class*=\"current\"])",
+//         "li[class*=\"selected\"]",
+//         "li:has(>span[class*=\"selected\"])",
+//         "li[class*=\"previous\"]",
+//         "li:has(>span[class*=\"previous\"])",
+//       ],*/
+//       [
+//         "li:not([class*=\"active\"]):not(:has(>span[class*=\"active\"])):not([class*=\"current\"]):not(:has(>span[class*=\"current\"])):not([class*=\"selected\"]):not(:has(>span[class*=\"selected\"])):not([class*=\"previous\"]):not(:has(>span[class*=\"previous\"]))",
+//       ]
+//     //societeTech_startupsMtp_mainOfComponents.childs_selectors[0],// "html>body div[class*=\"row\"]>div[class*=\"col\"]"]//"html body div[class*=\"main-content\"]>div[class*=\"container-fluid\"]>div[class*=\"row\"]>div[class*=\"col\"]"],
+//     //["div[class*='products list_woo']"]
 //     // ["div[class*=\"tab-content\"]>div[id*=\"tabPaneOne\"]"],
 //     // [":scope >div[class*=\"row\"]"],
 //     // [":scope div>div[class*=\"container-card-startup\"]"],
 //     // [":scope >a"]
 //     // [
 //     //     ":not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>footer),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[id*=\"footer\"]),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[class*=\"footer\"])>:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]) :not(script):not(noscript):not(:has(script)):not(:has(noscript))"//>:not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]) :not(script):not(noscript):not(:has(script)):not(:has(noscript))",
-//     //     //":not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>footer),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[id*=\"footer\"]),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[class*=\"footer\"])>:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]) :not(script):not(noscript):not(:has(script)):not(:has(noscript))",
+//     //     //":not(footer):not([id*     =\"footer\"]):not([class*=\"footer\"]):has(>footer),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[id*=\"footer\"]),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[class*=\"footer\"])>:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]) :not(script):not(noscript):not(:has(script)):not(:has(noscript))",
 //     // ]
 // ]
 // //:not(footer):not([id*="footer"]):not([class*="footer"]):has(>footer)>:not(footer):not([id*="footer"]):not([class*="footer"]):not(header):not([id*="header"]):not([class*="header"]):not(menu):not([id*="menu"]):not([class*="menu"]):not(nav):not([id*="nav"]):not([class*="nav"]) :not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style)),:not(footer):not([id*="footer"]):not([class*="footer"]):has(>[id*="footer"])>:not(footer):not([id*="footer"]):not([class*="footer"]):not(header):not([id*="header"]):not([class*="header"]):not(menu):not([id*="menu"]):not([class*="menu"]):not(nav):not([id*="nav"]):not([class*="nav"]) :not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style)),:not(footer):not([id*="footer"]):not([class*="footer"]):has(>[class*="footer"])>:not(footer):not([id*="footer"]):not([class*="footer"]):not(header):not([id*="header"]):not([class*="header"]):not(menu):not([id*="menu"]):not([class*="menu"]):not(nav):not([id*="nav"]):not([class*="nav"]) :not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style))
@@ -140,13 +174,17 @@ await closeBrowsers()*/
 // //   ":not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>footer),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[id*=\"footer\"]),:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):has(>[class*=\"footer\"])>:not(footer):not([id*=\"footer\"]):not([class*=\"footer\"]):not(header):not([id*=\"header\"]):not([class*=\"header\"]):not(menu):not([id*=\"menu\"]):not([class*=\"menu\"]):not(nav):not([id*=\"nav\"]):not([class*=\"nav\"]):not(script):not(noscript):not(style):not(:has(script)):not(:has(noscript)):not(:has(style))",
 // // ]
 // let elms  :any[]= await trySelectors_any_all(page,ttt[0])
+// for(const elm of elms){
+//     console.log(await elm.evaluate((e)=>e.textContent))
+// }
+
 // let rr = await Promise.all(elms.map((elm)=> elm.evaluate((e)=>e.outerHTML) ))
 // rr.map((r)=>console.log(r))
 // let idx = 0 
 // for (const selecs of ttt.slice(1)) {
 //     elms = await  Promise.all(elms.map((_elm)=>trySelectors_any_all(_elm,selecs)))
 //     elms = elms.flat(Infinity).filter((e)=>Array.isArray(e) ? e.length > 0 : e)
-//     if(idx == 2 || idx == 3) {
+//     if(idx == 0 || idx == 1) {
 //         let text = ""
 //         console.log("elms ",await elms[0].evaluate((e)=>e.outerHTML) )
 //         for(const elm of elms){

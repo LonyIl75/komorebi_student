@@ -78,7 +78,7 @@ export  class TypeChilds< unionChildType extends string  >   extends  haveSerial
     //TODO interface with function isEq , integrate/"implemented by" in AHaveSerializer for example
     static isEmpty (ch_type:TypeChilds<any>) : boolean {
         let empty = TypeChilds.getEmptyInit()
-        return ch_type.type == empty.type && ch_type.ids == empty.ids
+        return ch_type.type == empty.type && ch_type.ids.length == empty.ids.length
     }
 
 

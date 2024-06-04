@@ -12,7 +12,7 @@ import { selectorsOptions, getDfSelectorsOptions } from "@/utils/scraping/DOMEle
 import { Page, ElementHandle } from "puppeteer";
 import { page_fct_getLoadingElements, page_fct_getMainComponent, page_fct_isLoaded, page_fct_waitForPageFullLoading, waitForPageFullLoading } from "@/utils/scraping/DOMElements/page_selectors.js";
 import { t_pageOrElementHN, selectors } from "@/utils/scraping/DOMElements/Selector/_Selector/type.js";
-import { Selector, char_child, classProp, containOp } from "@/utils/scraping/PageParsing/Schema/primitives/Selector.js";
+import { Selector, char_child, classProp, containOp, idProp } from "@/utils/scraping/PageParsing/Schema/primitives/Selector.js";
 import { getLespepitestechHelpers } from "@/routes/scraping-services/Data/lespepitestech/util/helpers.js";
 import { root_startupsMtpPage_child_selectors } from "@/routes/scraping-services/Data/lespepitestech/Services/StartupsMtp/types.js";
 
@@ -56,6 +56,7 @@ const lespepitestech_loaded_selectors : selectors = [
             {selector:Selector.cst_oneProp(classProp,'page_inner',containOp)},
             {selector:Selector.cst_oneProp(classProp,'row',containOp)},
             {selector:Selector.cst_oneProp(classProp,'col',containOp)},
+            {selector:Selector.cst_oneProp(idProp,'content',containOp)},
             {selector:Selector.cst_oneProp(classProp,'view-content',containOp)}
         ]
     ),

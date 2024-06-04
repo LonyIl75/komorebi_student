@@ -12,7 +12,7 @@ import { majFirstChar } from "@shared/m_string.js"
 export const str_startupsMtp = idRoutes_lespepitestech[2] 
 export type t_str_startupsMtp = typeof str_startupsMtp
 
-export const str_StartupsMtp = majFirstChar(str_startupsMtp)
+export const str_StartupsMtp = "StartupsMtp" as const //majFirstChar(str_startupsMtp)
 export type t_str_StartupsMtp = typeof str_StartupsMtp
 
 export const embedName = <T extends string>(_str:T)=> `${str_StartupsMtp }${_str}` as const 

@@ -15,12 +15,13 @@ import { t_pageOrElementHN, selectors } from "@/utils/scraping/DOMElements/Selec
 import { Selector, char_child, classProp, containOp, idProp } from "@/utils/scraping/PageParsing/Schema/primitives/Selector.js";
 import { getForinovHelpers } from "@/routes/scraping-services/Data/forinov/util/helpers.js";
 
-export const forinov_loadingElements_selectors =  getForinovHelpers<string>().arr_selector_join_arrArr(
+export const root_selectors = [getForinovHelpers<string>().arr_selector_join(
     [
-        [[
-            {selector:Selector.cst_onePropAndTagg("",'',"html")},
-            {selector:Selector.cst_onePropAndTagg("",'',"body")}
-        ]]],(arr:string[])=>arr.join(char_child))[0]
+        {selector:Selector.cst_onePropAndTagg("",'',"html")},
+        {selector:Selector.cst_onePropAndTagg("",'',"body")},
+    ],(arr:string[])=>arr.join(char_child))] as const 
+
+export const forinov_loadingElements_selectors =  root_selectors
 
 
 const pageForinov_fct_getLoadingElements = page_fct_getLoadingElements(forinov_loadingElements_selectors)
@@ -55,6 +56,7 @@ const forinov_loaded_selectors : selectors = [
             {selector:Selector.cst_oneProp(classProp,'row',containOp)},
             {selector:Selector.cst_oneProp(classProp,'col',containOp)},
             {selector:Selector.cst_oneProp(classProp,'view-content',containOp)},
+            {selector:Selector.cst_oneProp(idProp,'content',containOp)},
             {selector:Selector.cst_oneProp(classProp,'tab-content',containOp)},
         ]
     ),

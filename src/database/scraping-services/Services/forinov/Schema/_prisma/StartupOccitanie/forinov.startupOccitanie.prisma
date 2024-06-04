@@ -27,12 +27,12 @@ model StartupOccitanie {
   StartupOccitaniePaternaire String?
   StartupOccitanieEffectif String?
   StartupOccitanieClient String?
-  StartupOccitanieTechnologies String?
+  StartupOccitanieTechnologies StartupOccitanieTechnologies[] @relation("StartupOccitanie_Technologies")
   StartupOccitanieImmat String?
   StartupOccitanieAdresse_2 String?
-  StartupOccitanieItemTargetSector StartupOccitanieTargetSector[] @relation("StartupOccitanie_TargetSector")
-  StartupOccitanieItemTargetJobs StartupOccitanieTargetJobs[] @relation("StartupOccitanie_TargetJobs")
-  StartupOccitanieItemPartnerShip StartupOccitaniePartnerShip[] @relation("StartupOccitanie_PartnerShip")
+  StartupOccitanieTargetSector StartupOccitanieTargetSector[] @relation("StartupOccitanie_TargetSector")
+  StartupOccitanieTargetJobs StartupOccitanieTargetJobs[] @relation("StartupOccitanie_TargetJobs")
+  StartupOccitaniePartnerShip StartupOccitaniePartnerShip[] @relation("StartupOccitanie_PartnerShip")
   StartupOccitanieItemCategory StartupOccitanieCategory[] @relation("StartupOccitanie_Category")
   StartupOccitanieItemContact StartupOccitanieContact[] @relation("StartupOccitanie_Contact")
   fk_StartupsOccitanie_StartupsOccitanieType String @unique
@@ -73,5 +73,12 @@ model StartupOccitanieTargetSector {
   StartupOccitanieTargetSector String
   StartupOccitanieId String @db.ObjectId
   StartupOccitanie StartupOccitanie @relation("StartupOccitanie_TargetSector",fields: [StartupOccitanieId], references: [id])
+}
+
+model StartupOccitanieTechnologies {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  StartupOccitanieTechnologies String
+  StartupOccitanieId String @db.ObjectId
+  StartupOccitanie StartupOccitanie @relation("StartupOccitanie_Technologies",fields: [StartupOccitanieId], references: [id])
 }
 

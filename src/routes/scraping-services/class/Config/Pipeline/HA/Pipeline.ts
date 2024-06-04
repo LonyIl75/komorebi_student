@@ -550,12 +550,17 @@ extends  AHA_ServiceBase<SN,R,Req,Res,UnionRegex,UnionIdPath,ArrUnionClassNameTy
 
         }
 
-        static embedItems <T extends IJson ,TUrl extends string , ItemField extends string  >(_json:T,url_toScrap:TUrl,item_field:ItemField){ /*console.log("DEBUG_ME",getCurrentLine());*/
-            let json = _json[url_toScrap]
+        static embedItems <T extends IJson ,TUrl extends string , ItemField extends string =null  >(_json:T,url_toScrap:TUrl,item_field:ItemField=null){ /*console.log("DEBUG_ME",getCurrentLine());*/
             const _date = _json[date_field]
-            const {bodyUrl,paramsUrl} = getBodyUrlAndParamsReq(url_toScrap)
-            //TODO extract add req_param 
-            json[item_field]= json[item_field].reduce((acc,e,idx)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/return {...acc, [getUrlToScrapItem(bodyUrl,paramsUrl,idx)]:{...e,[date_field] : _date}}},{})//A FAIRE : extract 
+            let json = _isNullOrUndefined(item_field) ? _json :_json[url_toScrap] 
+            if(_isNullOrUndefined(item_field)){
+                json[url_toScrap] = {...json[url_toScrap],[date_field] : _date}
+            }else {
+                const {bodyUrl,paramsUrl} = getBodyUrlAndParamsReq(url_toScrap)
+                //TODO extract add req_param 
+                json[item_field]= json[item_field].reduce((acc,e,idx)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/return {...acc, [getUrlToScrapItem(bodyUrl,paramsUrl,idx)]:{...e,[date_field] : _date}}},{})//A FAIRE : extract 
+               
+            }
             delete json[date_field]
             return json
             

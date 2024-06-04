@@ -15,6 +15,11 @@ import { ForinovServiceLogin } from "../Services/src/forinov/Services/Login/Logi
 import { ForinovServiceStartupsOccitanie } from "../Services/src/forinov/Services/StartupsOccitanie/StartupsOccitanie.js";
 import { str_startupOccitanie } from "../Services/src/forinov/Services/StartupOccitanie/human-actions.js";
 import { ForinovServiceStartupOccitanie } from "../Services/src/forinov/Services/StartupOccitanie/StartupOccitanie.js";
+import { str_startupsMtp as str_startupsMtp_2 } from "../Services/src/societeTech/Services/StartupsMtp/human-actions.js";
+import {serviceName_societeTech} from "@/controller/scraping-services/Services/Config/societeTech/config.js";
+import { SocieteTechServiceLogin } from "../Services/src/societeTech/Services/Login/Login.js";
+import { SocieteTechServiceMain } from "../Services/src/societeTech/Services/Main/Main.js";
+import { SocieteTechServiceStartupsMtp } from "../Services/src/societeTech/Services/StartupsMtp/StartupsMtp.js";
 
 export const json_serviceRoute = {
     //#ADD NEW SERVICE HERE
@@ -33,4 +38,9 @@ export const json_serviceRoute = {
       [str_startupsOccitanie]:ForinovServiceStartupsOccitanie,
       [str_startupOccitanie]:ForinovServiceStartupOccitanie,
     },
+    [serviceName_societeTech] :{
+      [str_login]:SocieteTechServiceLogin,
+      [str_main]:SocieteTechServiceMain,
+      [str_startupsMtp_2]:SocieteTechServiceStartupsMtp,
+    }
   }

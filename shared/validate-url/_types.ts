@@ -38,7 +38,7 @@ Ss extends `${types.t_full_strAndTld<infer S_TLD,infer R>}` ?
 :  Ss extends `${types.t_deb_strAndTld<infer S_TLD>}` ?
   isTLD<S_TLD> extends true ? "" : Ss 
 : Ss ;
-type t_add_strAndTld <Ss extends string ,S_TLD extends string = t_union_tld_df > = types.t_deb_strAndTld<S_TLD,Ss>
+type t_add_strAndTld <Ss extends string ,S_TLD extends string > = types.t_deb_strAndTld<S_TLD,Ss>
 
 
 //TYPE : PART OF URL 
@@ -118,6 +118,7 @@ export type t_str_domain = typeof str_domain
 type t_df_url = {
   [str_head_http_https]:types.t_str_https,
   [str_subdomain]:types.t_str_www,
+  [str_tld]:t_union_tld_df
 }
 
 type _t_url_json = {[str_head_http_https]:string,[str_subdomain]:string,[str_sld]:string,[str_tld]?:string,[str_bodyUrl]?:t_param_body,[str_paramsUrl]?:t_param_req|t_paramReq_arr}
@@ -128,7 +129,7 @@ t_df_url & {[str_sld]:string,[str_bodyUrl]:t_param_body,[str_paramsUrl]:t_param_
 t_jsonFilterUndefinedField<t_jsonAddIfNotExist<_SJson,t_df_url>> extends infer SJson ? SJson extends t_url_json ?
   SJson[t_str_paramsUrl] extends infer PRQ ?
   (PRQ extends t_paramReq_arr ?  getParamReqFromArrArr<PRQ> : PRQ ) extends infer PRQ ? 
-  (SJson[t_str_tld] extends string ? t_add_strAndTld<SJson[t_str_sld],SJson[t_str_tld]>: t_add_strAndTld<SJson[t_str_sld]>) extends infer Result ? Result extends string ? 
+  (SJson[t_str_tld] extends string ? t_add_strAndTld<SJson[t_str_sld],SJson[t_str_tld]>: SJson[t_str_sld]) extends infer Result ? Result extends string ? 
   (SJson[t_str_subdomain] extends string ? t_add_subdomain<Result,SJson[t_str_subdomain]> : Result) extends infer Result ? Result extends string ?
   t_add_head_http_https<Result,SJson[t_str_head_http_https] extends types.t_str_https ? true : false > extends infer Result ? Result extends string ?
   (SJson[t_str_bodyUrl] extends t_param_body ?  SJson[t_str_bodyUrl] extends t_param_body<SJson[t_str_bodyUrl]> ? t_add_bodyUrl<Result,SJson[t_str_bodyUrl]> : never:Result  ) extends infer Result ? Result extends string ?

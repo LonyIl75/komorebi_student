@@ -42,3 +42,4 @@ export const _getMongoDBClusterKOBSuffix = ():string => process.env.MONGO_URL_KO
 export const  _getLespepitestechDatabaseName =  ():string => process.env.DATABASE_MONGO_LESPEPITESTECH;
 export const  _getEntreprise_DatabaseName =  ():string => process.env.DATABASE_MONGO_MDSCANDIDATURE;
 export const  _getForinovDatabaseName =  ():string => process.env.DATABASE_MONGO_FORINOV;
+export const _getSocieteTechDatabaseName =  ():string => process.env.DATABASE_MONGO_SOCIETETECH;

@@ -165,7 +165,7 @@ export const id_field = fct_fk(id_field_StartupsMtp)
 const required_field = [] as const 
 const optional_field = ["TextMainContent","AllLinks"] as const
 
-const arr_pathId = [...required_field,...optional_field,...pagination_field] as const 
+const arr_pathId = [...required_field,...optional_field] as const 
 type t_arr_pathId =  typeof arr_pathId
 type t_path_id = t_arr_pathId[number]
 

@@ -154,6 +154,8 @@ const __IJsonComponents_leaf_forinov_startupOccitanie : _IJsonComponents<t_class
     },
     [arr_classNameType_forinov_startupOccitanie[19]] : {
         childs_selectors : Component.df[str_childs_selectors],
+        [str_value_init] : nil_value,
+        childs_attributes : [{[str_attribute_name] : "href"}]
     },
     [arr_classNameType_forinov_startupOccitanie[20]] : {
         childs_selectors : Component.df[str_childs_selectors],
@@ -171,6 +173,7 @@ const __IJsonComponents_leaf_forinov_startupOccitanie : _IJsonComponents<t_class
     },
     [arr_classNameType_forinov_startupOccitanie[26]] : {
         childs_selectors : Component.df[str_childs_selectors],
+        [str_value_init] : nil_value,
         childs_attributes : [{[str_attribute_name] : "href"}]
     },
     [arr_classNameType_forinov_startupOccitanie[28]] : {

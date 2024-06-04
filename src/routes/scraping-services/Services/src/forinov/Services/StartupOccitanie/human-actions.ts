@@ -151,23 +151,10 @@ class HA_ForinovServiceStartupOccitanie  extends  AHA_Service<t_serviceName_fori
     transformAfterGetServiceFunction(req:req_startupOccitanie , res : res_startupOccitanie, _json:Awaited<ReturnType< typeof HA_ForinovServiceStartupOccitanie.provider[t_str_getServiceFunction]>> )  { /*console.log("DEBUG_ME",getCurrentLine());*/
 
         const url_toScrap = req.header.url_toScrap || req.header.url
-        let json = {[url_toScrap]:_json}
+        let json = AHA_Service.embedItems(_json,url_toScrap)
         let json_item = json
         json_item = Object.keys(json_item).reduce((acc:any,curr_key:any)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             let curr_json = json_item[curr_key]
-            if(curr_json.hasOwnProperty("StartupOccitanieCategory")){
-                curr_json = { ...curr_json, StartupOccitanieItemCategory :  [{StartupOccitanieCategory:curr_json["StartupOccitanieCategory"]}]}
-                delete curr_json["StartupOccitanieCategory"]
-            }
-            else curr_json = { ...curr_json, StartupOccitanieItemCategory : s_getProp(curr_json,"StartupOccitanieItemCategory",[])}//?.map((_elm)=>_elm["StartupOccitanieCategory"])||[]}
-            if(curr_json.hasOwnProperty("StartupOccitanieLink_href")){
-                const _url =joinGetProtocolAndDomain(url_toScrap) + curr_json["StartupOccitanieLink_href"]
-                curr_json["StartupOccitanieLink_href"] = _url
-            }
-            if(curr_json.hasOwnProperty("StartupOccitanieItemSummary")){
-                curr_json = { ...curr_json, StartupOccitanieSummary :  curr_json["StartupOccitanieItemSummary"].map((elm)=>elm["StartupOccitanieSummary"]).join("")}
-                delete curr_json["StartupOccitanieItemSummary"]
-            }
             
             acc[curr_key] = curr_json
             return acc

@@ -138,7 +138,7 @@ export type t_json_forinov_main = typeof json_forinov_main
 const required_field = [] as const 
 const optional_field = ["MainBody"] as const
 
-const arr_pathId = [...required_field,...optional_field,...pagination_field] as const 
+const arr_pathId = [...required_field,...optional_field] as const 
 type t_arr_pathId =  typeof arr_pathId
 type t_path_id = t_arr_pathId[number]
 

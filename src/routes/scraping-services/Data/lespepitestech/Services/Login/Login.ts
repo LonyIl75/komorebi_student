@@ -131,7 +131,7 @@ export type t_json_lespepitestech_login = typeof json_lespepitestech_login
 const required_field = [] as const 
 const optional_field = ["LoginBody"] as const
 
-const arr_pathId = [...required_field,...optional_field,...pagination_field] as const 
+const arr_pathId = [...required_field,...optional_field] as const 
 type t_arr_pathId =  typeof arr_pathId
 type t_path_id = t_arr_pathId[number]
 

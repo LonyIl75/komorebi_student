@@ -215,16 +215,16 @@ const __IJsonComponents_lespepitestech_startupsMtp : _IJsonComponents<t_union_cl
     },
     StartupsMtpPagination:{
         childs_selectors : [
-            [
-                Selector.cst_onePropAndTagg(classProp,'active',"li",containOp).toString(),
-                Selector.cst_onePropAndTagg(classProp,'current',"li",containOp).toString(),
-                Selector.cst_onePropAndTagg(classProp,'selected',"li",containOp).toString(),
-            ],
             lespepitestech_startupsMtp_helpers.arr_selector([
                 Selector.cst_multPropAndTagg(classProp,['active','current','selected','previous'],"li",containOp,[fct_mod_not]).toString(),
             ],
             (str_selector)=> str_selector + char_child + Selector.cst_onePropAndTagg("",'',"a").toString()
-            )
+            ),
+            [
+                Selector.cst_onePropAndTagg(classProp,'active',"li",containOp).toString(),
+                Selector.cst_onePropAndTagg(classProp,'current',"li",containOp).toString(),
+                Selector.cst_onePropAndTagg(classProp,'selected',"li",containOp).toString(),
+            ]
         ]
 
     }

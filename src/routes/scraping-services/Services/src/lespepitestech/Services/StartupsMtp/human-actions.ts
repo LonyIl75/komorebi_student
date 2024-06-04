@@ -3,7 +3,7 @@ import { idRoutes_lespepitestech, serviceName_lespepitestech, t_serviceName_lesp
 export const str_startupsMtp = idRoutes_lespepitestech[2] 
 export type t_str_startupsMtp = typeof str_startupsMtp
 
-export const str_StartupsMtp = "StartupsMtp" as const
+export const str_StartupsMtp = "StartupsMtp" as const //majFirstChar(str_startupsMtp)
 export type t_str_StartupsMtp = typeof str_StartupsMtp
 
 import { debug,debug_join,debug_with_curLine,debug_start_with_curLine,debug_end_with_curLine, debug_with_curLine_isresult} from "@shared/m_debug.js";
@@ -40,6 +40,7 @@ import { getBodyUrlAndParamsReq, joinEndParamUrlIfNotEmpty } from "@shared/valid
 import { joinBegParamUrl, joinReqUrl } from "@shared/validate-url/types.js";
 import { mergeSaved } from "@/routes/scraping-services/class/utils/Data/ServiceRoute.js";
 import { convertToArray } from "@shared/m_array.js";
+import { majFirstChar } from "@shared/m_string.js";
 
 type t_args_getTree < BaseElement extends t_unionClassName_startupsMtp=t_rootClassName>= t_AHA_Service_ArgsGetTree<t_serviceName_lespepitestech,t_str_startupsMtp ,BaseElement,t_unionRegex_mapRegex_lespepitestech_startupsMtp ,t_unionIdPath_mapRegex_lespepitestech_startupsMtp , t_arrClassName_startupsMtp,t_unionClassName_startupsMtp ,t_arrChilds_startupsMtp ,  t_IJsonComponent_startupsMtp>
 

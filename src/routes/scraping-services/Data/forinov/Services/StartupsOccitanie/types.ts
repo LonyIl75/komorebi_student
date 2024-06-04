@@ -8,12 +8,12 @@ import { enum_forinov_style, getForinovHelpers } from "../../util/helpers.js"
 import { StrChildType, empty_ids } from "@/utils/scraping/PageParsing/TypeChilds/types.js"
 import { idRoutes_forinov } from "@/controller/scraping-services/Services/Config/forinov/config.js"
 import { majFirstChar } from "@shared/m_string.js"
-import { root_selectors } from "@/routes/scraping-services/Services/src/lespepitestech/Services/utils/selector.js"
+import { root_selectors } from "@/routes/scraping-services/Services/src/forinov/Services/utils/selector.js"
 
 export const str_startupsOccitanie = idRoutes_forinov[2] 
 export type t_str_startupsOccitanie = typeof str_startupsOccitanie
 
-export const str_StartupsOccitanie = majFirstChar(str_startupsOccitanie)
+export const str_StartupsOccitanie = "StartupsOccitanie" as const//majFirstChar(str_startupsOccitanie)
 export type t_str_StartupsOccitanie = typeof str_StartupsOccitanie
 
 export const embedName = <T extends string>(_str:T)=> `${str_StartupsOccitanie }${_str}` as const 

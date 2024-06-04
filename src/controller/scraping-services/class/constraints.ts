@@ -8,12 +8,14 @@ import { t_param_body, t_param_req, t_url } from "@shared/validate-url/_types.js
 import { ReqAndResType } from "@/routes/scraping-services/class/utils/Data/ReqResRoute.js"
 
 
+type fdsfds =  t_url<{subdomain:undefined,sld:"jfkdsf.fedsfds",tld:undefined}> 
+
 export type _validateServiceName = string
 //A FAIRE : t_url union 
 export type _validateRemoteAddress<SN extends _validateServiceName > =  
-string extends SN ? t_url<{subdomain:string,sld:SN,tld:string}>|t_url<{subdomain:undefined,sld:SN,tld:string}>  : 
+string extends SN ? t_url<{subdomain:string,sld:SN,tld:string}>|t_url<{subdomain:undefined,sld:SN,tld:string}>|t_url<{subdomain:undefined,sld:SN,tld:undefined}>| t_url<{subdomain:string,sld:SN,tld:undefined}>  : 
 t_joinMaj_to_joinChar<SN,"."|"_"|"-"> extends infer _SN ? _SN extends string ? 
-t_url<{subdomain:undefined,sld:_SN,tld:string}>|t_url<{subdomain:string,sld:_SN,tld:string}> : never : never 
+t_url<{subdomain:undefined,sld:_SN,tld:string}>|t_url<{subdomain:string,sld:_SN,tld:string}> |t_url<{subdomain:undefined,sld:_SN,tld:undefined}>| t_url<{subdomain:string,sld:_SN,tld:undefined}>: never : never 
 
 export type t_args_validateRemoteAddress = [_validateServiceName] 
 export type t_fnValidateRemoteAddress = Fn<t_args_validateRemoteAddress,_fnValidateRemoteAddress<t_args_validateRemoteAddress>>

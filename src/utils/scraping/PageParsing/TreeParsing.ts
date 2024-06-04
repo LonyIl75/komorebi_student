@@ -35,6 +35,7 @@ import { ChildAttributeTypeValue } from './Schema/_Component/ChildAttributeType/
 import { str_joinChar_group, str_value, str_value_init, str_value_validation_strRegex } from './Schema/_Component/ValTextContent/types.js';
 import { getRegexGS, isEmptyStrRegex } from '@shared/m_regex.js';
 import { getMatchAndPosFromRegexMatchingInterval } from '@shared/m_regex_matchObject.js';
+import { enum_prisma_op } from '@/database/scraping-services/utils/prisma.js';
 
 
 const parent_component_color = "red"
@@ -60,7 +61,9 @@ export const getAttributesValues  = async (page_or_element : t_pageOrElementHN ,
           
               let attr = ChildAttributeType.fromJson(json_attr as any )
               let elem =  attr?.[str_selector] ? await page_or_element.$(attr[str_selector]) : page_or_element
-           
+              if(!elem) {
+                console.log("ATTR",JSON.stringify(json_attr),"EVAL",await (page_or_element as any).evaluate((elem:any)=>elem.outerHTML),"EEE",attr?.[str_selector])
+              }
 
 
               const getCurValueOfNode =async (attributeValue :ChildAttributeType, _node:any)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
