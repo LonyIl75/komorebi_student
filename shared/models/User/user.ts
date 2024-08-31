@@ -1,4 +1,5 @@
 
+import getCurrentLine from "get-current-line"
 import { nullOrUndefined } from "@shared/m_primitives.js";
 import * as Yup from "yup"
 
@@ -23,7 +24,7 @@ export interface IUser{
 const df_refreshToken : "0"= "0" as const ; 
 type t_df_refreshToken = typeof df_refreshToken
 type t_isDfRefreshToken <T extends string > = T extends t_df_refreshToken ? true : false
-const isDfRrefreshToken = <T extends string > (refreshToken: T)  =>{
+const isDfRrefreshToken = <T extends string > (refreshToken: T)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return (refreshToken === df_refreshToken) as t_isDfRefreshToken<T>;
 }
 
@@ -38,7 +39,7 @@ export class User implements IUser{
     static df_refreshToken = df_refreshToken;
     static isDfRrefreshToken =isDfRrefreshToken
 
-    constructor(username: string, password: string, refreshToken : string=User.df_refreshToken){
+    constructor(username: string, password: string, refreshToken : string=User.df_refreshToken){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.username = username;
         this.password = password;
         this.refreshToken = refreshToken
@@ -52,11 +53,11 @@ export class User implements IUser{
     }
 
     static fromJson(data: any): [User | nullOrUndefined, string[]|null ] {
-        UserSchema.validate(data).catch((e:Yup.ValidationError)=> {return [User.invalid_User(),e.errors] }); //TODO
+        UserSchema.validate(data).catch((e:Yup.ValidationError)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/return [User.invalid_User(),e.errors] }); //TODO
         return [ new User(data.username, data.password, data.refreshToken) , null ] ; 
     }
 
-    static toJson(user: User) {
+    static toJson(user: User) { /*console.log("DEBUG_ME",getCurrentLine());*/
         return { username: user.username, password: user.password, refreshToken: user.refreshToken } as const ;
     }
 }

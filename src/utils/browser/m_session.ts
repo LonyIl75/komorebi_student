@@ -10,5 +10,5 @@ const debug_browserPool : Debugger = debug(getNameModule("scraping_services_util
 
 import { hours } from '@shared/hours.js';
 
-export const get_session_maxAge = ():number => { return hours.minuteToMilli(30) } 
-export const get_session_originalMaxAge = ():number => { return hours.hourToMilli(2) }
+export const get_session_maxAge = ():number =>{ /*console.log("DEBUG_ME",getCurrentLine());*/ return hours.minuteToMilli(30) } 
+export const get_session_originalMaxAge = ():number =>{ /*console.log("DEBUG_ME",getCurrentLine());*/ return hours.hourToMilli(2) }

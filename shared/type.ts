@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 
 export const _notFoundIdx = ():-1 => -1
 export type t_notFoundIdx = ReturnType<typeof _notFoundIdx>
@@ -39,7 +40,7 @@ export type t_alphaNumeriChar = t_alphabet|t_alphabetMaj | t_char_number
 export const none_attributeName : "__none__" = "__none__" 
 export type t_none_attributeName = typeof none_attributeName 
 export type t_isNoneAttributeName <T extends string> = T extends t_none_attributeName ? true : false 
-export const isNoneAttributeName =<T extends string>(attr_name : any  ) : attr_name is t_none_attributeName =>{
+export const isNoneAttributeName =<T extends string>(attr_name : any  ) : attr_name is t_none_attributeName =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
   return (attr_name === none_attributeName) as t_isNoneAttributeName<T>
 }
 export const arr_attributeName = [none_attributeName,"id","src","alt","href","type","color","aria-label"] as const
@@ -55,7 +56,7 @@ export const arr_attributeName_strict = arr_attributeName.slice(1) as removeFirs
 export type t_arr_attributeName_strict = typeof arr_attributeName_strict
 export type t_attributeName_val <isStrict extends boolean = false  >= isStrict extends true ? t_union_attributeName_strict : t_union_attributeName 
 
-export const validateAttributeNameValue = <t_isStrict extends boolean = boolean> (name : t_attributeName_val<t_isStrict> , isStrict?:t_isStrict ) => {
+export const validateAttributeNameValue = <t_isStrict extends boolean = boolean> (name : t_attributeName_val<t_isStrict> , isStrict?:t_isStrict ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
   return isStrict === undefined ||isStrict === false ? arr_attributeName.includes(name)  : arr_attributeName_strict.includes(name as t_attributeName_val<true>)
 }
 
@@ -140,9 +141,12 @@ export type _Enumerate<N extends number, Acc extends number[] = []> = Acc['lengt
   : _Enumerate<N, [...Acc, Acc['length']]>
 
 
-  export type Enumerate<N extends number> = 
-  _Enumerate<N> extends infer A ? A extends readonly number[] ? A[number] :never :never
 
+  export type Enumerate<End extends number , Beg extends number =  0 > = 
+  _Enumerate<Beg> extends infer BegArr ? BegArr extends readonly number[] ?
+  _Enumerate<End,[...BegArr]> extends infer A ? A extends readonly number[] ? A :never :never:never:never
+
+export type EnumerateUnion <End extends number , Beg extends number =  0 > = Enumerate<End,Beg>[number]
 
 export type isRepetitivePatternStr < T extends string , pattern extends string , joinChar extends string =""> = 
   T extends "" ? false : T extends `${pattern}${joinChar}${infer R}` ? 
@@ -153,7 +157,7 @@ export type isRepetitivePatternStr < T extends string , pattern extends string ,
 export type isRepetitiveUnion <  T extends string, pattern extends string , joinChar extends string ="" > = isRepetitivePatternStr<T,pattern,joinChar> extends true ? true : false 
 
 
-type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
+type IntRange<F extends number, T extends number> = Exclude<EnumerateUnion<T>, EnumerateUnion<F>>
 
 export type isInRange<x extends number ,bot extends number , top extends number > = x extends IntRange<bot, top> ? true : false 
 
@@ -368,7 +372,7 @@ export type upsertInSimpleJson <_json extends {readonly [k in t_indexable_key]:a
 
 
 interface FnArrToUnion extends Fn {
-  return: _arrToUnion<Args<this>>
+  return: Args<this> extends readonly any[] ? arrToUnion<Args<this>> : never 
 }
 
 type _replaceOptional < TF extends t_function  > = 
@@ -397,7 +401,6 @@ export type repeat < T extends string , Acc extends readonly string[]> =
       `${T}${repeat<T,R>}` 
     : "" : ""
 
-type _arrToUnion <T> = T extends  readonly [any,... infer R] ? R extends readonly any[] ? T[0] | _arrToUnion <R> : never : never
 
 export type t_arrSameLength < Arr1 extends readonly any[] , Arr2 extends readonly any[]> = Arr1['length'] extends Arr2['length'] ? true : false
 export type _constraintSameLengthArr < T extends any , N extends number ,Acc extends readonly T[] = readonly [] > =N extends Acc["length"] ? Acc : _constraintSameLengthArr<T,N,readonly  [T,...Acc]>
@@ -421,7 +424,13 @@ export type t_emptyNDArray = t_empty1DArray | NestedArray<t_empty1DArray>
 
 
 export type arrAdd < T extends readonly any[] , Add extends any  > = T extends  readonly [any,... infer R] ? [T[0],...arrAdd<R,Add>] :[] 
-export type arrToUnion <T extends readonly any[] > = T extends  readonly [any,... infer R] ? R extends readonly any[] ? T[0] | arrToUnion <R> : never : never
+
+//TODO :
+  type _arrToUnion_ <T extends readonly any[] > = T extends  readonly [any,... infer R] ? R extends readonly any[] ? T[0] | _arrToUnion_ <R> : never : T extends readonly string[] ? T[number] : never
+  export type arrToUnion <T extends readonly any[]> =  T extends undefined ? never : 
+  T extends  readonly [any,... infer R] ? R extends readonly any[] ? T[0] | arrToUnion <R> : never : 
+  T[number] extends infer A ? A extends string ?  A  : never : never
+
 export type arrToUnion_add <T extends readonly any[] , Add extends any  > = arrAdd <arrToUnion < T > , Add>
 
 export type arrArrAdd < T extends readonly (readonly any[]) [] , Add extends readonly any[] =[] > = T extends  readonly [readonly any[],... infer R] ? R extends readonly any[] ? [[...Add,...T[0]],...arrArrAdd<R,Add>] :[] :[]
@@ -613,11 +622,18 @@ export type t_JoinChar_pipe < T extends readonly string[] > = t_JoinChar<T,t_joi
 
 
 
-export  type t_joinCapitalize< Arr extends readonly string[]> = Arr extends readonly [infer A ,... infer B] ? 
+type _t_joinCapitalize< Arr extends readonly string[]> = Arr extends readonly [infer A ,... infer B] ? 
 A extends string ? 
-        B extends readonly string[]? `${Capitalize<A>}${t_joinCapitalize<B>}`:`${Capitalize<A>}`
+        B extends readonly string[]? `${Capitalize<A>}${_t_joinCapitalize<B>}`:`${Capitalize<A>}`
 : never
 : ""
+
+export  type t_joinCapitalize< Arr extends readonly string[]> = Arr extends readonly [infer A ,... infer B] ? 
+A extends string ? 
+      B extends readonly string[]? `${A}${_t_joinCapitalize<B>}` : never 
+: never
+: ""
+
 
 export type t_joinUnderscore_to_joinMaj<T extends string> = t_joinChar_to_joinMaj<T,t_join_underscore>
 
@@ -633,7 +649,7 @@ export type isCharNumber <T extends string> = T extends `${t_char_number}` ? tru
 
 export type majCuttingRetArr<T extends string , Buff extends string =""> =
   T extends `${infer A}${infer Rest}` ?
-    A extends Capitalize<A> ? 
+    A extends t_alphabetMaj ? 
       Buff extends "" ? 
         majCuttingRetArr<Rest,`${Lowercase<A>}`> 
         : isStrNumber<A> extends true ? 
@@ -901,18 +917,25 @@ export type t_filter< T extends any[]> = t_filter_elemOfArr <isInferior <T['leng
 export  type t_filter_arrType <T extends any[]> = Exclude<T,t_emptyNDArray/*never[]|[[]]|[][]*/>|[]
 
 
-export type Permutation<T, K=T> =
+type _Permutation <U , Arr extends readonly any[], K = U , Acc = []> =  Arr extends readonly [any, ... infer R] ?  IsUnion<U> extends false ?
+R extends [] ? [U] : never  :
+  K extends K ? [K,..._Permutation<Exclude<U,K>,R>] :never: []
+
+export type PermutationArr < U , Arr extends readonly any[] > = _Permutation<U,Arr>
+export type PermutationNb < U , N extends number > = _Permutation<U,Enumerate<N>>
+export type PermutationU<T, K=T> =
 [T] extends [never]
   ? []
   : K extends K
-    ? [K, ...Permutation<Exclude<T, K>>]
+    ? [K, ...PermutationU<Exclude<T, K>>]
     : never
 
 type _AllPermutation <T , K=T> = 
 IsUnion<T> extends false ? never :
-K extends K ? Permutation<Exclude<T, K>>|_AllPermutation<Exclude<T, K>> : [] 
+K extends K ? PermutationU<Exclude<T, K>>|_AllPermutation<Exclude<T, K>> : [] 
   
-export type AllPermutation <T> = Permutation<T> | _AllPermutation<T>
+//TODO : to securized if to large 
+export type AllPermutation <T> = PermutationU<T> | _AllPermutation<T>
 
 export type validateStrIsInAllPermutation <V extends string , U extends string > = stringToArray<V> extends AllPermutation<U> ? V : never 
 
@@ -924,6 +947,17 @@ type t_rest_classe<P=any > = {prototype: P}
 
 export type t_class = t_constructor & t_rest_classe
 export type t_class_abs = t_abs_constructor & t_rest_classe
+
+
+export type getNameOfStaticFields<_this> = Exclude<keyof _this,"prototype">
+export type t_typeofClass = {"prototype":any} & {[k in string]:any}
+
+export type _t_verifyStatic<_this extends {[k in string]:any} ,staticType extends {[k in string]:any} >  = 
+{[k in getNameOfStaticFields<_this> as k extends keyof staticType ? _this[k] extends staticType[k] ? k : never : k  ] : _this[k]}
+
+export type t_verifyStatic<_this extends t_typeofClass ,staticType extends {[k in string]:any} , needisComplete extends boolean = false > = _t_verifyStatic<_this,staticType> extends infer A ?
+A extends {[k in string]:any} ? 
+needisComplete extends true ? keyof staticType extends keyof A ? A : never : A : never : never 
 
 
 

@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { concatArraysAndRemoveDuplicates, joinArray_with_char } from "@shared/m_array.js"
 import { IJson } from "@shared/m_object.js"
 import { _isNullOrUndefined, t__isNullOrUndefined } from "@shared/m_primitives.js"
@@ -11,7 +12,7 @@ export namespace m_regex_getContext {
         
     const df_getIthContextSuffix_joinChar = ""
     const df_getIthContextSuffix_fct_join_nameAndContext = <T extends  string[] , JoinChar extends string >(args:T,joinChar:JoinChar)=>joinArray_with_char<T,JoinChar>(args,joinChar)
-    const df_getIthContextSuffix_fct_join_nameAndContextAndNumber = (_context : string , _name:string ,num_context : number , joinChar_nameAndContext : string =df_getIthContextSuffix_joinChar , fct_join_nameAndContext : (args:string[],joinChar:string)=> string = df_getIthContextSuffix_fct_join_nameAndContext ) =>{
+    const df_getIthContextSuffix_fct_join_nameAndContextAndNumber = (_context : string , _name:string ,num_context : number , joinChar_nameAndContext : string =df_getIthContextSuffix_joinChar , fct_join_nameAndContext : (args:string[],joinChar:string)=> string = df_getIthContextSuffix_fct_join_nameAndContext ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         const str_num_context : `${number}`|""= num_context ==0  ? "" : `${num_context}`
         const prefix : string =  str_num_context === "" ? "" : joinArray_with_char([_context , str_num_context],"" ) 
         return fct_join_nameAndContext([_name, prefix],joinChar_nameAndContext)
@@ -20,7 +21,7 @@ export namespace m_regex_getContext {
 
     const ithContextRegex = /\d+/
 
-    export const getCurNumContext= <TContext extends string , TName extends string , Obj extends IJson<string,any> , JoinChar extends string =  typeof df_getIthContextSuffix_joinChar , _R extends string = ReturnType<typeof df_getIthContextSuffix_fct_join_nameAndContext<[TName,TContext],JoinChar>> > (_context : TContext , _name:TName , obj : Obj,joinChar_nameAndContext: JoinChar = df_getIthContextSuffix_joinChar as JoinChar,fct_join_nameAndContext :(args:string[],joinChar:string)=> _R  = df_getIthContextSuffix_fct_join_nameAndContext as any )=> {
+    export const getCurNumContext= <TContext extends string , TName extends string , Obj extends IJson<string,any> , JoinChar extends string =  typeof df_getIthContextSuffix_joinChar , _R extends string = ReturnType<typeof df_getIthContextSuffix_fct_join_nameAndContext<[TName,TContext],JoinChar>> > (_context : TContext , _name:TName , obj : Obj,joinChar_nameAndContext: JoinChar = df_getIthContextSuffix_joinChar as JoinChar,fct_join_nameAndContext :(args:string[],joinChar:string)=> _R  = df_getIthContextSuffix_fct_join_nameAndContext as any )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         
         
         const setOfKeys_in_DepsAndDeclarations = getSetOfKeys(obj)

@@ -20,7 +20,7 @@ export function rgbToHsl(r :number, g:number, b:number) : arr_hsl  {
   
     let h, s, l = (max + min) / 2;
   
-    if (max === min) {
+    if (max === min) { /*console.log("DEBUG_ME",getCurrentLine());*/
       h = s = 0;
     } else {
       const d = max - min;
@@ -49,14 +49,14 @@ export function getRgbFromRgbString(str_color :string , regex ?:RegExp   ) : [nu
     if (regex == undefined) regex =  /rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/;
 
     const matches = regex.exec(str_color);
-        if (matches) {
+        if (matches) { /*console.log("DEBUG_ME",getCurrentLine());*/
             return [parseInt(matches[1]),parseInt(matches[2]),parseInt(matches[3])]
         }
         else return null
 }
-export function isColorFromStr(str_color :string , color:enum_color , regex?:RegExp  ){ //, threshold :number = 250/6){
+export function isColorFromStr(str_color :string , color:enum_color , regex?:RegExp  ){ /*console.log("DEBUG_ME",getCurrentLine());*/ //, threshold :number = 250/6){ /*console.log("DEBUG_ME",getCurrentLine());*/
     const rgb = getRgbFromRgbString( str_color , regex )
-    if(rgb == null) { console.log("Format de couleur invalide."); return false}
+    if(rgb == null) { /*console.log("DEBUG_ME",getCurrentLine());*/ console.log("Format de couleur invalide."); return false}
     else return isColor(...rgb ,  color)
 }
 
@@ -72,13 +72,13 @@ export enum enum_color {
         const [h, s, l] : arr_hsl  = rgbToHsl(r, g, b);
   
         let  detected_color =  enum_color.Other ; 
-        if (s < 0.1) {
-          if (l < 0.25) {
+        if (s < 0.1) { /*console.log("DEBUG_ME",getCurrentLine());*/
+          if (l < 0.25) { /*console.log("DEBUG_ME",getCurrentLine());*/
             detected_color = enum_color.Black;
           } else {
             detected_color = enum_color.Gray;
           }
-        } else if (h > 0.55 && h < 0.65) {
+        } else if (h > 0.55 && h < 0.65) { /*console.log("DEBUG_ME",getCurrentLine());*/
             detected_color = enum_color.Blue;
         } else {
             detected_color =  enum_color.Other ;

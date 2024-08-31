@@ -1,4 +1,5 @@
 import { randomIntFromInterval } from "./m_math.js"
+import getCurrentLine from "get-current-line"
 
 const coef_milliToSec = 1000
 const coef_secToMinute = 60
@@ -30,9 +31,9 @@ export const hours = {
 }
 
 
-const timer = (num:number ): Promise<boolean> => {
-    return new Promise(res => {
-        setTimeout(() => {
+const timer = (num:number ): Promise<boolean> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    return new Promise(res =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        setTimeout(() =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             res(true);
         }, num + randomIntFromInterval(-1000, 1000));
     });

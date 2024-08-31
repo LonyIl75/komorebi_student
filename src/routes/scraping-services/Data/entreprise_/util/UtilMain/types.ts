@@ -1,0 +1,1 @@
+export const entreprise__imgImage_selectors =[`img[class*="image"]`]

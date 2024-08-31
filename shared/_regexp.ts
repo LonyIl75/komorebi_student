@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { t_alphabet, t_alphaNumeriChar, UnionToArray, t_char_number, validateStrIsInAllPermutation } from "./type.js"
 
 export type t_specialChar_regex = "("|")"|"{"|"}"|"["|"]"|"*"|"+"|"?"|"."|"\\"|"^"|"$"|"|"|"&"|"/"
@@ -45,8 +46,8 @@ A extends `${char_u}${infer T}`? T : undefined
 
       
 export type t_strRegex = ReturnType < typeof RegExp.toString > 
-
-export const ju_escapeRegex = /[(){}\[\]*+?.\\\^$|&\/]/g 
+export const ju_escapeRegexStr = "[(){}\\[\\]*+?.\\\\\\^$|&\\/]" as const 
+export const ju_escapeRegex = new RegExp(ju_escapeRegexStr,"g") 
 export const arr_regex_flag = ["i","g","m","s","u","y"] as const 
 type t_arr_arr_regex_flag = typeof arr_regex_flag
 export type t_regex_flag = typeof arr_regex_flag[number]
@@ -59,7 +60,7 @@ export default class MRegExp<T extends string , F extends t_regexpFlags = undefi
     source : T
     flags : F
 
-    constructor(source : T , flags : F = undefined ) {
+    constructor(source : T , flags : F = undefined ) { /*console.log("DEBUG_ME",getCurrentLine());*/
         super(source, flags)
     }
 

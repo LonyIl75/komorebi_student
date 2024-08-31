@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { t_matching_pattern_regex_closing, t_pattern_class_regex_closing, t_count_regex, t_begin_ismatching_pattern_regex, t_matching_patternLook_opening, t_maching_patternGroup_regex, t_pattern_class_regex_opening, t_strRegex, t_regex_base_char, ju_escapeRegex } from "./_regexp.js"
 import { countArray } from "./m_json.js"
 import { IJson } from "./m_object.js"
@@ -5,7 +6,7 @@ import { is_notFound, nullOrUndefined, val_null_nullOrUndefined } from "./m_prim
 import { convertStrToRegexStr} from "./m_regex.js"
 import { embedCapturingGroupStrOrRegex, embedNonCapturingGroupStrOrRegex, embedOptCapturingGroupStrOrRegex } from "./m_regex_prefixAndSuffix.js"
 import { char_join_pathRoutes, createAddressBis, t_agreg_path, t_char_join_pathRoutes } from "./routePath.js"
-import { Enumerate, IsUnion, PopUnion, _Enumerate, _countAndRemoveElmInElms, arrArrFromArrAndArr, arrToUnion, countAndRemoveElmInElms, getIndexOfElement, t_getLastElementArr, jsonObjectToArrKey, removeFirstArray, repeat, t_JoinChar_pipe, t_indexable_key, insArray } from "./type.js"
+import { EnumerateUnion, IsUnion, PopUnion, _Enumerate, _countAndRemoveElmInElms, arrArrFromArrAndArr, arrToUnion, countAndRemoveElmInElms, getIndexOfElement, t_getLastElementArr, jsonObjectToArrKey, removeFirstArray, repeat, t_JoinChar_pipe, t_indexable_key, insArray } from "./type.js"
 
 
 
@@ -125,7 +126,7 @@ UnionIdPath extends string ,
 _TKey extends t_strRegex ,
 ArrUnionClassNameType extends readonly string[]
 > = readonly ([_TKey,readonly UnionIdPath[]])[]
-//_t_mapRegexToIdPath<UnionIdPath,t_ismatching_pattern_regex<_TKey,t_ret_embedVar<Enumerate<ArrUnionClassNameType['length']>>> extends true ? _TKey : never >
+//_t_mapRegexToIdPath<UnionIdPath,t_ismatching_pattern_regex<_TKey,t_ret_embedVar<EnumerateUnion<ArrUnionClassNameType['length']>>> extends true ? _TKey : never >
 
 type t_arrRegexToIdPath<UnionIdPath extends string,unionclassname extends string> = readonly [t_input_ret_embedVar2<unionclassname>,readonly UnionIdPath[]]
 export type arrArrRegexToIdPath<UnionIdPath extends string,unionclassname extends string> = readonly t_arrRegexToIdPath<UnionIdPath,unionclassname >[]
@@ -176,12 +177,12 @@ type t_UMapRegexToIdPath< UnionRegex extends t_strRegex , UnionIdPath  extends s
 {mapRegexToIdPath : t_mapRegexToIdPath< UnionIdPath,UnionRegex, ArrUnionClassNameType> } |{_mapRegexToIdPath : t_mapRegexToIdPath< UnionIdPath,UnionRegex, ArrUnionClassNameType> } 
 
 
-type t_mapclassNameToId <ArrUnionClassNameType extends readonly string[]> = Map<arrToUnion<ArrUnionClassNameType>,Enumerate<ArrUnionClassNameType['length']>>
+type t_mapclassNameToId <ArrUnionClassNameType extends readonly string[]> = Map<arrToUnion<ArrUnionClassNameType>,EnumerateUnion<ArrUnionClassNameType['length']>>
 //isRepetitivePatternStr < T extends string , pattern extends string , joinChar extends string ="">
 
 export type t_arrPathToPathId <UnionIdPath extends string,ArrUnionClassNameType extends readonly string[]  , unionClassNameType extends arrToUnion<ArrUnionClassNameType> >  = ({regex_idx:number,group_idx:UnionIdPath[]|unionClassNameType[]}|nullOrUndefined) 
-
-export const pagination_field = ["NextPagination","SelectedPagination"] as const
+export const str_Pagination = "Pagination" as const
+export const pagination_field = [`Next${str_Pagination}`,`Selected${str_Pagination}`] as const
 export type t_pagination_field = typeof pagination_field
 export type t_union_pagination_field = t_pagination_field[number]
 
@@ -220,7 +221,7 @@ export class MapRegexToIdPath< UnionRegex extends t_strRegex , UnionIdPath exten
         return new Map(arrArrBeforeMap)
     }
 
-    static convertArrKeyInRegexKey = < T extends string , Arr extends t_input_ret_embedVar2<T>  >(arr : Arr) : t_ret_embedVar2<Arr> =>{
+    static convertArrKeyInRegexKey = < T extends string , Arr extends t_input_ret_embedVar2<T>  >(arr : Arr) : t_ret_embedVar2<Arr> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
 
         const embed = (str:string) => convertStrToRegexStr(char_join_pathRoutes+str) //convertStrToRegexStr(createAddressBis<string,string>(char_join_pathRoutes,str))//convertStrToRegexStr(createAddressBis())+embedVar_strRegex(str)
         let len = arr.length - 1
@@ -242,11 +243,11 @@ export class MapRegexToIdPath< UnionRegex extends t_strRegex , UnionIdPath exten
     }
 
     static factorizedRegexs< ArrUnionClassNameType extends readonly string[] , _UnionRegex extends t_strRegex , UnionIdPath extends string  >
-    ( _regexJson : {[key in _UnionRegex] : readonly UnionIdPath[] } ,classNameToId :Map<arrToUnion<ArrUnionClassNameType>,Enumerate<ArrUnionClassNameType['length']>> )  {
+    ( _regexJson : {[key in _UnionRegex] : readonly UnionIdPath[] } ,classNameToId :Map<arrToUnion<ArrUnionClassNameType>,EnumerateUnion<ArrUnionClassNameType['length']>> )  { /*console.log("DEBUG_ME",getCurrentLine());*/
         let regexJson ={} as IJson 
         const regex_getVar_embedVar = new RegExp(str_regex_getVar_embedVar)
 
-        const _factorizedRegex = (_str_regex : _UnionRegex,idx:number)  : []|[string,string] =>{
+        const _factorizedRegex = (_str_regex : _UnionRegex,idx:number)  : []|[string,string] =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             let re = regex_getVar_embedVar.exec(_str_regex)
             if(re == null) return []
             let _str_rest = _str_regex.substring(re.index+re[1].length)
@@ -267,7 +268,7 @@ export class MapRegexToIdPath< UnionRegex extends t_strRegex , UnionIdPath exten
         for(const [str_regex,value] of Object.entries(_regexJson)) {
             str_treated = init_strR_strT[1]
             str_rest=str_regex
-            while(str_rest.length > 0){
+            while(str_rest.length > 0){ /*console.log("DEBUG_ME",getCurrentLine());*/
                 res_strR_strT = _factorizedRegex(str_rest as _UnionRegex ,idx )
                 if(res_strR_strT.length == 0 ) 
                 {
@@ -305,14 +306,14 @@ export class MapRegexToIdPath< UnionRegex extends t_strRegex , UnionIdPath exten
             arr_id = []
             regex = new RegExp(testRegex)
             if((found=regex.exec(str_path))) {
-                for (let k = 1; k < found.length; k++) {
-                    if(found[k] !== undefined && found[0].length == str_path.length ) {
+                for (let k = 1; k < found.length; k++) { /*console.log("DEBUG_ME",getCurrentLine());*/
+                    if(found[k] !== undefined && found[0].length == str_path.length ) { /*console.log("DEBUG_ME",getCurrentLine());*/
                         (arr_id as UnionIdPath[]).push(value[k-1] )
                     }
                 }
                 if(arr_id.length == 0 &&found.index === 0 && found[0].length == str_path.length) return {regex_idx:idx+i,group_idx:[str_type]}
             }
-            if(arr_id.length > 0 ) {
+            if(arr_id.length > 0 ) { /*console.log("DEBUG_ME",getCurrentLine());*/
                 //json[i] = [...arr_id]
                 return {regex_idx: idx+i,group_idx:arr_id}
             }

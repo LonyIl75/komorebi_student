@@ -1,7 +1,7 @@
 import { DebuggingOptions, debug_join, debug_start_with_curLine, debug_with_curLine, debug_with_curLine_isresult } from '@shared/m_debug.js';
 import debug, { Debugger } from 'debug';
 import getCurrentLine from 'get-current-line';
-import { getNameModule,getNameDebugAllNameModule, str_idRouteAndRemoteAddresss, concatNameModuleAndDebug } from '@shared/str_debug.js';
+import { getNameModule, concatNameModuleAndDebug } from '@shared/str_debug.js';
 
 
 const name_module :string =  getNameModule("scraping_selector_pageEvaluate","exposeFunction")
@@ -18,7 +18,7 @@ import { promiseAlltoPromise } from '@shared/m_promise.js';
     export class ExposeFunction extends ExposeObjectOrFunction<Function> {
 
         
-        constructor(funct:Function ,  name ?: string  ,required?:FrameAddScriptTagOptions[] , scriptTag?:FrameAddScriptTagOptions ){
+        constructor(funct:Function ,  name ?: string  ,required?:FrameAddScriptTagOptions[] , scriptTag?:FrameAddScriptTagOptions ){ /*console.log("DEBUG_ME",getCurrentLine());*/
             super(funct,name,scriptTag,required);
         }
 
@@ -29,7 +29,7 @@ import { promiseAlltoPromise } from '@shared/m_promise.js';
         
     };
     export class  onEventFunction extends ExposeFunction {
-        constructor(funct:Function ,  name ?: keyof PageEventObject  ,required?:FrameAddScriptTagOptions[] , scriptTag?:FrameAddScriptTagOptions ){
+        constructor(funct:Function ,  name ?: keyof PageEventObject  ,required?:FrameAddScriptTagOptions[] , scriptTag?:FrameAddScriptTagOptions ){ /*console.log("DEBUG_ME",getCurrentLine());*/
             super(funct,name as string ,required,scriptTag);
         }
 
@@ -61,7 +61,7 @@ import { promiseAlltoPromise } from '@shared/m_promise.js';
 
 
    export function  _page_exposeFunction (page:Page , arr_exposeFunction:ExposeFunction[]): Promise<void>[] {
-        return arr_exposeFunction.map(async (exposeFunction:ExposeFunction) => {
+        return arr_exposeFunction.map(async (exposeFunction:ExposeFunction) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             return page.exposeFunction(exposeFunction.getScriptsTag()!.id,await exposeFunction.getObj())
         })
     }

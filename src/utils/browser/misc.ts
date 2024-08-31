@@ -19,14 +19,14 @@ type t_returnTo = string|null ;
 
 export function getReturnTo(req :any ):t_returnTo{
     let _returnTo :t_returnTo =null
-    if (req.session && req.session.returnTo) {
+    if (req.session && req.session.returnTo) { /*console.log("DEBUG_ME",getCurrentLine());*/
         _returnTo = req.session.returnTo;
         delete req.session.returnTo; 
     }
     return _returnTo
 }
 
-export function redirectIfNotNull (res:any , returnTo:t_returnTo){
+export function redirectIfNotNull (res:any , returnTo:t_returnTo){ /*console.log("DEBUG_ME",getCurrentLine());*/
     if(returnTo) return res.redirect(returnTo);
     return null;
 
@@ -49,7 +49,7 @@ export class LocalConfig< G extends t_getLocalName<string>  > {
 
 // A FAIRE extends with constraints
 //getConfigFromServiceName<SN> 
-export  const _gereq_mainPage_url = <G extends t_getLocalName<string> , SN extends _validateServiceName , RA extends _validateRemoteAddress<SN> , MainAddress extends string = ""  > ( local_config : LocalConfig<G> ,service_config : t_IJson_ServiceConfig_any  )=> {
+export  const _gereq_mainPage_url = <G extends t_getLocalName<string> , SN extends _validateServiceName , RA extends _validateRemoteAddress<SN> , MainAddress extends string = ""  > ( local_config : LocalConfig<G> ,service_config : t_IJson_ServiceConfig_any  )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return local_config.is_local() ? 
     join_pathRoutes<[G , typeof LocalConfig.clientBackendBaseUrl ]>  ([local_config.local_prefix,LocalConfig.clientBackendBaseUrl ] )  
     :join_pathRoutes<[RA,MainAddress]>([service_config.remoteAddress,service_config.mainAddress] as [RA,MainAddress]  );

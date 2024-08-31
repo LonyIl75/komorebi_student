@@ -1,4 +1,4 @@
-
+import getCurrentLine from "get-current-line"
 import { IJson_ServiceConfig } from "@/controller/scraping-services/class/Config/IJson_ServiceConfig.js";
 import { t_doServiceFunction } from "@/controller/scraping-services/class/Services/MainService.js";
 import { _C_RA, _fnValidateServiceName, _validateIdHome, _validateRemoteAddress, _validateRoute, _validateServiceName, t_args_validateServiceName, FnValidateRouteAndAddress } from "@/controller/scraping-services/class/constraints.js";
@@ -26,7 +26,7 @@ export type t_str_routes = typeof str_routes ;
 
     scrapingService : t_ScrapingServices<SN,R,H,T1,RA> ; 
 
-    constructor(_scrapingService :  t_ScrapingServices<SN,R,H,T1,RA> ){
+    constructor(_scrapingService :  t_ScrapingServices<SN,R,H,T1,RA> ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.scrapingService =_scrapingService
     }
 

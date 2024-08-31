@@ -62,6 +62,7 @@ export class __ServiceConfig<SN extends _validateServiceName  , R extends _valid
         this.idRoutes  =  idRoutes ;
         this.idRouteAndRemoteAddresss = idRouteAndRemoteAddresss;
         this.doProcessFunctionName = doProcessFunctionName;
+        //TODO : use idRouteAndRemoteAddresss to retrieve remoteAddress from idRoutes (see TODO in config service) , atm this is ${string}/${idRoute}
         this.service_address =  getServiceAddress<SN, typeof remoteName , R , T1  >(this.serviceName,this.remoteName , this.remoteAddress , idRoutes )  as serviceAdress <T1[number] , string , string> ;
         const _tmp :[H] = [idRoute_home]
         this.url_main_page =  getScrapingPageUrl<R,  [H]>(__ServiceConfig.isLocal() , this.remoteAddress , _tmp)[_tmp.length-1] as string  ;
@@ -81,7 +82,7 @@ export class __ServiceConfig<SN extends _validateServiceName  , R extends _valid
     getRemoteRoute():string[] {
         //A FAIRE extract misc
         let res : string [] =[]
-        for(const key in this.service_address   ) {
+        for(const key in this.service_address   ) { /*console.log("DEBUG_ME",getCurrentLine());*/
             res.push(getRemoteAdressFromServiceAddressBody(this.service_address[key]));
         }
         return res;
@@ -90,7 +91,7 @@ export class __ServiceConfig<SN extends _validateServiceName  , R extends _valid
     getLocalRoute() :string[] {
         //A FAIRE extract misc
         let res : string [] =[]
-        for(const key in this.service_address   ) {
+        for(const key in this.service_address   ) { /*console.log("DEBUG_ME",getCurrentLine());*/
             res.push(getLocalAdressFromServiceAddressBody(this.service_address[key]));
         }
         return res;
@@ -125,15 +126,15 @@ export function f_ServiceConfig<C_SN extends _validateServiceName  , C_FR extend
         return _ServiceConfig.builder<SN ,R ,H,T1 ,RA >(_json.serviceName , _json.remoteName ,_json.remoteAddress ,_json.mainAddress ,_json.idRoute_home , _json.idRoutes , _json.idRouteAndRemoteAddresss , _json.doProcessFunctionName );
     }
 
-    static strToStrRoute<SN extends C_SN  , T1 extends _C_T1<C_FT1,[SN]>,_R extends T1[number]  =  T1[number]> (str_route : _R , 
+    static strToStrRoute<SN extends C_SN  , T1 extends _C_T1<C_FT1,[SN]>,_R extends T1[number]  =  T1[number]> (routeName : _R , 
         config : t_IJson_ServiceConfig_any
     ):string   {
-        return str_route == _ServiceConfig.df[str_idRoute_home] ?  getRootRepertoryName(config) /*config.mainAddress*/  :str_route ;
+        return routeName == _ServiceConfig.df[str_idRoute_home] ?  getRootRepertoryName(config) /*config.mainAddress*/  :routeName ;
     }
 
 
     static builder<SN extends C_SN  , R extends _C_R<C_FR,[SN]> , H extends _C_H<C_FH,[SN]>  ,T1 extends _C_T1<C_FT1,[SN]>,RA extends _C_RA<C_FRA,[SN, R, T1]>>
-        (serviceName :SN , remoteName : string,remoteAddress : R,mainAddress : string,idRoute_home:H , idRoutes: T1 , idRouteAndRemoteAddresss : RA , doProcessFunctionName : string = _ServiceConfig.df[str_doProcessFunctionName]){
+        (serviceName :SN , remoteName : string,remoteAddress : R,mainAddress : string,idRoute_home:H , idRoutes: T1 , idRouteAndRemoteAddresss : RA , doProcessFunctionName : string = _ServiceConfig.df[str_doProcessFunctionName]){ /*console.log("DEBUG_ME",getCurrentLine());*/
 
         //const idRoutes :  t_all_routesArrByServiceName< SN>  = [...id_arr_serviceRoutes ,..._idRoutes ]  ;//"login" ; id_arr_serviceRoutes
         return new _ServiceConfig<SN,R , H,T1,RA>  (serviceName , remoteName ,remoteAddress ,mainAddress,idRoute_home, idRoutes ,idRouteAndRemoteAddresss , doProcessFunctionName );

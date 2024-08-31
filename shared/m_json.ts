@@ -28,27 +28,28 @@ export type t_j <T> = { [k in keyof T as T[k] extends Function ? never : k ] ?:
     T[k] extends object ? T[k] extends readonly any[] ?t_arr_j<T[k]> :t_j<T[k]> : T[k] 
 }
 
+
 export type t_serializer<T,J extends t_j<T> = t_j<T>> = { toJson : ( obj : T) => J , fromJson : (json:J) => T   }
-export abstract class haveSerializer<T,J extends t_j<T>=t_j<T>  > {
+export abstract class AHaveSerializer<T,J extends t_j<T>=t_j<T>  > {
 
 
     obj_serializer:t_serializer<T,J> ; 
 
-    toJson : () => J = () => {
+    toJson : () => J = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.getSerializer().toJson(this as unknown as T )
     }
 
 
-    fromJson : (json:J) => T = (json:J) => {
+    fromJson : (json:J) => T = (json:J) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.getSerializer().fromJson(json)
     }
 
 
-    getSerializer : () => t_serializer<T,J> = () =>{
+    getSerializer : () => t_serializer<T,J> = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.obj_serializer;
     }
 
-    constructor(initializer ){
+    constructor(initializer ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.obj_serializer = initializer ; 
     }
 
@@ -63,7 +64,7 @@ export class EmptyInit<T>  {
     classType : { new (): T } ;
 
     constructor ( classType ?: { new (): T } , _emptyInit ?: () => T){
-        if (+!!classType + +!!_emptyInit !== 1) {
+        if (+!!classType + +!!_emptyInit !== 1) { /*console.log("DEBUG_ME",getCurrentLine());*/
             throw new Error("EmptyInit constructor must have one and only one argument");
           }
           
@@ -73,15 +74,15 @@ export class EmptyInit<T>  {
 
     }
     _emptyInit ?: () => T ; 
-    df_constructor ( c : NoArgsConstructor<T> ) {
+    df_constructor ( c : NoArgsConstructor<T> ) { /*console.log("DEBUG_ME",getCurrentLine());*/
         return new c();
     }
-    emptyInit : () => T = () => {
+    emptyInit : () => T = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         if(this._emptyInit == undefined)  return this.df_constructor(this.classType)
         return this._emptyInit()
     }
 
-    _getEmptyInit = () => {
+    getEmptyInit = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         if(this.obj_emptyInit == undefined) this.obj_emptyInit = this.emptyInit();
         return this.obj_emptyInit;
     }
@@ -89,7 +90,7 @@ export class EmptyInit<T>  {
 
 }
 
-type t_ret_getEmptyInit<T,J extends t_j<T> = t_j<T>> = T & haveSerializer <T,J>
+type t_retGetEmptyInit<T,J extends t_j<T> = t_j<T>> = T & AHaveSerializer <T,J>
 type t_ret_ObjectKeys = string[]
 
 type t_keysObject<K extends t_indexable_key = t_indexable_key, V = any > = {keys:t_ret_ObjectKeys,obj:IJson<K,V>}
@@ -99,19 +100,19 @@ const cst_keysObjectFromObj = (obj:IJson) : t_keysObject => cst_keysObject(Objec
 
 const _sameKeys=<K extends t_indexable_key = t_indexable_key, V = any >
 ( obj1 : IJson<K,V> , obj2 : IJson<K,V> , fct_cond : t_function<boolean,[t_keysObject<K,V>,t_keysObject<K,V>]>)
-: boolean => {
+: boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const keysObj_1  = cst_keysObjectFromObj(obj1)
     const keysObj_2 = cst_keysObjectFromObj(obj2)
     if (keysObj_1.keys.length !== keysObj_2.keys.length)return false
     return fct_cond(keysObj_1,keysObj_2)
 }
 
-export const sameKeysOnLevel =<K extends t_indexable_key = t_indexable_key, V = any >( obj1 : IJson<K,V> , obj2 : IJson<K,V> ) : boolean => {
+export const sameKeysOnLevel =<K extends t_indexable_key = t_indexable_key, V = any >( obj1 : IJson<K,V> , obj2 : IJson<K,V> ) : boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const fct = (keysObj_1:t_keysObject<K,V>,keysObj_2:t_keysObject<K,V>)=>keysObj_1.keys.every((key) => keysObj_2.obj.hasOwnProperty(key))
     return _sameKeys(obj1,obj2,fct)
 }
 
-export const sameKeysDeep = <K extends t_indexable_key = t_indexable_key, V = any >( obj1 : IJson<K,V> , obj2 : IJson<K,V> ) : boolean => {
+export const sameKeysDeep = <K extends t_indexable_key = t_indexable_key, V = any >( obj1 : IJson<K,V> , obj2 : IJson<K,V> ) : boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const fct = (keysObj_1:t_keysObject<K,V>,keysObj_2:t_keysObject<K,V>)=>keysObj_1.keys.every((key) => 
         {
             let res_bool :boolean  = keysObj_2.hasOwnProperty(key) 
@@ -131,8 +132,8 @@ enum enum_compare_mode {
 }
 
 const fct_isSameKeys =
-( obj1 : IJson , obj2 : IJson , mode : enum_compare_mode ) : boolean => {
-    switch (mode) {
+( obj1 : IJson , obj2 : IJson , mode : enum_compare_mode ) : boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    switch (mode) { 
         case enum_compare_mode.deep:
             return sameKeysDeep(obj1,obj2)
         case enum_compare_mode.firstLevel:
@@ -140,7 +141,7 @@ const fct_isSameKeys =
     }
 }
 
-const fct_st_isTypeof = <T,J extends t_j<T> = t_j<T>>(_this:t_ret_getEmptyInit<T,J> ,  obj : haveSerializer<any> , mode : enum_compare_mode = enum_compare_mode.firstLevel ) : boolean => {
+const fct_st_isTypeof = <T,J extends t_j<T> = t_j<T>>(_this:t_retGetEmptyInit<T,J> ,  obj : AHaveSerializer<any> , mode : enum_compare_mode = enum_compare_mode.firstLevel ) : boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return fct_isSameKeys(obj.toJson(),_this.toJson(),mode)
 }
 
@@ -148,24 +149,45 @@ type t_fct_st_isTypeof<T,J extends t_j<T> = t_j<T>> = typeof fct_st_isTypeof<T,J
 type t_fct_mb_isTypeof = t_function_staticToMember<t_fct_st_isTypeof<any>>
 
 
-const fct_st_isEqual = <T,J extends t_j<T> = t_j<T>>(_this:t_ret_getEmptyInit<T,J> ,  obj : haveSerializer<any>  ) : boolean => {
+const fct_st_isEqual = <T,J extends t_j<T> = t_j<T>>(_this:t_retGetEmptyInit<T,J> ,  obj : AHaveSerializer<any>  ) : boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return isEqJson(obj.toJson(),_this.toJson())
 }
 
 type t_fct_st_isEqual<T,J extends t_j<T> = t_j<T>> = typeof fct_st_isEqual<T,J>
 type t_fct_mb_isEqual = t_function_staticToMember<t_fct_st_isEqual<any>>
 
-export interface AEmptyInit<T,J extends t_j<T> = t_j<T>> {
-    getEmptyInit:()=>t_ret_getEmptyInit<T,J> ;
-    isTypeof :t_fct_st_isTypeof<T,J>
-    isEqual :t_fct_st_isEqual<T,J>
+export interface t_st_haveSerializer< T,J extends t_j<T> = t_j<T> >  extends t_serializer<T,J>{
+}
+
+export interface t_st_emptyInit<T,J extends t_j<T> = t_j<T>,_T extends t_retGetEmptyInit<T,J> =t_retGetEmptyInit<T,J>> {
+    emptyObject : EmptyInit<_T>
+    getEmptyInit:()=>_T;
+}
+  
+export interface t_st_haveSerializerAndEmptyInit< T  extends haveSerializerAndEmptyInit<T> > extends t_st_haveSerializer<T>,t_st_emptyInit<T>{
+    isTypeof:t_function_staticToMember<t_fct_st_isTypeof<T>>
+    //isEqual:t_function_staticToMember<t_fct_st_isEqual<T>>
+}
+
+
+export interface IEmptyInit<T,J extends t_j<T> = t_j<T>,_T extends t_retGetEmptyInit<T,J> =t_retGetEmptyInit<T,J>> {
+    getEmptyInit:()=>_T;
     isEmpty : () => boolean
 }
 
 
-export abstract class haveSerializerAndEmptyInit<T, J extends t_j<T> = t_j<T>,_T extends t_ret_getEmptyInit<T,J> =t_ret_getEmptyInit<T,J>> extends haveSerializer<T,J> implements AEmptyInit<T,J>   {
+export interface IHaveSerializerAndEmptyInit< T, J extends t_j<T> = t_j<T>,_T extends t_retGetEmptyInit<T,J> =t_retGetEmptyInit<T,J>> extends  IEmptyInit<T,J,_T> ,AHaveSerializer<T,J>{
+    isEqual :t_function_staticToMember<t_fct_st_isTypeof<T>>
+}
+
+export abstract class AHaveSerializerAndEmptyInit<T, J extends t_j<T> = t_j<T>,_T extends t_retGetEmptyInit<T,J> =t_retGetEmptyInit<T,J>>{
+    abstract getEmptyInit:()=>_T;
+    abstract isTypeof :t_fct_st_isTypeof<T,J>
+}
+
+export abstract class haveSerializerAndEmptyInit<T, J extends t_j<T> = t_j<T>,_T extends t_retGetEmptyInit<T,J> =t_retGetEmptyInit<T,J>> extends AHaveSerializer<T,J> implements IHaveSerializerAndEmptyInit<T,J,_T>,AHaveSerializerAndEmptyInit<T,J,_T>   {
     
-    constructor(intializer){
+    constructor(intializer){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super(intializer);
     }
     
@@ -173,55 +195,55 @@ export abstract class haveSerializerAndEmptyInit<T, J extends t_j<T> = t_j<T>,_T
     abstract getEmptyInit:()=>_T;
     abstract isTypeof :t_fct_st_isTypeof<T,J>
 
-    static st_isTypeof<T,J extends t_j<T> = t_j<T>>(...args:Parameters<t_fct_st_isTypeof<T,J>>) { return fct_st_isTypeof<T,J>(...args) }
-    static st_isEqual<T,J extends t_j<T> = t_j<T>>(...args:Parameters<t_fct_st_isEqual<T,J>>) { return fct_st_isEqual<T,J>(...args) }
+    static _isTypeof<T,J extends t_j<T> = t_j<T>>(...args:Parameters<t_fct_st_isTypeof<T,J>>) { /*console.log("DEBUG_ME",getCurrentLine());*/ return fct_st_isTypeof<T,J>(...args) }
+    static _isEqual<T,J extends t_j<T> = t_j<T>>(...args:Parameters<t_fct_st_isEqual<T,J>>) { /*console.log("DEBUG_ME",getCurrentLine());*/ return fct_st_isEqual<T,J>(...args) }
 
-    isEmpty = () => {
-        return fct_st_isEqual<T,J>(this as unknown as _T,this.getEmptyInit())
+    isEmpty = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        return this.isEqual(this.getEmptyInit())
     }
 
 
 
-    isEqual = (obj: _T) :boolean =>  {
-        return haveSerializerAndEmptyInit.st_isEqual(this as unknown as _T,obj)
+    isEqual = (obj: _T) :boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        return haveSerializerAndEmptyInit._isEqual(this as unknown as _T,obj)
     }
 
     
 }
 
-export const deepCloneJson = <T extends IJson>(json:T) : T => {
+export const deepCloneJson = <T extends IJson>(json:T) : T =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return !_isNullOrUndefined(json) ? JSON.parse(JSON.stringify(json)) : json
 }
 
-export const deepCloneJsonIfIsObject = <T extends any>(json:T) : T => {
+export const deepCloneJsonIfIsObject = <T extends any>(json:T) : T =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return isObject(json) ? JSON.parse(JSON.stringify(json)) :json 
 }
 
-export const createSubJsonFromArrKeys =<K extends t_indexable_key , T extends IJson<K> = IJson<K> > (json : T , keys : readonly K[]) : ({ [k in K] : T[k] }|IVoid) => {
+export const createSubJsonFromArrKeys =<K extends t_indexable_key , T extends IJson<K> = IJson<K> > (json : T , keys : readonly K[]) : ({ [k in K] : T[k] }|IVoid) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const transformedData = {} as any ;
-    for (const key of keys) {
-        if (!transformedData[key]) {
+    for (const key of keys) { /*console.log("DEBUG_ME",getCurrentLine());*/
+        if (!transformedData[key]) { /*console.log("DEBUG_ME",getCurrentLine());*/
             transformedData[key] = isObject(json[key]) ? deepCloneJson(json[key]) : json[key] ;
         }
     }
     return transformedData as ({ [k in K] : T[k] }|IVoid)
 }
 
-export const getSubsetKeysFromArrRegex =<K extends t_indexable_key  , T extends IJson<K> = IJson<K> > (json : T , arr_regex : readonly RegExp[]) : (K[]|[]) => {
+export const getSubsetKeysFromArrRegex =<K extends t_indexable_key  , T extends IJson<K> = IJson<K> > (json : T , arr_regex : readonly RegExp[]) : (K[]|[]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return Object.keys(json).filter((key) => arr_regex.some((regex) => regex.test(key))) as K[]
 }
 
-export const createSubJsonFromArrRegex =<K extends t_indexable_key  , T extends IJson<K> = IJson<K> > (json : T , arr_regex : readonly RegExp[])  => {
+export const createSubJsonFromArrRegex =<K extends t_indexable_key  , T extends IJson<K> = IJson<K> > (json : T , arr_regex : readonly RegExp[])  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const subsetKeys = getSubsetKeysFromArrRegex<K,T>(json,arr_regex)
     return createSubJsonFromArrKeys(json,subsetKeys as K[])
 }
 
 
-export const getSubsetValuesFromPredicate =<V , T extends IJson<t_indexable_key,V> = IJson<t_indexable_key,V> > (json : T , predicate : (val: V)=> boolean ) : (V[]|[]) => {
+export const getSubsetValuesFromPredicate =<V , T extends IJson<t_indexable_key,V> = IJson<t_indexable_key,V> > (json : T , predicate : (val: V)=> boolean ) : (V[]|[]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return Object.values(json).filter((val: V) => predicate(val))
 }
 
-export const getSubsetJsonFromPredicate =<K extends t_indexable_key  ,V , T extends IJson<K,V> = IJson<K,V> > (json : T , predicate : (entry: t_Entry<K,V>)=> boolean ) : IJson<K,V>|IVoid => {
+export const getSubsetJsonFromPredicate =<K extends t_indexable_key  ,V , T extends IJson<K,V> = IJson<K,V> > (json : T , predicate : (entry: t_Entry<K,V>)=> boolean ) : IJson<K,V>|IVoid =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const entries : t_Entry<K,V>[] = Object.entries<V>(json) as any
     return createJsonFromEntries(entries.filter((entry: t_Entry<K,V>) => predicate(entry)))
 }
@@ -242,17 +264,19 @@ export function pickAndFilterProps<T extends  haveSerializerAndEmptyInit<T>, _TP
     return {extracted_props , restProps };
 
 }
+export interface t_st_configObject<T extends haveSerializerAndEmptyInit<T>> extends t_st_haveSerializerAndEmptyInit<T> {}
 
 export abstract class t_configObject<T> extends haveSerializerAndEmptyInit<T> {}
 
-export const getReqOrResJsonFromTConfigObj = < O extends t_configObject<O>> (obj:O)=> {
+
+export const getReqOrResJsonFromTConfigObj = < O extends t_configObject<O>> (obj:O)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return obj.toJson() as ReturnType<O["toJson"] >
 }
-/*
-export const getReqOrResEmptyJsonFromTConfigObj = < O extends t_configObject<O>> (obj:O)=> {
-    type fdsf =  O['getEmptyInit']
-    return obj.getEmptyInit().toJson() as ReturnType<O['getEmptyInit']>["toJson"] 
-}*/
+
+//export const getReqOrResEmptyJsonFromTConfigObj = < O extends t_configObject<O>> (obj:O)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    //type fdsf =  O['getEmptyInit']
+    //return obj.getEmptyInit().toJson() as ReturnType<O['getEmptyInit']>["toJson"] 
+//}
 
 
 
@@ -262,7 +286,7 @@ export function pickAndFilterProps_firstLevelProps<T extends  haveSerializerAndE
     let json_extracted_props :t_j<T>  = {} 
     let restProps:IJson = {} as IJson
 
-    for ( const key in props ){
+    for ( const key in props ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         if(key in dfInstance )json_extracted_props[key] = props[key]
         else restProps[key] = props[key]
     }
@@ -273,7 +297,7 @@ export function pickAndFilterProps_firstLevelProps<T extends  haveSerializerAndE
 
 }
 
-export function getExtractedPropsFromPick (pickObject ){
+export function getExtractedPropsFromPick (pickObject ){ /*console.log("DEBUG_ME",getCurrentLine());*/
     return pickObject["extracted_props"] ;
 }
 
@@ -281,22 +305,22 @@ export function getExtractedPropsFromPick (pickObject ){
 export  abstract class IPickProps<T> extends haveSerializerAndEmptyInit<T>{}  
 
 
-export const filterJsonByArrProps = (json:IJson , arrProps : t_indexable_key[])=> {
-    return (arrProps?.length ? createJsonAsForEach(Object.keys(json).map((key : string ) => { return  arrProps.includes(key as any) ? { [key] : json[key] } : null }).filter((_)=>_)):json) as IJson
+export const filterJsonByArrProps = (json:IJson , arrProps : t_indexable_key[])=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    return (arrProps?.length ? createJsonAsForEach(Object.keys(json).map((key : string ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/ return  arrProps.includes(key as any) ? { [key] : json[key] } : null }).filter((_)=>_)):json) as IJson
 }
 
 
-export function countArray<T extends t_indexable_key , Arr extends readonly T[] > (arr:Arr){
+export function countArray<T extends t_indexable_key , Arr extends readonly T[] > (arr:Arr){ /*console.log("DEBUG_ME",getCurrentLine());*/
     let counts : IJson<T,number> = {} as any ;
     
-    arr.forEach(function(element:T) {
+    arr.forEach(function(element:T) { /*console.log("DEBUG_ME",getCurrentLine());*/
         counts[element] = (counts[element] || 0) + 1;
     });
     
     return counts as {[k in T ]: countAndRemoveElmInElms<Arr,k>[1]};
 }
 
-export const getSetOfKeys = <K extends t_indexable_key  > (_json:IJson<K>) => {
+export const getSetOfKeys = <K extends t_indexable_key  > (_json:IJson<K>) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         const keys : string[] = Object.keys(_json)
         return concatArraysAndRemoveDuplicates<string>(...keys)
 }
@@ -333,7 +357,7 @@ export  class FunctionalWrapperJson< J extends IJson , C extends IJson = IVoid  
         [fieldName_json]: {} as any ,
     }
     
-    constructor (_json : J = FunctionalWrapperJson.df[fieldName_json] ,_config : C = FunctionalWrapperJson.df[fieldName_config]){
+    constructor (_json : J = FunctionalWrapperJson.df[fieldName_json] ,_config : C = FunctionalWrapperJson.df[fieldName_config]){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this[fieldName_config] = _config;
         this[fieldName_json] = _json;
         
@@ -348,10 +372,10 @@ export  class FunctionalWrapperJson< J extends IJson , C extends IJson = IVoid  
     [getConfigPropName]<K extends keyof C >(prop_key:K ):C[K]{
         return this[getConfig]()[prop_key]
     }
-    [setJson](value:J){
+    [setJson](value:J){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this[fieldName_json] = value 
     }
-    [setConfig]<K extends keyof C >(prop_key:K , value : C[K]  ){
+    [setConfig]<K extends keyof C >(prop_key:K , value : C[K]  ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         this[fieldName_config][prop_key]= value 
     }
 
@@ -366,7 +390,7 @@ export  class FunctionalWrapperJson< J extends IJson , C extends IJson = IVoid  
 
   
 export function functionError_RetDfEmpty<T extends  haveSerializerAndEmptyInit<T>  > ( dfInstance:T , _message ?: string ): err_function<T>  {
-    return (_error:any)=> {
+    return (_error:any)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         let err_obj = {error :_error,message:_message}
         if(_error!==undefined)console.error(`Error ${err_obj.error} message : ${err_obj.message}`)
         return  dfInstance 
@@ -375,7 +399,7 @@ export function functionError_RetDfEmpty<T extends  haveSerializerAndEmptyInit<T
   }
   
   export function  functionError_RetPromDfEmpty<T  extends  haveSerializerAndEmptyInit<T>  > ( dfInstance:T , _message ?: string ): err_function<Promise<T>>  {
-    return (_error:any)=> {
+    return (_error:any)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         let err_obj = {error :_error,message:_message}
         if(_error!==undefined)console.error(`Error ${err_obj.error} message : ${err_obj.message}`)
         return  promisifyVal<T>(dfInstance) 

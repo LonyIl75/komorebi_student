@@ -1,4 +1,5 @@
-import { EmptyInit, haveSerializer, haveSerializerAndEmptyInit } from "@shared/m_json.js"
+import getCurrentLine from "get-current-line"
+import { EmptyInit, AHaveSerializer, haveSerializerAndEmptyInit } from "@shared/m_json.js"
 import { str_value_init, t_value_init, str_value_validation_strRegex, t_value_validation_strRegex, df_value_init, df_value_validation_strRegex, df, str_joinChar_group } from "./types.js"
 import { IJson } from "@shared/m_object.js"
 
@@ -17,7 +18,7 @@ export class ValTextContent extends haveSerializerAndEmptyInit<ValTextContent>  
 
     static df = df
 
-    constructor(value_init : t_value_init = df[str_value_init] , value_validation_strRegex : t_value_validation_strRegex = df[str_value_validation_strRegex] , joinChar_group : string = df[str_joinChar_group]){
+    constructor(value_init : t_value_init = df[str_value_init] , value_validation_strRegex : t_value_validation_strRegex = df[str_value_validation_strRegex] , joinChar_group : string = df[str_joinChar_group]){ /*console.log("DEBUG_ME",getCurrentLine());*/
         super( {toJson:ValTextContent.toJson , fromJson:ValTextContent.fromJson});
         this[str_value_init] = value_init
         this[str_value_validation_strRegex] = value_validation_strRegex
@@ -29,16 +30,16 @@ export class ValTextContent extends haveSerializerAndEmptyInit<ValTextContent>  
         return {[str_value_init]: valTextContent[str_value_init] , [str_value_validation_strRegex] :valTextContent[str_value_validation_strRegex] , [str_joinChar_group] : valTextContent[str_joinChar_group]} as const 
     }
 
-    static fromJson = (json: IJson ) : ValTextContent => {
+    static fromJson = (json: IJson ) : ValTextContent =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
        return new ValTextContent(json[str_value_init],json[str_value_validation_strRegex],json[str_joinChar_group])
     }
 
-    static getArgsForCst = (json: IJson ) :t_cst_args => {
+    static getArgsForCst = (json: IJson ) :t_cst_args =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return [json[str_value_init],json[str_value_validation_strRegex],json[str_joinChar_group]]
     }
     static dfArgsCst = ValTextContent.getArgsForCst(ValTextContent.df)
 
-    static setArgsForCst = (_this: IValTextContent , ...args : t_cst_args ) : void => {
+    static setArgsForCst = (_this: IValTextContent , ...args : t_cst_args ) : void =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
          _this.value_init = args[0]
         _this.value_validation_strRegex = args[1]
         _this.joinChar_group = args[2]
@@ -46,16 +47,16 @@ export class ValTextContent extends haveSerializerAndEmptyInit<ValTextContent>  
 
     static emptyObject : EmptyInit<ValTextContent>  = new EmptyInit<ValTextContent>(ValTextContent) ;
 
-    static _getEmptyInit: () => ValTextContent = () => {
+    static getEmptyInit: () => ValTextContent = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return ValTextContent.emptyObject.emptyInit() ;
     }
 
-    getEmptyInit: () => ValTextContent = () => {
-        return ValTextContent._getEmptyInit() ;
+    getEmptyInit: () => ValTextContent = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        return ValTextContent.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: haveSerializer<ValTextContent>) => boolean = (obj:haveSerializer<ValTextContent>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(ValTextContent._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<ValTextContent>) => boolean = (obj:AHaveSerializer<ValTextContent>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        return haveSerializerAndEmptyInit._isTypeof(ValTextContent.getEmptyInit(),obj)
     }
 
     isTypeof = ValTextContent.isTypeof

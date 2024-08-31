@@ -1,7 +1,7 @@
 import { DebuggingOptions, debug_join, debug_start_with_curLine, debug_with_curLine, debug_with_curLine_isresult } from '@shared/m_debug.js';
 import debug, { Debugger } from 'debug';
 import getCurrentLine from 'get-current-line';
-import { getNameModule,getNameDebugAllNameModule, str_idRouteAndRemoteAddresss } from '@shared/str_debug.js';
+import { getNameModule } from '@shared/str_debug.js';
 
 
 const name_module :string =  getNameModule("scraping_selector","m_pptrSelector")
@@ -31,8 +31,8 @@ export namespace  FSelector {
     export type t_resFSelector_reject_element = typeof reject_qSelector_element ;
     
 
-    export const selectIfFoundElseThrow = async (page_or_element: t_pageOrElementHN ,selector: selector ): Promise<t_resSelector> => {
-        let res = await throwIfResolveWith (reject_qSelector_element)((_selector: selector )=>{
+    export const selectIfFoundElseThrow = async (page_or_element: t_pageOrElementHN ,selector: selector ): Promise<t_resSelector> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        let res = await throwIfResolveWith (reject_qSelector_element)((_selector: selector )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             return page_or_element.$(_selector).then((res)=>res === null ? reject_qSelector_element : res as Exclude <typeof res, null> )
         },selector)
         return res
@@ -43,7 +43,7 @@ export namespace  FSelector {
     t_resFSelector_success ,t_arr_IBaseFunctionSelector , getTypeArrJson<name_functionSelector.querySelector> >
 
 
-    export  const _querySelector : IQuerySelector = async (page_or_element: t_pageOrElementHN ,selector:selector,_type : name_functionSelector.querySelector =name_functionSelector.querySelector): Promise<t_resFSelector_success>=>{
+    export  const _querySelector : IQuerySelector = async (page_or_element: t_pageOrElementHN ,selector:selector,_type : name_functionSelector.querySelector =name_functionSelector.querySelector): Promise<t_resFSelector_success>=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         let _res = await selectIfFoundElseThrow(page_or_element,selector);
         return [_res]
     }
@@ -51,7 +51,7 @@ export namespace  FSelector {
     export type t_funct_querySelector = typeof _querySelector 
 
 
-    export const getRejecteValue_qSelector = () : t_reject_qSelector => {
+    export const getRejecteValue_qSelector = () : t_reject_qSelector =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return reject_qSelector
     }
 
@@ -65,7 +65,7 @@ export namespace  FSelector {
                 [str_ISelectorFunctionObject_props.isRejected] : t_booleanFunction
             };
 
-        constructor (  ) {
+        constructor (  ) { /*console.log("DEBUG_ME",getCurrentLine());*/
             this[name_functionSelector.querySelector] = {
                 ...getSelectorJson<t_funct_querySelector ,t_getRejecteValue_qSelector > (_querySelector,getRejecteValue_qSelector)
             }

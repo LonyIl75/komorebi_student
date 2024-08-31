@@ -1,7 +1,7 @@
 import { DebuggingOptions, debug_join, debug_start_with_curLine, debug_with_curLine, debug_with_curLine_isresult } from '@shared/m_debug.js';
 import debug, { Debugger } from 'debug';
 import getCurrentLine from 'get-current-line';
-import { getNameModule,getNameDebugAllNameModule, str_idRouteAndRemoteAddresss } from '@shared/str_debug.js';
+import { getNameModule } from '@shared/str_debug.js';
 
 
 const name_module :string =  getNameModule("scraping_selector","windowSelectors")
@@ -46,7 +46,7 @@ function filterElementByTextContent(  regex : RegExp ) :  t_filterFunction  {
 
 export function filterArrElementByContent (elms : HTMLElement[] , filter_functions : Array<t_filterFunction> ) : HTMLElement[] {
     let arr_elms : HTMLElement[] = elms ;
-    for (const filter_function of filter_functions) {
+    for (const filter_function of filter_functions) { /*console.log("DEBUG_ME",getCurrentLine());*/
         arr_elms = arr_elms.filter(filter_function);
     }
     return arr_elms ;

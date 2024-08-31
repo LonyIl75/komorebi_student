@@ -15,18 +15,18 @@ import { ReqAndResType } from './Data/ReqResRoute.js';
 import { isCategoryLayerNeedEmbed, t_embed_lib_retReqRes } from '../Config/Pipeline/types.js';
 import { t_req_any, t_res_any } from '@/controller/scraping-services/class/constraints.js';
 
-export function df_transformAfterGetServiceFunction<TReq  extends t_req_any , TRes extends t_res_any , Result extends IJson > (req:TReq , res : TRes ,json:Result){
+export function df_transformAfterGetServiceFunction<TReq  extends t_req_any , TRes extends t_res_any , Result extends IJson > (req:TReq , res : TRes ,json:Result){ /*console.log("DEBUG_ME",getCurrentLine());*/
         res.body.result = res.body?.result ?{...res.body.result,...json} : json
         return [req,res] as ReqAndResType<TReq , TRes>
 }
 
 
 export function embed_lib_retReqRes <KCategory extends string , KFct extends string , TL extends { [k in KFct]:t_function}, MCF extends {readonly [kc in KCategory] : readonly KFct[]} >
-(lib_pipeline :  TL , map_pipeline: MCF){
+(lib_pipeline :  TL , map_pipeline: MCF){ /*console.log("DEBUG_ME",getCurrentLine());*/
     let new_lib = {} as any
-    for(const category in map_pipeline){
-        for(const fct of map_pipeline[category]){
-            new_lib[fct] = isCategoryLayerNeedEmbed(category)?async (...args:any[])=> {
+    for(const category in map_pipeline){ /*console.log("DEBUG_ME",getCurrentLine());*/
+        for(const fct of map_pipeline[category]){ /*console.log("DEBUG_ME",getCurrentLine());*/
+            new_lib[fct] = isCategoryLayerNeedEmbed(category)?async (...args:any[])=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                 let res = await lib_pipeline[fct](...args)
                 return isRetFunctionisNothing(res) ? [...args] : [...args,res]
             }:lib_pipeline[fct]
@@ -36,11 +36,11 @@ export function embed_lib_retReqRes <KCategory extends string , KFct extends str
 
 }
 
-const verify_url = (url:string):boolean => {return true;} //TODO
+const verify_url = (url:string):boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/return true;} //TODO
 
-export const goto_verified_url = async (page:Page ,url:string , waitForOptions ?: WaitForOptions  ): Promise<HTTPResponse | nullOrUndefined  > => {
+export const goto_verified_url = async (page:Page ,url:string , waitForOptions ?: WaitForOptions  ): Promise<HTTPResponse | nullOrUndefined  > =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
 
-    if( verify_url ) {
+    if( verify_url ) { /*console.log("DEBUG_ME",getCurrentLine());*/
         if( !waitForOptions ) waitForOptions = df_waitForOptions;
         await page.goto(url , waitForOptions);
     }

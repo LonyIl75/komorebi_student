@@ -1,0 +1,9 @@
+generator client {
+  provider = "prisma-client-js"
+  output = env("SOCIETETECH_GEN_CLIENT_OUTPUT")
+}
+
+datasource db {
+  provider = env("SOCIETETECH_DAT_DB_PROVIDER")
+  url = env("SOCIETETECH_DAT_DB_URL")
+}

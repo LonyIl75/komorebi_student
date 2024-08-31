@@ -1,7 +1,7 @@
 import { DebuggingOptions, debug_join, debug_start_with_curLine, debug_with_curLine, debug_with_curLine_isresult } from '@shared/m_debug.js';
 import debug, { Debugger } from 'debug';
 import getCurrentLine from 'get-current-line';
-import { getNameModule,getNameDebugAllNameModule, str_idRouteAndRemoteAddresss, concatNameModuleAndDebug } from '@shared/str_debug.js';
+import { getNameModule, concatNameModuleAndDebug } from '@shared/str_debug.js';
 
 
 const name_module :string =  getNameModule("scraping_selector_pageParsing","componentObject")
@@ -12,7 +12,7 @@ import {IJson, getEmptyJson} from "@shared/m_object.js";
 import { t_arr_component,  t_getChildTypeFromArrComponent, t_getClassNameTypeFromArrComponent, t_rootClassName} from "./types.js";
 import {_Enumerate, arrToUnion,reshapeObject, t_function } from "@shared/type.js";
 import {_notFoundIdx} from "@shared/type.js";
-import { EmptyInit, haveSerializer, haveSerializerAndEmptyInit, } from '@shared/m_json.js';
+import { EmptyInit, AHaveSerializer, haveSerializerAndEmptyInit, } from '@shared/m_json.js';
 import { MapRegexToIdPath } from '@shared/m_regexMapping.js';
 import { FrameAddScriptTagOptions } from 'puppeteer';
 import { ExposeObject, t_exposeObject } from '../PageEvaluate/ExposeObject.js';
@@ -26,7 +26,7 @@ import { _IJsonComponents } from './Schema/FunctionalWrapperJsonComponents/_Json
 import { t_strRegex } from '@shared/_regexp.js';
 
 
-export type t_ScrapingComponent_any = ScrapingComponent<t_strRegex, string, readonly [t_rootClassName,...readonly string[]],  any, t_arr_component<string>, _IJsonComponents<string>>
+export type t_ScrapingComponent_any = ScrapingComponent<any,any,any,any,any,any>
 
 
 export class ScrapingComponent<UnionRegex  extends t_strRegex ,UnionIdPath  extends string , ArrUnionClassNameType extends readonly [t_rootClassName,...readonly string[]],unionClassNameType extends arrToUnion<ArrUnionClassNameType> ,
@@ -40,11 +40,11 @@ ArrArr extends t_arr_component<unionClassNameType> ,  T extends _IJsonComponents
         this.fwJsonComponent = _fwJsonComponent
     }
 
-    getFwJsonComponent = () => {
+    getFwJsonComponent = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.fwJsonComponent
     }
 
-    getMapPathPatternToId = () => {
+    getMapPathPatternToId = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.mapPathPatternToId
     }
 }
@@ -81,21 +81,21 @@ unionClassNameType extends arrToUnion<ArrUnionClassNameType>, t_arrrArrUnion_pag
         this.scrapingComponent = _json.scrapingComponent
     }
 
-    getEmptyInit: () => t_JsonWithScrapingComponent = () => {
-        return JsonWithScrapingComponents._getEmptyInit() ;
+    getEmptyInit: () => t_JsonWithScrapingComponent = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        return JsonWithScrapingComponents.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: haveSerializer<t_JsonWithScrapingComponent>) => boolean = (obj:haveSerializer<t_JsonWithScrapingComponent>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(JsonWithScrapingComponents._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<t_JsonWithScrapingComponent>) => boolean = (obj:AHaveSerializer<t_JsonWithScrapingComponent>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        return haveSerializerAndEmptyInit._isTypeof(JsonWithScrapingComponents.getEmptyInit(),obj)
     }
 
     isTypeof = JsonWithScrapingComponents.isTypeof
     
-    static fromJson = (json : IJson) : t_JsonWithScrapingComponent => {
+    static fromJson = (json : IJson) : t_JsonWithScrapingComponent =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return new JsonWithScrapingComponents(json as any )
     }
 
-    static toJson = (jsonWithScrapingComponent : t_JsonWithScrapingComponent)  => {
+    static toJson = (jsonWithScrapingComponent : t_JsonWithScrapingComponent)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return {
             scriptsTagMap : jsonWithScrapingComponent.scriptsTagMap,
             scriptObjectMap : jsonWithScrapingComponent.scriptObjectMap,
@@ -105,7 +105,7 @@ unionClassNameType extends arrToUnion<ArrUnionClassNameType>, t_arrrArrUnion_pag
     }
     static emptyObject : EmptyInit<t_JsonWithScrapingComponent>  = new EmptyInit<t_JsonWithScrapingComponent>(JsonWithScrapingComponents) ;
 
-    static _getEmptyInit: () => t_JsonWithScrapingComponent = () => {
+    static getEmptyInit: () => t_JsonWithScrapingComponent = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return JsonWithScrapingComponents.emptyObject.emptyInit() ;
     }
 
@@ -118,17 +118,17 @@ unionClassNameType extends arrToUnion<ArrUnionClassNameType>, t_arrrArrUnion_pag
 type t_hj < Ks  extends readonly string[]> = Ks extends readonly [infer A , ...infer B] ? A extends string ? B extends readonly string[] ?  IJson<A,t_union_IComponent<A,any>>& t_hj<B> : never : never : {}
 
 
-export const getPropsFromImportedComponentAndProp = <Ks extends readonly string[]  ,  TJson extends IJson<Ks[number]>  , P extends keyof TJson[Ks[number]] ,  R extends TJson[Ks[number]] = TJson[Ks[number]] >(json:TJson, keys : Ks , prop : P)=> {
+export const getPropsFromImportedComponentAndProp = <Ks extends readonly string[]  ,  TJson extends IJson<Ks[number]>  , P extends keyof TJson[Ks[number]] ,  R extends TJson[Ks[number]] = TJson[Ks[number]] >(json:TJson, keys : Ks , prop : P)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     type t_ <_Ks extends readonly string[]  > = _Ks extends readonly [infer A , ...infer B] ? A extends keyof TJson ? B extends readonly string[] ?  readonly [TJson[A][P] , ...t_<B>] : never : never : []
     return keys.map((key)=>json[key][prop]) as t_ <Ks >
 }
 
-export const getPropsFromImportedComponentAndFct = <Ks extends readonly string[]  ,  TJson extends t_hj<Ks> & IJson<Ks[number]>  ,  P extends keyof TJson[Ks[number]] ,F extends t_function<R[P],[R]> , R extends TJson[Ks[number]] = TJson[Ks[number]] >(json:TJson, keys : Ks , fct : F )=> {
+export const getPropsFromImportedComponentAndFct = <Ks extends readonly string[]  ,  TJson extends t_hj<Ks> & IJson<Ks[number]>  ,  P extends keyof TJson[Ks[number]] ,F extends t_function<R[P],[R]> , R extends TJson[Ks[number]] = TJson[Ks[number]] >(json:TJson, keys : Ks , fct : F )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     type t_ <_Ks extends readonly string[]  > = _Ks extends readonly [infer A , ...infer B] ? A extends keyof TJson ? B extends readonly string[] ?  readonly [TJson[A][P] , ...t_<B>] : never : never : []
     return keys.map((key:Ks[number])=>fct( json[key] )) as t_<Ks>
 }
 
-export const getTypesFromImportedComponentAndFct =<Ks extends readonly string[],TJson extends t_hj<Ks> & IJson<Ks[number]>>(json:TJson, keys : Ks)=> {
+export const getTypesFromImportedComponentAndFct =<Ks extends readonly string[],TJson extends t_hj<Ks> & IJson<Ks[number]>>(json:TJson, keys : Ks)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     type K = Ks[number]
     type t_imported_component_getType = typeof Component.getType<K,any,TJson[K]>
     return getPropsFromImportedComponentAndFct<Ks,TJson,t_str_type,t_imported_component_getType>(json,keys,Component.getType)

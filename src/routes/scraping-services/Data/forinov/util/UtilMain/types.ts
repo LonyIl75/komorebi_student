@@ -1,0 +1,1 @@
+export const forinov_imgImage_selectors =[`img[class*="image"]`]

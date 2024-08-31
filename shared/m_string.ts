@@ -23,14 +23,14 @@ export const stringToArray = (paramStr: string, delimiter : string = ".") : any[
 const join_filter = (char_join : string, ...args:string[]  ) => args.filter((_)=>_).join(char_join)
 export const join_underscore = < T extends readonly string[]>(...args:T ) => join_filter(char_join_underscore,...args) as t_JoinChar_underscore<T>;
 
-export const join_underscore_lowercase = < T extends readonly string[]>(..._args:T )  => {
+export const join_underscore_lowercase = < T extends readonly string[]>(..._args:T )  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const args = _args.map((e)=>minFirstChar(e))
     return join_filter(char_join_underscore,...args) as t_JoinChar_underscore_lowercase<T>
 }
 
 export const join_hyphen = < T extends readonly string[]>(...args:T ) => join_filter(char_join_hyphen,...args) as t_JoinChar_hyphen<T>; 
 
-export const join_hyphen_lowercase = < T extends readonly string[]>(..._args:T )  => {
+export const join_hyphen_lowercase = < T extends readonly string[]>(..._args:T )  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const args = _args.map((e)=>minFirstChar(e))
     return join_filter(char_join_hyphen,...args) as t_JoinChar_underscore_lowercase<T>
 }
@@ -61,8 +61,8 @@ export const majFirstChar = <Z extends string > (str:Z) : Capitalize<Z> => str.c
 export const minAllStr = <Z extends string > (str:Z) : Lowercase<Z> => str.toLowerCase() as Lowercase<Z>  ;
 export const minFirstChar = <Z extends string > (str:Z) : Uncapitalize<Z> => str.charAt(0).toLowerCase() + str.slice(1) as Uncapitalize<Z>  ;
 
-export const joinCapitalize = <T extends readonly string[]>(...args:T) => {
-    return args.reduce((_str,elm) => `${_str}${majFirstChar(elm)}`,"") as t_joinCapitalize<T>
+export const joinCapitalize = <T extends readonly string[]>(...args:T) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    return args.slice(1).reduce((_str,elm) => `${_str}${majFirstChar(elm)}`,args[0]) as t_joinCapitalize<T>
 }
   
 export const str_validation_strRegex = "validation_strRegex" as const
@@ -71,12 +71,12 @@ export type t_str_validation_strRegex = typeof str_validation_strRegex
 export const str_init = "init" as const
 export type t_str_init = typeof str_init
 
-export const dottedName = (str:string) => {
+export const dottedName = (str:string) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     let res = "";
     let _car = str.charAt(0);
     res += _car.toLowerCase();
 
-    for ( let i = 1 ; i < str.length ; i++) {
+    for ( let i = 1 ; i < str.length ; i++) { /*console.log("DEBUG_ME",getCurrentLine());*/
         _car = str.charAt(i);
         if(_car == _car.toUpperCase()) res += "."+_car.toLowerCase();
         else res += _car;

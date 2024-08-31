@@ -1,4 +1,5 @@
-import { deepCloneJson, haveSerializer } from "@shared/m_json.js";
+import getCurrentLine from "get-current-line"
+import { deepCloneJson, AHaveSerializer } from "@shared/m_json.js";
 import { IJson } from "@shared/m_object.js";
 import { _notFoundIdx } from "@shared/type.js";
 import ChildAttributeType, { IChildAttributeType } from "../_Component/ChildAttributeType/ChildAttributeType.js";
@@ -19,7 +20,7 @@ export interface IComponent <unionclassname  extends string , UnionChildsClassNa
 }
 
 //type t_childs_components < UnionChildsClassName extends string > = UnionChildsClassName  extends t_component_empty_childs[0] ? t_component_empty_childs :  TypeChilds<UnionChildsClassName>[] ; 
-export class Component<unionclassname  extends string , UnionChildsClassName extends string = unionclassname > extends haveSerializer<Component<unionclassname,UnionChildsClassName>> implements IComponent<unionclassname,UnionChildsClassName> {
+export class Component<unionclassname  extends string , UnionChildsClassName extends string = unionclassname > extends AHaveSerializer<Component<unionclassname,UnionChildsClassName>> implements IComponent<unionclassname,UnionChildsClassName> {
     [str_type]:StrChildType.t_childType<unionclassname>  ; 
     [str_childs_selectors] :t_childsSelectors ;
 
@@ -46,7 +47,7 @@ export class Component<unionclassname  extends string , UnionChildsClassName ext
             [str_childs_attributes]:compJson.childs_attributes?.map(ChildAttributeType.toJson)} as const 
     } 
 
-    static fromJson = (json: IJson) : Component<any,any> => {
+    static fromJson = (json: IJson) : Component<any,any> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return new Component(json.class_name , json[str_type] , json.childs_selectors , json.childs_components.map(TypeChilds.fromJson) ,json.isScoped,ValTextContent.getArgsForCst(json),json.childs_attributes?.map(ChildAttributeType.fromJson))
     }
 
@@ -88,40 +89,40 @@ export class Component<unionclassname  extends string , UnionChildsClassName ext
     }
 
     static getType = 
-    <unionclassname  extends string,  UnionChildsClassName extends string = unionclassname ,TJson extends IComponent<unionclassname,UnionChildsClassName> = IComponent<unionclassname,UnionChildsClassName> , R extends StrChildType.t_childType<unionclassname> =  TJson[t_str_type] >(_json :  TJson) : R => {
+    <unionclassname  extends string,  UnionChildsClassName extends string = unionclassname ,TJson extends IComponent<unionclassname,UnionChildsClassName> = IComponent<unionclassname,UnionChildsClassName> , R extends StrChildType.t_childType<unionclassname> =  TJson[t_str_type] >(_json :  TJson) : R =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return (_json as any)[str_type]
     }
     static getIScoped = 
-    <unionclassname  extends string,  UnionChildsClassName extends string = unionclassname ,TJson extends IComponent<unionclassname,UnionChildsClassName> = IComponent<unionclassname,UnionChildsClassName> , R extends boolean =  TJson[t_str_isScoped] >(_json :  TJson) : R => {
+    <unionclassname  extends string,  UnionChildsClassName extends string = unionclassname ,TJson extends IComponent<unionclassname,UnionChildsClassName> = IComponent<unionclassname,UnionChildsClassName> , R extends boolean =  TJson[t_str_isScoped] >(_json :  TJson) : R =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return (_json as any)[str_isScoped]
     }
-    static getChilds_selectors = <unionclassname  extends string = string ,  UnionChildsClassName extends string = unionclassname, TJson extends IComponent<unionclassname,UnionChildsClassName> = IComponent<unionclassname,UnionChildsClassName> ,R extends t_childsSelectors|(typeof Component.df[t_str_childs_selectors]) = TJson[t_str_childs_selectors] >(_json : TJson) : R => {
+    static getChilds_selectors = <unionclassname  extends string = string ,  UnionChildsClassName extends string = unionclassname, TJson extends IComponent<unionclassname,UnionChildsClassName> = IComponent<unionclassname,UnionChildsClassName> ,R extends t_childsSelectors|(typeof Component.df[t_str_childs_selectors]) = TJson[t_str_childs_selectors] >(_json : TJson) : R =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return (_json as any)[str_childs_selectors]
     }
-    static getChilds_components = <unionclassname  extends string  , UnionChildsClassName extends string , TJson extends IComponent<unionclassname,UnionChildsClassName> = IComponent<unionclassname,UnionChildsClassName> ,  R extends t_childs_components<UnionChildsClassName>|(typeof Component.df[t_str_childs_components])  =  TJson[t_str_childs_components]  >(_json : IComponent<unionclassname,UnionChildsClassName>) : R=> {
+    static getChilds_components = <unionclassname  extends string  , UnionChildsClassName extends string , TJson extends IComponent<unionclassname,UnionChildsClassName> = IComponent<unionclassname,UnionChildsClassName> ,  R extends t_childs_components<UnionChildsClassName>|(typeof Component.df[t_str_childs_components])  =  TJson[t_str_childs_components]  >(_json : IComponent<unionclassname,UnionChildsClassName>) : R=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return (_json as any)[str_childs_components]
     }
-    static getClass_name = <unionclassname  extends string  ,  UnionChildsClassName extends string= unionclassname , TJson extends IComponent<unionclassname,UnionChildsClassName> = IComponent<unionclassname,UnionChildsClassName> , R extends unionclassname|(typeof Component.df[t_str_class_name])  = TJson[t_str_class_name] >(_json : TJson) : R => {
+    static getClass_name = <unionclassname  extends string  ,  UnionChildsClassName extends string= unionclassname , TJson extends IComponent<unionclassname,UnionChildsClassName> = IComponent<unionclassname,UnionChildsClassName> , R extends unionclassname|(typeof Component.df[t_str_class_name])  = TJson[t_str_class_name] >(_json : TJson) : R =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return (_json as any)[str_class_name]
     }
-    static getChilds_attributes = <unionclassname  extends string = string ,  UnionChildsClassName extends string = unionclassname , TJson extends IComponent<unionclassname,UnionChildsClassName> = IComponent<unionclassname,UnionChildsClassName> , R extends (readonly IChildAttributeType[] ) = TJson[t_str_childs_attributes] >(_json : TJson) : R => {
+    static getChilds_attributes = <unionclassname  extends string = string ,  UnionChildsClassName extends string = unionclassname , TJson extends IComponent<unionclassname,UnionChildsClassName> = IComponent<unionclassname,UnionChildsClassName> , R extends (readonly IChildAttributeType[] ) = TJson[t_str_childs_attributes] >(_json : TJson) : R =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return (_json as any)[str_childs_attributes]
     }
 
-    static isEmptyChilds_components = <unionclassname  extends string  ,  UnionChildsClassName extends string   >(_json : IComponent<unionclassname,UnionChildsClassName>) :boolean => {
+    static isEmptyChilds_components = <unionclassname  extends string  ,  UnionChildsClassName extends string   >(_json : IComponent<unionclassname,UnionChildsClassName>) :boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return isEmptyChildsComponents(Component.getChilds_components<unionclassname,UnionChildsClassName>(_json)) ; //replace by : == component_empty_childs //A FAIRE 
     }
-    static isEmptyChilds_attributes = <unionclassname  extends string = string ,  UnionChildsClassName extends string = unionclassname > (_json :IComponent<unionclassname,UnionChildsClassName>) : boolean => {
+    static isEmptyChilds_attributes = <unionclassname  extends string = string ,  UnionChildsClassName extends string = unionclassname > (_json :IComponent<unionclassname,UnionChildsClassName>) : boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return Component.getChilds_attributes<unionclassname,UnionChildsClassName>(_json) == undefined //replace by : === // A FAIRE 
     }
-    static isEmptyChilds_selectors = <unionclassname  extends string = string ,  UnionChildsClassName extends string = unionclassname > (_json : IComponent<unionclassname,UnionChildsClassName>) : boolean => {
+    static isEmptyChilds_selectors = <unionclassname  extends string = string ,  UnionChildsClassName extends string = unionclassname > (_json : IComponent<unionclassname,UnionChildsClassName>) : boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return isEmptyChildSelectors(Component.getChilds_selectors<unionclassname,UnionChildsClassName>(_json) )
     }
-    static isScoped = <unionclassname  extends string = string ,  UnionChildsClassName extends string = unionclassname > (_json : IComponent<unionclassname,UnionChildsClassName>) : boolean => {
+    static isScoped = <unionclassname  extends string = string ,  UnionChildsClassName extends string = unionclassname > (_json : IComponent<unionclassname,UnionChildsClassName>) : boolean =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return Component.getIScoped<unionclassname,  UnionChildsClassName >(_json)
     }
 
-    static getChilds_components_idx = <unionclassname  extends string  ,  UnionChildsClassName extends string   > (_json : IComponent<unionclassname,UnionChildsClassName> , idx:number) : ITypeChilds<UnionChildsClassName> => {
+    static getChilds_components_idx = <unionclassname  extends string  ,  UnionChildsClassName extends string   > (_json : IComponent<unionclassname,UnionChildsClassName> , idx:number) : ITypeChilds<UnionChildsClassName> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         if(Component.isEmptyChilds_components(_json)) throw new Error("Childs_components is empty")
         
         let res : t_child_component<UnionChildsClassName>[] = Component.getChilds_components<unionclassname,UnionChildsClassName>(_json)
@@ -129,11 +130,11 @@ export class Component<unionclassname  extends string , UnionChildsClassName ext
     }
 
     static getIndexOfChildClassName =   <unionclassname  extends string  ,  UnionChildsClassName extends string   > 
-    (_json : IComponent<unionclassname,UnionChildsClassName> ,  childClassName : string ) =>{
+    (_json : IComponent<unionclassname,UnionChildsClassName> ,  childClassName : string ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         const arrChildsClassName : ITypeChilds<UnionChildsClassName>[] = Component.getChilds_components(_json)
         const foundSubarray = arrChildsClassName.find((child :ITypeChilds<UnionChildsClassName> ) =>  
             TypeChilds.getType(child)=== childClassName);
-        if (foundSubarray) {
+        if (foundSubarray) { /*console.log("DEBUG_ME",getCurrentLine());*/
             return arrChildsClassName.indexOf(foundSubarray);
         } else {
             return _notFoundIdx();  // Return -1 if no subarray with the target string as the first element is found

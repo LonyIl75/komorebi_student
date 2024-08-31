@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+model StartupsOccitanie {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  date Int
+  StartupsOccitanieType String @unique
+  StartupsOccitanieSummary String?
+  StartupsOccitanieLink_href String?
+  StartupsOccitanieFilterText String?
+  StartupsOccitanieItemCategory Category[] @relation("StartupsOccitanie_Category")
+}
+
+model Category {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  StartupsOccitanieCategory String
+  StartupsOccitanieId String @db.ObjectId
+  StartupsOccitanie StartupsOccitanie @relation("StartupsOccitanie_Category",fields: [StartupsOccitanieId], references: [id])
+}
+

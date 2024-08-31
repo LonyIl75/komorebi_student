@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { t_strRegex } from "./_regexp.js"
 import {convertStrToRegexStr,moreThenOneStrRegex, ordinalSuffixRegex, strRegexToMaybePluralStrRegex } from "./m_regex.js"
 import { getUnionNonMatchingGroups, embedCapturingGroupStrOrRegex, embedNonCapturingGroupStrOrRegex, unionRegexs, embedOptionalStrOrRegex, embedOptNonCapturingGroupStrOrRegex } from "./m_regex_prefixAndSuffix.js"
@@ -38,7 +39,7 @@ export const _strRegexSeparatorPrice = getUnionNonMatchingGroups(...arr_separato
 
 export const strRegexNumberUnit = `(?:(\\d+)(?:\\s+(\\d+))?)+(?:\\s*(${_strRegexSeparatorPrice})\\s*(\\d+))?`as const
 export const strRegexEndNumberUnit = ``as const
-export const getStrRegexUnitExpression = <TStrRegexExp extends string , TUnit extends string >(strRegexExp : TStrRegexExp , unit:TUnit) => {
+export const getStrRegexUnitExpression = <TStrRegexExp extends string , TUnit extends string >(strRegexExp : TStrRegexExp , unit:TUnit) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return embedNonCapturingGroupStrOrRegex(getUnionNonMatchingGroups(`${unit}\\s*${strRegexExp}`,`${strRegexExp}\\s*${unit}`),true) 
 }
 export const strRegexPrice = getStrRegexUnitExpression(strRegexNumberUnit,strRegexPriceUnit)
@@ -57,12 +58,12 @@ export const strRegexQuantity = getStrRegexUnitExpression(strRegexNumberUnit,str
     export const arr_inBetween = ["\/","à","-"] as const
     const _strRegexInBetween = getUnionNonMatchingGroups(...arr_inBetween)
     export const strRegexInBetween = embedCapturingGroupStrOrRegex(_strRegexInBetween,true)
-    export const getInBetweenNumberPieceStringUnit = <TStrRegexUnit extends t_strRegex >(strRegexUnit:TStrRegexUnit)=>{
+    export const getInBetweenNumberPieceStringUnit = <TStrRegexUnit extends t_strRegex >(strRegexUnit:TStrRegexUnit)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
        
         return embedNonCapturingGroupStrOrRegex(`\\d+\\s*${strRegexInBetween}\\s*\\d+\\s*${strRegexUnit}` as const,true)
     }
 
-    export const getInBetweenNumberStringUnit = <TStrRegexUnit extends t_strRegex >(strRegexUnit:TStrRegexUnit)=>{
+    export const getInBetweenNumberStringUnit = <TStrRegexUnit extends t_strRegex >(strRegexUnit:TStrRegexUnit)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
        
         return embedNonCapturingGroupStrOrRegex(`${strRegexNumberUnit}\\s*${strRegexInBetween}\\s*${strRegexNumberUnit}\\s*${strRegexUnit}` as const ,true) 
     }
@@ -82,18 +83,18 @@ export const strRegexQuantity = getStrRegexUnitExpression(strRegexNumberUnit,str
     export const arr_aproxPrefixOnlyPiece = ["de"] as const
     const _aproxPrefixOnlyPieceStrRegex =  getUnionNonMatchingGroups(...arr_aproxPrefix,...arr_aproxPrefixOnlyPiece)
     export const aproxPrefixOnlyPieceStrRegex = embedCapturingGroupStrOrRegex(_aproxPrefixOnlyPieceStrRegex,true)
-    export const getAproxOnlyPieceStringUnit = <TStrRegexUnit extends t_strRegex >(_strRegexUnit:TStrRegexUnit)=>{
+    export const getAproxOnlyPieceStringUnit = <TStrRegexUnit extends t_strRegex >(_strRegexUnit:TStrRegexUnit)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                            
         return embedNonCapturingGroupStrOrRegex(`${embedOptionalStrOrRegex(aproxPrefixOnlyPieceStrRegex,true)}\\s*${getInBetweenNumberPieceStringUnit(_strRegexUnit)}` as const,true)
     }
 
-    export const getAproxNotPieceStringUnit = <TStrRegexUnit extends t_strRegex >(_strRegexUnit:TStrRegexUnit)=>{
+    export const getAproxNotPieceStringUnit = <TStrRegexUnit extends t_strRegex >(_strRegexUnit:TStrRegexUnit)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                            
         return embedNonCapturingGroupStrOrRegex(`${aproxPrefixStrRegex}\\s*${getInBetweenNumberStringUnit(_strRegexUnit)}` as const,true)
     }
 
 
-    export const getAproxNotOnlyPieceStringUnit = <TStrRegexUnit extends t_strRegex >(_strRegexUnit:TStrRegexUnit)=>{
+    export const getAproxNotOnlyPieceStringUnit = <TStrRegexUnit extends t_strRegex >(_strRegexUnit:TStrRegexUnit)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                            
         return unionRegexs(getAproxOnlyPieceStringUnit(_strRegexUnit),getAproxNotPieceStringUnit(_strRegexUnit)) 
     }
@@ -112,17 +113,17 @@ export const strRegexQuantity = getStrRegexUnitExpression(strRegexNumberUnit,str
     const _strRegexMultiplePiece = getUnionNonMatchingGroups(...arr_multiplePiece)
     export const strRegexMultiplePiece = embedCapturingGroupStrOrRegex(_strRegexMultiplePiece,true)
 
-    export const getPluralNumberedStringUnit = <TStrRegexUnit extends t_strRegex >(_strRegexUnit:TStrRegexUnit)=>{
+    export const getPluralNumberedStringUnit = <TStrRegexUnit extends t_strRegex >(_strRegexUnit:TStrRegexUnit)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
        
         return  embedNonCapturingGroupStrOrRegex(`${moreThenOneStrRegex}\\s*${_strRegexUnit}s` as const ,true)
     }
 
 
-    export const getStrRegexMultiplePieceExp = <TStrRegexUnitPiece extends t_strRegex ,TStrRegexMultiplePiece extends t_strRegex = typeof strRegexMultiplePiece>(_strRegexUnitPiece:TStrRegexUnitPiece,_strRegexMultiplePiece :TStrRegexMultiplePiece = strRegexMultiplePiece as any )=>{                     
+    export const getStrRegexMultiplePieceExp = <TStrRegexUnitPiece extends t_strRegex ,TStrRegexMultiplePiece extends t_strRegex = typeof strRegexMultiplePiece>(_strRegexUnitPiece:TStrRegexUnitPiece,_strRegexMultiplePiece :TStrRegexMultiplePiece = strRegexMultiplePiece as any )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/                     
         return embedNonCapturingGroupStrOrRegex(`${_strRegexMultiplePiece}\\s*${embedOptionalStrOrRegex(strRegexArticleMultiplePiece,true)}\\s*${getPluralNumberedStringUnit(_strRegexUnitPiece)}` as const,true)
     }
     
-    export const getStrRegexBatchQuantityExp = <TStrRegexUnit extends t_strRegex ,TStrRegexMultiplePiece extends t_strRegex = typeof strRegexMultiplePiece >(_strRegexUnit:TStrRegexUnit,_strRegexMultiplePiece: TStrRegexMultiplePiece=strRegexMultiplePiece as any)=>{                     
+    export const getStrRegexBatchQuantityExp = <TStrRegexUnit extends t_strRegex ,TStrRegexMultiplePiece extends t_strRegex = typeof strRegexMultiplePiece >(_strRegexUnit:TStrRegexUnit,_strRegexMultiplePiece: TStrRegexMultiplePiece=strRegexMultiplePiece as any)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/                     
         return embedNonCapturingGroupStrOrRegex(`${embedOptNonCapturingGroupStrOrRegex(`${_strRegexMultiplePiece}\\s*${strRegexArticleMultiplePiece}`,true)}\\s*)?${strRegexNumberUnit}\\s*${_strRegexUnit}s` as const,true)
     }   
 
@@ -137,17 +138,17 @@ export const strRegexQuantity = getStrRegexUnitExpression(strRegexNumberUnit,str
     export const strRegexStringUnit = embedNonCapturingGroupStrOrRegex(unionRegexs(strRegexStringUnitDf,strRegexStringUnitLegume),true)
 
     export const strRegexUnit = embedNonCapturingGroupStrOrRegex(unionRegexs(strRegexUnitQuantity,strRegexAproxType,strRegexStringUnit),true)
-    export const getSingelNumberedStringUnit = <TStrRegexUnit extends t_strRegex >(_strRegexUnit:TStrRegexUnit)=>{
+    export const getSingelNumberedStringUnit = <TStrRegexUnit extends t_strRegex >(_strRegexUnit:TStrRegexUnit)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
        
         return  embedNonCapturingGroupStrOrRegex(`1\\s*${_strRegexUnit}` as const,true)
     }
 
-    export const getNumberedStringUnit = <TStrRegexUnit extends t_strRegex >(_strRegexUnit:TStrRegexUnit)=>{
+    export const getNumberedStringUnit = <TStrRegexUnit extends t_strRegex >(_strRegexUnit:TStrRegexUnit)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
        
         return  unionRegexs(getPluralNumberedStringUnit(_strRegexUnit),getSingelNumberedStringUnit(_strRegexUnit))
     }
 
-    export const getDividedStringUnit = <TStrRegexUnit extends t_strRegex >(_strRegexUnit:TStrRegexUnit)=>{
+    export const getDividedStringUnit = <TStrRegexUnit extends t_strRegex >(_strRegexUnit:TStrRegexUnit)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
        
         return embedNonCapturingGroupStrOrRegex(`\\d\/\\d${embedOptionalStrOrRegex(ordinalSuffixRegex,true)}\\s*${_strRegexUnit}` as const,true)
     }
@@ -157,13 +158,13 @@ export const strRegexQuantity = getStrRegexUnitExpression(strRegexNumberUnit,str
     export const arr_timesChar = ["x","*"] as const
     export const strRegexTimesChar = getUnionNonMatchingGroups(...arr_timesChar)
 
-    export const _getTimesStrRegex = <TStrRegex extends t_strRegex >(strRegex:TStrRegex)=>{
+    export const _getTimesStrRegex = <TStrRegex extends t_strRegex >(strRegex:TStrRegex)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
        
         return embedNonCapturingGroupStrOrRegex(`${strRegexTimesChar}\\s*${strRegex}` as const,true)
     }
     //is x 4 sachets
 
-    export const getTimesStrRegex = <TStrRegex extends t_strRegex >(strRegex:TStrRegex)=>{
+    export const getTimesStrRegex = <TStrRegex extends t_strRegex >(strRegex:TStrRegex)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
        
         return embedNonCapturingGroupStrOrRegex(`${moreThenOneStrRegex}\\s*${_getTimesStrRegex(strRegex)}` as const,true)
     }

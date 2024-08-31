@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import MRegExp, { t_regexpFlags, t_strRegex } from "./_regexp.js"
 import { _isFunction, _isNullOrUndefined } from "./m_primitives.js"
 import { convertStrToRegexStr, t_convertStrToRegexStr, t_transformRegexOrStrWithPreSelectTransform } from "./m_regex.js"
@@ -23,7 +24,7 @@ export class EnclosingChars<t_open extends string = string, t_close extends stri
     _enclosingPairRegex:[t_strRegex,t_strRegex]
     enclosingPair:[t_open,t_close]
 
-    constructor(open :t_open , close:t_close) {
+    constructor(open :t_open , close:t_close) { /*console.log("DEBUG_ME",getCurrentLine());*/
         this._enclosingPairRegex = null
         this.enclosingPair = [open, close]
     }
@@ -54,13 +55,13 @@ export class EnclosingChars<t_open extends string = string, t_close extends stri
         return this._enclosingPairRegex
     }
     
-    enclose<B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined    > (str:_T,isStr : B ) {
+    enclose<B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string = undefined , _F extends t_regexpFlags = undefined    > (str:_T,isStr : B ) { /*console.log("DEBUG_ME",getCurrentLine());*/
         
         type t__encloseStr<B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string  , _F extends t_regexpFlags   ,_t_open extends string = string, _t_close extends string = string> = 
         _T extends MRegExp<_S,_F> ?  MRegExp<`${_t_open}${_T["source"]}${_t_close}`,_F>: _T extends string ? `${_t_open}${_T}${_t_close}` :never 
         
         const _enclose = <B extends boolean,_T extends (B extends true ? string : MRegExp<_S,_F>) , _S extends string  , _F extends t_regexpFlags   ,_t_open extends string = string, _t_close extends string = string>
-        (_strOrRegex:_T, isStr : B,_open : _t_open , _close : _t_close ) => {
+        (_strOrRegex:_T, isStr : B,_open : _t_open , _close : _t_close ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             const _str = isStr ? _strOrRegex as string : (_strOrRegex as MRegExp<_S,_F>).source
             const _res = `${_open}${_str}${_close}` as const 
             return isStr ? _res : new MRegExp<typeof _res , _F>(_res,(_strOrRegex as MRegExp<_S,_F>).flags ) as t__encloseStr< B,_T,_S,_F,_t_open,_t_close> 
@@ -69,17 +70,17 @@ export class EnclosingChars<t_open extends string = string, t_close extends stri
         const rest_param = (isStr ? [true,this.openingChar,this.closingChar] : [false,this.openingCharRegex,this.closingCharRegex]) as [B, t_open , t_close]
         return ( isStr && isStrEmptyOrNullOrUndefined(str as string ) ? "" : _enclose<B,_T,_S,_F,t_open,t_close>(str,...rest_param) ) as t_ret_encloseStr< this,t_open,t_close,B,_T,_S,_F>
     }
-    encloseStr<_T extends string >(str :_T) {
+    encloseStr<_T extends string >(str :_T) { /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.enclose<true,_T>(str,true)
     }
-    encloseRegex<_T extends MRegExp<_S,_F> ,_S extends string = undefined , _F extends t_regexpFlags = undefined  > (regex :_T) {
+    encloseRegex<_T extends MRegExp<_S,_F> ,_S extends string = undefined , _F extends t_regexpFlags = undefined  > (regex :_T) { /*console.log("DEBUG_ME",getCurrentLine());*/
         return this.enclose<false,_T,_S,_F>(regex,false)
     }
 
     //A FAIRE : add type 
     //and also do FctChange = typeof embedBeginAndEndOfLineStrOrRegex
     //@ts-ignore
-   getValueBetweenEnclosingChars<T extends string ,FctChange extends t_transformRegexOrStrWithPreSelectTransform<false,MRegExp<string,string>,_Fn,Fct,string,string> , _Fn extends Fn<[string],string> ,Fct extends t_functionFn<_Fn>, R extends MRegExp<_S,_F> = t_getValueBetweenEnclosingCharsParamDf<t_close> , _S extends string =t_close, _F extends string = undefined > (str :T , fct_change_regex : FctChange = embedBeginAndEndOfLineStrOrRegex as any , _getGroupRegex :R = getValueBetweenEnclosingCharsParamDf(this.closingCharRegex) as R ) {
+   getValueBetweenEnclosingChars<T extends string ,FctChange extends t_transformRegexOrStrWithPreSelectTransform<false,MRegExp<string,string>,_Fn,Fct,string,string> , _Fn extends Fn<[string],string> ,Fct extends t_functionFn<_Fn>, R extends MRegExp<_S,_F> = t_getValueBetweenEnclosingCharsParamDf<t_close> , _S extends string =t_close, _F extends string = undefined > (str :T , fct_change_regex : FctChange = embedBeginAndEndOfLineStrOrRegex as any , _getGroupRegex :R = getValueBetweenEnclosingCharsParamDf(this.closingCharRegex) as R ) { /*console.log("DEBUG_ME",getCurrentLine());*/
         const replace_regex = this.encloseRegex<R,_S,_F>(_getGroupRegex)
         let _res 
         if (!_isNullOrUndefined(fct_change_regex)) _res = fct_change_regex(replace_regex, false)
@@ -94,22 +95,22 @@ export const pairsOfEnclosingChars = [
     new EnclosingChars("{", "}"), new EnclosingChars("<", ">"), new EnclosingChars("`", "`"),
     new EnclosingChars("'", "'"), new EnclosingChars("\"", "\"")] as const 
 
-const replaceEnclosingCharIfExist = (paramStr : string , paramPairsEnclosingChars : EnclosingChars[] , paramPairChars: EnclosingChars ) => {
+const replaceEnclosingCharIfExist = (paramStr : string , paramPairsEnclosingChars : EnclosingChars[] , paramPairChars: EnclosingChars ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     let [beg_idx, end_idx] = [0, paramStr.length - 1]
     return paramPairsEnclosingChars.some((pair) => new RegExp(pair.openingCharRegex).test(paramStr[beg_idx]) && new RegExp(pair.closingCharRegex).test(paramStr[end_idx])) 
     ? paramPairChars.encloseStr(paramStr.substring(beg_idx + 1, end_idx)) 
     : paramStr
 }
 
-export const removeEnclosingChars = (paramStr: string, paramPairsEnclosingChars?: EnclosingChars[]) => {
+export const removeEnclosingChars = (paramStr: string, paramPairsEnclosingChars?: EnclosingChars[]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     if (_isNullOrUndefined(paramPairsEnclosingChars)) paramPairsEnclosingChars = [...pairsOfEnclosingChars]
     return replaceEnclosingCharIfExist(paramStr, paramPairsEnclosingChars, new EnclosingChars("", ""))
 }
 
-export function enclosingChars_openingChars(arr_enclosingChars: EnclosingChars[]) {
+export function enclosingChars_openingChars(arr_enclosingChars: EnclosingChars[]) { /*console.log("DEBUG_ME",getCurrentLine());*/
     return arr_enclosingChars.map((enclosingChars) => enclosingChars.openingChar)
 }
 
-export function enclosingChars_closingChars(arr_enclosingChars: EnclosingChars[]) {
+export function enclosingChars_closingChars(arr_enclosingChars: EnclosingChars[]) { /*console.log("DEBUG_ME",getCurrentLine());*/
     return arr_enclosingChars.map((enclosingChars) => enclosingChars.closingChar)
 }

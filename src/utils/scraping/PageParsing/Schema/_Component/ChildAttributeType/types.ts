@@ -1,4 +1,4 @@
-
+import getCurrentLine from "get-current-line"
 import { IJson, IVoid, createJsonAsForEach } from "@shared/m_object.js"
 import { IsUnion, PopUnion, UnionToArray, XOR, arrToUnion, getArrValuesFromObject, removeFirstArray, t_concatJson, t_function, t_indexable_key} from "@shared/type.js"
 
@@ -28,7 +28,7 @@ export type t_attribute_name_all = typeof attribute_name_all
 export type t_isAttributeNameAll <T extends string > = T extends t_attribute_name_all ? true : false
 export const isAttributeNameAll = <T extends string > (attribute_name : T) => ((attribute_name === attribute_name_all) as t_isAttributeNameAll<T>)
 
-const addNameAllToArr = <T extends readonly string[]>(arr:T) => {
+const addNameAllToArr = <T extends readonly string[]>(arr:T) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return [...arr,attribute_name_all] as [...T,t_attribute_name_all]
 }
 
@@ -52,7 +52,7 @@ export type t_arr_attribut_name_strict = typeof arr_attribute_name_strict
 export type t_attribute_name_val_ <isStrict extends boolean = false  >=  t_attribute_name_withAll<t_attributeName_val<isStrict>>
 export type t_union_attribute_name__val_strict =  t_attribute_name_val_<true>
 export type t_union_attribute_name__val = t_attribute_name_val_<false>
-export const validateAttributeNameValue_ = <t_isStrict extends boolean = boolean> (name : t_attribute_name_val_<t_isStrict> , isStrict?:t_isStrict ) => {
+export const validateAttributeNameValue_ = <t_isStrict extends boolean = boolean> (name : t_attribute_name_val_<t_isStrict> , isStrict?:t_isStrict ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
   return isAttributeNameAll(name) ? true : validateAttributeNameValue(name as Exclude<t_attribute_name_val_<t_isStrict>,t_attribute_name_all>,isStrict)
 }
 
@@ -64,7 +64,7 @@ export type t_isAttributeNoneName_ <T  extends t_attribute_name > = T extends t_
 export const isAttributeNoneName_ = <T extends t_attribute_name  >( attribute : T) =>attribute[str_attribute_name] === undefined || isNoneAttributeNameVal_(attribute[str_attribute_name]) as  t_isAttributeNoneName_<T >
 
 export type t_isAttributeName_ <T extends t_attribute_name> =  T extends t_attribute_name ? true : false  
-export const isAttributeName_ =<T extends t_attribute_name> (json:T)=> {
+export const isAttributeName_ =<T extends t_attribute_name> (json:T)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return json.hasOwnProperty(str_attribute_name)  as t_isAttributeName_<T>
 }
 
@@ -81,7 +81,7 @@ export type t_none_attribute_name_function_val = typeof none_attribute_name_func
 export const none_attribute_name_function = {[str_attribute_name_function]:none_attribute_name_function_val} as const 
 export type t_none_attribute_name_function = typeof none_attribute_name_function
 
-export const arr_attribute_name_function_val_ = [none_attribute_name_function_val,"index","getCustomAttribute"] as const
+export const arr_attribute_name_function_val_ = [none_attribute_name_function_val,"index","getCustomAttribute","getChildsTextContent"] as const
 export type t_arr_attribute_name_function_val_ = typeof arr_attribute_name_function_val_
 export type t_union_attribute_name_function_val_ = arrToUnion<t_arr_attribute_name_function_val_>
 
@@ -98,7 +98,7 @@ export const isAttributeNoneFunctionName = <T extends t_attribute_name >( attrib
 
 
 export type t_isAttributeFunctionName <T extends t_attribute_name> =  T extends t_attribute_name ? true : false  
-export const isAttributeFunctionName =<T extends t_attribute_name> (json:T)=> {
+export const isAttributeFunctionName =<T extends t_attribute_name> (json:T)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return json.hasOwnProperty(str_attribute_name)  as t_isAttributeFunctionName<T>
 }
 
@@ -108,7 +108,7 @@ export type t_union_attribute_name_function_val_strict = arrToUnion<t_arr_attrib
 
 export type t_union_attribute_name_function < isStrict extends boolean = boolean  > = isStrict extends true ? t_union_attribute_name_function_val_strict : t_union_attribute_name_function_val
 
-export const validateAttributeNamFunctionValue = <t_f_isStrict extends boolean = boolean> (name :t_union_attribute_name_function<t_f_isStrict>, f_isStrict?:t_f_isStrict ) => {
+export const validateAttributeNamFunctionValue = <t_f_isStrict extends boolean = boolean> (name :t_union_attribute_name_function<t_f_isStrict>, f_isStrict?:t_f_isStrict ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return f_isStrict === undefined || f_isStrict === false ? arr_attribute_name_function_val.includes(name)  : arr_attribute_name_function_val_strict.includes(name  as t_union_attribute_name_function<true> )
 }
 
@@ -116,8 +116,8 @@ export type t_attributeFunctionName <isStrict extends boolean = boolean  >= isSt
 
 
 
-export const validateAttributeNamValue = <t_isStrict extends boolean = boolean> (key:t_union_key_attribute_name , name : t_union_attribute_name_val<t_isStrict> ,isStrict?:t_isStrict ) => {
-    switch (key){
+export const validateAttributeNamValue = <t_isStrict extends boolean = boolean> (key:t_union_key_attribute_name , name : t_union_attribute_name_val<t_isStrict> ,isStrict?:t_isStrict ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    switch (key){ 
         case str_attribute_name_function : 
             return validateAttributeNamFunctionValue(name as t_union_attribute_name_function<t_isStrict> ,isStrict )
         case str_attribute_name :
@@ -154,7 +154,7 @@ t_attribute_name<isStrict,isStrict_f> extends {[k in t_indexable_key]: infer V} 
 export type t_union_attribute_name_val_strict = t_union_attribute_name_val<true,true>
 
 //export type t_isEqualAttributeName < T extends t_attribute_namet_attribute_name<isStrict> , T2 extends t_attribute_name<isStrict>, isStrict extends boolean = boolean  > =T1[]
-export const isEqualAttributeName = < T1 extends t_attribute_name<isStrict> , T2 extends t_attribute_name<isStrict> ,isStrict extends boolean = boolean  >(attributeValue : T1,attributeValue_2 : T2)=> {
+export const isEqualAttributeName = < T1 extends t_attribute_name<isStrict> , T2 extends t_attribute_name<isStrict> ,isStrict extends boolean = boolean  >(attributeValue : T1,attributeValue_2 : T2)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     let key_1 = Object.keys(attributeValue)[0]
     let key_2 = Object.keys(attributeValue_2)[0]
     return key_1 == key_2 && attributeValue[key_1]==attributeValue[key_2]
@@ -238,40 +238,60 @@ IsUnion<KV> extends true ?
 export const df_fct_attribute_name_function =  (node:any) => Promise.resolve({[noFieldName]:""})  
 
 export const df_fct_attribute_name =  (attributeValue:IJson={...df,[str_attribute_name]:attribute_name_all})=>  //A FAIRE IJson => IChildAttributeType
-(node:any) => node.evaluate((e:any,attr_val:string)=>e.getAttribute(attr_val),attributeValue[str_attribute_name]).then((_str:string)=>{
+(node:any) => node.evaluate((e:any,attr_val:string)=>e.getAttribute(attr_val),attributeValue[str_attribute_name]).then((_str:string)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return {[attributeValue[str_attribute_name]]:_str}
 })
 
 type t_args_getCustomAttribute = {name_attribute_from:string,name_attribute_to?:string}
 
-export const cst_args_getCustomAttribute =  (...args:getArrValuesFromObject<t_args_getCustomAttribute>)=> {
+export const cst_args_getCustomAttribute =  (...args:getArrValuesFromObject<t_args_getCustomAttribute>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const name_attribute_from = args[0]
     const name_attribute_to = args.length > 1 ? args[1] : noFieldName
     return {name_attribute_from,name_attribute_to}
 }
 
+type t_args_getChildsTextContent = {}
+
+export const cst_args_getChildsTextContent =  (...args:getArrValuesFromObject<t_args_getCustomAttribute>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    return {}
+}
+
 export const arr_function_attribute_function :t_Object_withAttributeNameValue<true,false,t_attributeFunctionName<true>>
 = {
-    [arr_attribute_name_function_val_strict[0]]: (node:any) =>  node.evaluate((e:any)=>JSON.stringify(Array.from(e.parentNode.children).indexOf(e))).then((_str:string)=>{
+    [arr_attribute_name_function_val_strict[0]]: (node:any) =>  node.evaluate((e:any)=>JSON.stringify(Array.from(e.parentNode.children).indexOf(e))).then((_str:string)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return {[arr_attribute_name_function_val_strict[0]]:_str}
     }),
     [arr_attribute_name_function_val_strict[1]]: (node:any,args:t_args_getCustomAttribute) => 
-    node.evaluate((e:any,_name_attribute_from:string)=>e.getAttribute(_name_attribute_from),args.name_attribute_from).then((_str:string)=>{
+    node.evaluate((e:any,_name_attribute_from:string)=>e.getAttribute(_name_attribute_from),args.name_attribute_from).then((_str:string)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return {[args.name_attribute_to]:_str}
     }),
+    [arr_attribute_name_function_val_strict[2]]: async (node:any,args:t_args_getChildsTextContent) =>  {
+        const r =  await node.evaluate((e:any)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        let text = '';
+        for (const node of e.childNodes) {
+            if (node.nodeType === Node.TEXT_NODE) {
+              text += node.textContent
+            }
+          }
+        return text
+        }).then((_str:string)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+            return {[arr_attribute_name_function_val_strict[2]]:_str}
+        })
+        return r
+    },
     [attribute_name_all] : df_fct_attribute_name_function ,
 }
 
 
 export const arr_function_attribute_name :t_Object_withAttributeNameValue<true,false,t_attribute_name_<true>> = createJsonAsForEach(arr_attributeName.map(
-    (name) => {
+    (name) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return {
-            [name]:((name)=>{
-                return (node:any) => {
+            [name]:((name)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+                return (node:any) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
 
                     return node.evaluate(
-                        (e:any,name:string,var_isAttributeNameAll:boolean)=>{
-                            return var_isAttributeNameAll ? e.getAttributeNames().reduce((acc, attr_name) => {
+                        (e:any,name:string,var_isAttributeNameAll:boolean)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+                            return var_isAttributeNameAll ? e.getAttributeNames().reduce((acc, attr_name) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                             acc[attr_name] = e.getAttribute(attr_name)
                             return acc 
                             //return `${acc},${attr_name}=\"${e.getAttribute(attr_name)}\"`;

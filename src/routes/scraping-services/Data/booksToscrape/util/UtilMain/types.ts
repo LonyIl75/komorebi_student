@@ -1,1 +1,0 @@
-export const booksToscrape_imgImage_selectors =[`img[class*="image"]`]

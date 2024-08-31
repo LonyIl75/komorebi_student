@@ -1,10 +1,11 @@
 
+import getCurrentLine from "get-current-line"
 import { MapRegexToIdPath, t_arrPathToPathId } from "@shared/m_regexMapping.js"
 import { t_agreg_path } from "@shared/routePath.js"
 import { arrToUnion} from "@shared/type.js"
 import { INodeComponent, NodeComponent, NodeComponentValue, _t_NodeComponentValue_getJsonValue } from "./NodeComponent.js"
 import { _isNullOrUndefined } from "@shared/m_primitives.js"
-import { IJson, entryGetKey, entryGetValue, isEmptyJson, isNotEmptyJson, isObject } from "@shared/m_object.js"
+import { IJson, entryGetKey, entryGetValue, isEmptyJson, isNotEmptyJson, isObject, t_s_getProp } from "@shared/m_object.js"
 import { deepCloneJson, getSubsetJsonFromPredicate } from "@shared/m_json.js"
 import { isNoneCompClassName, t_noneCompClassName } from "../TypeChilds/types.js"
 import { t_strRegex } from "@shared/_regexp.js"
@@ -23,12 +24,12 @@ type t_str_json_value = typeof str_json_value
 export const isGetValue = (jsonValue : IJson<any>) => jsonValue.hasOwnProperty(str_json_value)
 
 
-export const getRootPropFromResValue = <TProp extends string,isGetValue extends boolean = boolean > (prop : TProp , json : {[k in TProp]:t_resValue<TProp,isGetValue>})=> {
+export const getRootPropFromResValue = <TProp extends string,isGetValue extends boolean = boolean > (prop : TProp , json : {[k in TProp]:t_resValue<TProp,isGetValue>})=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
   const elm = json[prop]
   return isGetValue(elm) ? elm[str_json_value][prop] : elm 
 }
 
-export const getRootPropFromValue = <TProp extends string ,isGetValue extends boolean = boolean > (prop : TProp , json_or_value : {[k in TProp]:t_resValue<TProp,isGetValue>}|string)=> {
+export const getRootPropFromValue = <TProp extends string ,isGetValue extends boolean = boolean > (prop : TProp , json_or_value : {[k in TProp]:t_resValue<TProp,isGetValue>}|string)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
   if(!isObject(json_or_value)) return json_or_value
   return getRootPropFromResValue<TProp>(prop,json_or_value as {[k in TProp]:t_resValue<TProp,false>} )
 }
@@ -38,13 +39,13 @@ type t_nodeComponentValue <unionPathId extends string ,ArrUnionClassNameType ext
 
 const _isDefinedVal = <unionPathId extends string ,ArrUnionClassNameType extends readonly string[],unionClassname extends arrToUnion<ArrUnionClassNameType>> (nodeValue : {value:t_nodeComponentValue<unionPathId,ArrUnionClassNameType,unionClassname>["value"]}&{[k in string] :any }) =>  !NodeComponent.isDfProp<"value">(nodeValue,"value")
 
-const isDefinedValFromNotIsGetValue = <unionPathId extends string ,ArrUnionClassNameType extends readonly string[],  T extends unionPathId | arrToUnion<ArrUnionClassNameType>| "" >(val : t_resValue<T,false>,idPath : T ) =>  {
+const isDefinedValFromNotIsGetValue = <unionPathId extends string ,ArrUnionClassNameType extends readonly string[],  T extends unionPathId | arrToUnion<ArrUnionClassNameType>| "" >(val : t_resValue<T,false>,idPath : T ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
   let _b =  val.hasOwnProperty(idPath)?_isDefinedVal({value:val[idPath]}) : false 
   if(!_b)_b = isNotEmptyJson(getSubsetJsonFromPredicate(val, (entry) => entryGetKey(entry) !== idPath && entryGetValue(entry) !== undefined))
   return _b
 }
 
-const isDefinedVal =<unionPathId extends string ,ArrUnionClassNameType extends readonly string[] , T extends unionPathId | arrToUnion<ArrUnionClassNameType> , t_isGetValue extends boolean = boolean > (_val : t_resValue<T,t_isGetValue>,idPath : T  ) => {
+const isDefinedVal =<unionPathId extends string ,ArrUnionClassNameType extends readonly string[] , T extends unionPathId | arrToUnion<ArrUnionClassNameType> , t_isGetValue extends boolean = boolean > (_val : t_resValue<T,t_isGetValue>,idPath : T  ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
   const val : t_resValue<T,false> = isGetValue(_val) ? _val[str_json_value] : _val
   return isDefinedValFromNotIsGetValue<unionPathId,ArrUnionClassNameType,T>(val ,idPath)
 }
@@ -75,10 +76,10 @@ t_isGetValue extends boolean = boolean, isOne extends boolean = boolean > =
 
 
 
-const buildGetJsonValueRecurParam = <unionPathId extends string ,ArrUnionClassNameType extends readonly string[]  , unionClassname extends arrToUnion<ArrUnionClassNameType>=arrToUnion<ArrUnionClassNameType>> (tree:mTree<unionPathId ,ArrUnionClassNameType , unionClassname > , trad_map : MapRegexToIdPath< t_strRegex , unionPathId ,ArrUnionClassNameType,unionClassname >,cur_recur?:t_recur_param<unionPathId ,ArrUnionClassNameType,unionClassname >)=>{
+const buildGetJsonValueRecurParam = <unionPathId extends string ,ArrUnionClassNameType extends readonly string[]  , unionClassname extends arrToUnion<ArrUnionClassNameType>=arrToUnion<ArrUnionClassNameType>> (tree:mTree<unionPathId ,ArrUnionClassNameType , unionClassname > , trad_map : MapRegexToIdPath< t_strRegex , unionPathId ,ArrUnionClassNameType,unionClassname >,cur_recur?:t_recur_param<unionPathId ,ArrUnionClassNameType,unionClassname >)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
 
       let _cur_node,_cur_idx,_cur_trad_paths
-      if(cur_recur === undefined) {
+      if(cur_recur === undefined) { /*console.log("DEBUG_ME",getCurrentLine());*/
         _cur_node = tree.nodes[tree.root_id]
         if(isNoneCompClassName(_cur_node.className)) return invalid_getJsonValue
         const tmp = MapRegexToIdPath.arrPathToPathId<t_strRegex, unionPathId,ArrUnionClassNameType,unionClassname> (trad_map,_cur_node.compo_path,_cur_node.className,0)
@@ -110,17 +111,17 @@ export default class mTree<unionPathId extends string ,ArrUnionClassNameType ext
   
     //jsonValue : t_tree_jsonValue<unionPathId> 
   
-    addNode (node : INodeComponent<unionPathId,ArrUnionClassNameType,unionClassname>){
+    addNode (node : INodeComponent<unionPathId,ArrUnionClassNameType,unionClassname>){ /*console.log("DEBUG_ME",getCurrentLine());*/
       this.nodes[node.id] = node
       this.len += 1
     }
 
-    static  getChildsIdPath <unionPathId extends string ,ArrUnionClassNameType extends readonly string[]  , unionClassname extends arrToUnion<ArrUnionClassNameType>=arrToUnion<ArrUnionClassNameType>> (cur_node : INodeComponent<unionPathId,ArrUnionClassNameType,unionClassname> ,cur_idx : number , _trad_map : MapRegexToIdPath< t_strRegex , unionPathId ,ArrUnionClassNameType,unionClassname >){
+    static  getChildsIdPath <unionPathId extends string ,ArrUnionClassNameType extends readonly string[]  , unionClassname extends arrToUnion<ArrUnionClassNameType>=arrToUnion<ArrUnionClassNameType>> (cur_node : INodeComponent<unionPathId,ArrUnionClassNameType,unionClassname> ,cur_idx : number , _trad_map : MapRegexToIdPath< t_strRegex , unionPathId ,ArrUnionClassNameType,unionClassname >){ /*console.log("DEBUG_ME",getCurrentLine());*/
       let path : t_agreg_path<unionClassname>  = cur_node.compo_path
       let cur_path: t_agreg_path<unionClassname>  = null 
       let type_node : unionClassname = null
       let cur_idxPath_s : t_ret_getChildsIdPath<unionPathId,ArrUnionClassNameType,unionClassname,typeof type_node , typeof cur_path>={}
-      for (let i = 0 ; i <cur_node.key_set.length ; i++){
+      for (let i = 0 ; i <cur_node.key_set.length ; i++){ /*console.log("DEBUG_ME",getCurrentLine());*/
         type_node = cur_node.key_set[i] as unionClassname
         cur_path = NodeComponent.nextAgregPath<unionClassname|t_noneCompClassName ,unionClassname>(type_node,path )
         let _res = MapRegexToIdPath.arrPathToPathId<t_strRegex, unionPathId,ArrUnionClassNameType,unionClassname> (_trad_map,cur_path,type_node,cur_idx)
@@ -130,7 +131,7 @@ export default class mTree<unionPathId extends string ,ArrUnionClassNameType ext
     }
   
     getJsonValue<t_isGetValue extends boolean= false >(trad_map : MapRegexToIdPath< t_strRegex , unionPathId ,ArrUnionClassNameType,unionClassname >, cur_recur?:t_recur_param<unionPathId ,ArrUnionClassNameType,unionClassname >,var_isGetValue : t_isGetValue = false  as any )
-    :(t_getJsonValue<unionPathId,ArrUnionClassNameType,unionClassname ,t_isGetValue>| null){
+    :(t_getJsonValue<unionPathId,ArrUnionClassNameType,unionClassname ,t_isGetValue>| null){ /*console.log("DEBUG_ME",getCurrentLine());*/
   
       class SetCond {
         _b : boolean 
@@ -157,6 +158,7 @@ export default class mTree<unionPathId extends string ,ArrUnionClassNameType ext
       
 
       const  {cur_node,cur_idx,cur_trad_paths} = buildGetJsonValueRecurParam(this,trad_map,cur_recur)
+      if(!cur_node) return invalid_getJsonValue //TO FIX 
 
       let cur_idxPath_s = mTree.getChildsIdPath<unionPathId,ArrUnionClassNameType>(cur_node,cur_idx,trad_map)
 
@@ -182,7 +184,7 @@ export default class mTree<unionPathId extends string ,ArrUnionClassNameType ext
       type t__path = typeof cur_idxPath.type_node 
       type t_trad_path = typeof trad_paths[number]
 
-      for (const id_child in  cur_idxPath_s){
+      for (const id_child in  cur_idxPath_s){ /*console.log("DEBUG_ME",getCurrentLine());*/
 
         arr_res = []
         id_childs =  cur_node.childs[id_child].ids
@@ -193,13 +195,13 @@ export default class mTree<unionPathId extends string ,ArrUnionClassNameType ext
         let _path: t__path = cur_idxPath.type_node
         let trad_path :t_trad_path = trad_paths[0]
         
-        for (const id of id_childs) {
+        for (const id of id_childs) { /*console.log("DEBUG_ME",getCurrentLine());*/
           arr_res.push(this.getJsonValue(trad_map,{cur_node : this.nodes[id],cur_idx : cur_idxPath.regex_idx,cur_trad_paths:[trad_paths[0]]},var_isGetValue))// cur_idxPath[2] : current id regex
         }
-        //cur_node.className == "BooksProductDetails"
+        //cur_node.className == "StartupsMtpProductDetails"
         arr_res = arr_res.filter((res)=>res!==null)
 
-        const fct_onlyOne =  <_isOne extends true = true ,_TChild extends t_res<_isOne>["res_childs"] =t_res<_isOne>["res_childs"] > (arr_res :t_arr_res ,acc : _TChild, ... args:[{_path:t__path,trad_path:t_trad_path,}] ) => {
+        const fct_onlyOne =  <_isOne extends true = true ,_TChild extends t_res<_isOne>["res_childs"] =t_res<_isOne>["res_childs"] > (arr_res :t_arr_res ,acc : _TChild, ... args:[{_path:t__path,trad_path:t_trad_path,}] ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
           type t_isOne =   true
           
 
@@ -232,17 +234,16 @@ export default class mTree<unionPathId extends string ,ArrUnionClassNameType ext
         }
 
         const fct_moreThenOne = <_isOne extends false = false  ,_TChild extends t_res<_isOne>["res_childs"] =t_res<_isOne>["res_childs"] > 
-        (arr_res : t_arr_res,acc : _TChild , ... args:[{_path:t__path,trad_path:t_trad_path,},...[_TChild[t__path],...any[]]]   ) => {
+        (arr_res : t_arr_res,acc : _TChild , ... args:[{_path:t__path,trad_path:t_trad_path,},...[t_s_getProp<_TChild,t__path,undefined>,...any[]]]   ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
 
           type t_isOne = false
 
-          const init_value = args.length > 1 ?args[1]:[]
+          const init_value = (args.length > 1 ?args[1]:undefined)||[] as []|Exclude<typeof args[1],undefined>
           const {trad_path,_path} = args[0]
-
           const c_acc : IJson< unionClassname, t_isOne extends true ? IJson :IJson[] >   = acc as any 
-          c_acc[_path] = [...init_value]
+          c_acc[_path] = [...init_value as any ]  //A FAIRE 
 
-          for( const _res of arr_res){
+          for( const _res of arr_res){ /*console.log("DEBUG_ME",getCurrentLine());*/
             const {res_value,res_childs} = _res
             if(isGetValue(res_value))c_acc[_path].push(isDefinedVal(res_value,trad_path) ? {[trad_path]:res_value,...res_childs} : res_childs)
             else c_acc[_path].push(isDefinedVal(res_value,trad_path) ? {...res_value ,...res_childs} : res_childs) 
@@ -252,10 +253,10 @@ export default class mTree<unionPathId extends string ,ArrUnionClassNameType ext
           return acc
         }
 
-        const fct_body = (arr_res : t_arr_res,res : t_res , ... args:[{trad_path:any,_path:any}]) => {
+        const fct_body = (arr_res : t_arr_res,res : t_res , ... args:[{trad_path:any,_path:any}]) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
 
           const embed_fct = <_isOne extends boolean = boolean  , _TRes extends t_res<_isOne> = t_res<_isOne> > 
-          (_arr_res : t_arr_res,res:_TRes , fct :(arr_res : t_arr_res,acc : _TRes["res_childs"] ,...args:any[])=>_TRes["res_childs"] , ...args:any[]  ) => {
+          (_arr_res : t_arr_res,res:_TRes , fct :(arr_res : t_arr_res,acc : _TRes["res_childs"] ,...args:any[])=>_TRes["res_childs"] , ...args:any[]  ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             
             res._b.setSetCond()
             const r = fct(_arr_res,deepCloneJson(res.res_childs),...args)
@@ -264,10 +265,10 @@ export default class mTree<unionPathId extends string ,ArrUnionClassNameType ext
             return res
           }
 
-          if(arr_res.length == 1 ){
+          if(arr_res.length == 1 ){ /*console.log("DEBUG_ME",getCurrentLine());*/
             return embed_fct(arr_res,res,fct_onlyOne,...args)
           }
-          else if(arr_res.length > 0) {
+          else if(arr_res.length > 0) { /*console.log("DEBUG_ME",getCurrentLine());*/
             return embed_fct(arr_res,res,fct_moreThenOne,...args,[])
           }
 
@@ -282,7 +283,7 @@ export default class mTree<unionPathId extends string ,ArrUnionClassNameType ext
     
       if(!res._b.issetSetCond()) res.res_childs = invalid_childs
       //@ts-ignore
-      return res_value || isNotEmptyJson(res.res_childs) ? {res_value:res_value , res_childs : res.res_childs} : invalid_getJsonValue 
+      return (isObject(res_value) ? isNotEmptyJson(res_value) : res_value) || isNotEmptyJson(res.res_childs) ? {res_value:res_value , res_childs : res.res_childs} : invalid_getJsonValue 
   
     }
   

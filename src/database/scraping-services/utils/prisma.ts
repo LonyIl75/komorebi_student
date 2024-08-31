@@ -17,28 +17,28 @@ import { convertStrToRegexStr, getRegexGM, notSpaceStrRegex, spaceStrRegexWithou
 import { majFirstChar, join_dot, join_underscore, majAllStr, join_hyphen } from '@shared/m_string.js';
 import { t_indexable_key, t_JoinChar_hyphen, Substring, t_JoinChar_underscore, t_JoinChar } from '@shared/type.js';
 import { isDatabaseMeta_type, providerDbToType, t_DatabaseMeta_type } from '@shared/m_database.js';
-import { convertToArray, permutator } from '@shared/m_array.js';
+import { convertToArray, getPermutation } from '@shared/m_array.js';
 import { rFact } from '@shared/m_math.js';
 import { embedCapturingGroupStrOrRegex, embedNonCapturingGroupStrOrRegex, embedOptCapturingGroupStrOrRegex } from '@shared/m_regex_prefixAndSuffix.js';
 
 const extensionPrisma =  "prisma" as const
 export const concatExtensionPrisma = <T extends string  > (str:T) => concatExtension(str,extensionPrisma)
 
-const getFilePath_prismaFile =  <T extends string> (service_name : T,name : string ,isLocal : boolean,isDev :boolean = false  ) => {
+const getFilePath_prismaFile =  <T extends string> (service_name : T,name : string ,isLocal : boolean,isDev :boolean = false  ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return joinFilePath(getPathServiceSchemaPrisma(service_name ,isLocal,isDev,true),majFirstChar(name),concatExtensionPrisma(join_dot(service_name,name)))
 }
 
-const getFilePathPrismaFile =  <T extends string> (service_name : T,filename : string ,isLocal : boolean,isDev :boolean = false  ) => {
+const getFilePathPrismaFile =  <T extends string> (service_name : T,filename : string ,isLocal : boolean,isDev :boolean = false  ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return joinFilePath(getPathServiceSchemaPrisma(service_name ,isLocal,isDev,false),concatExtensionPrisma(filename))
 }
 
-const getMainPath_prismaFile = <T extends string> (service_name : T,isLocal : boolean, isDev :boolean = false,fileName ?: string ) => {
+const getMainPath_prismaFile = <T extends string> (service_name : T,isLocal : boolean, isDev :boolean = false,fileName ?: string ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return joinFilePath(getPathServiceSchemaPrisma(service_name ,isLocal,isDev,true),concatExtensionPrisma(`${fileName ? fileName:service_name}`))
 }
 
 export const joinPrefix  = <SN extends string , T extends string> (sn: SN , prefix : T) => join_underscore(prefix,sn) 
 
-const getMergedPathsprismaFile = <T extends string, union_nw_name extends t_indexable_key> (service_name : T , new_names : readonly union_nw_name[],isLocal:boolean , isDev :boolean = false):{[k in union_nw_name] : string } => {
+const getMergedPathsprismaFile = <T extends string, union_nw_name extends t_indexable_key> (service_name : T , new_names : readonly union_nw_name[],isLocal:boolean , isDev :boolean = false):{[k in union_nw_name] : string } =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     type t_ret = {[k in union_nw_name] : string }
     return new_names.reduce(
         (acc_obj : t_ret, _name:union_nw_name)=>
@@ -49,13 +49,21 @@ const getMergedPathsprismaFile = <T extends string, union_nw_name extends t_inde
 }
 
 
-const getMainReplacePathFile = <T extends string> (service_name : T ,isLocal : boolean ,isDev :boolean) => {
+const getMainReplacePathFile = <T extends string> (service_name : T ,isLocal : boolean ,isDev :boolean) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return joinFilePath(getPathServiceSchemaPrisma(service_name ,isLocal,isDev,true),concatExtensionJs(join_dot(service_name,"replace")))
 }
 
-export const getServicePathClientPrisma = <T extends string> (service_name : T ,isLocal : boolean, isDev ?:boolean  ) => {
+export const getServicePathClientPrisma = <T extends string> (service_name : T ,isLocal : boolean, isDev ?:boolean  ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return joinFilePath(getPathServiceClientPrisma(service_name,isLocal,isDev ),"index.js")
 }
+
+
+export enum enum_prisma_op{
+    "create" = "create",
+    "update" = "update",
+    "delete" = "delete",
+} 
+
 
 type t_arr_leaf_client = readonly ["output"]
 type t_val_leaf_client = t_arr_leaf_client[number]
@@ -116,26 +124,27 @@ const base_json_replace : t_json_replaceOrStrRegex = {
         }
     }
 
-// A FAIRE ; refactor regex
+// A FAIRE ; refactor regex with jsonRegex
 namespace jsonReplace {
-    export const  getRegexModel = (_key_1 :string , _key_2 :string )=> {
-        const debRegex = [_key_1+" ",_key_2+" ","{"]
+    export const  getRegexModel = (_key_1 :string|RegExp , _key_2 :string|RegExp )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        const fct = (key :string|RegExp) => key instanceof RegExp ? key.source : convertStrToRegexStr(key)
+        const debRegex = [fct(_key_1)+" ",fct(_key_2)+" ","{"]
         const midRegex = ["([^}]+)"]//getContent
         const endRegex = ["}"]
-        return [...debRegex,...midRegex,...endRegex].reduce((acc,val,index)=>[...acc,debRegex.length==index ? val : convertStrToRegexStr(val)],[]).join("\\s*")
+        return [...debRegex,...midRegex,...endRegex].join("\\s*")
     }
 
-    export const joinKey1Key2 = <K1 extends string , K2 extends string > (_key_1 :K1 , _key_2 :K2 ) => {
+    export const joinKey1Key2 = <K1 extends string , K2 extends string > (_key_1 :K1 , _key_2 :K2 ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         const sub_key_1  = _key_1.substring(0,3) as Substring<K1,0,3>
         return join_underscore(sub_key_1,_key_2) as t_JoinChar_underscore<[ typeof sub_key_1 , K2 ]>
     }
    const _placeHolderGetRegex = <K1 extends string , K2 extends string , V extends string > (_key_1 :K1 , _key_2 :K2 , _value_1 : V) => majAllStr(join_underscore(_key_1,_key_2,_value_1) )
     
-   export const envPlaceHolderGetRegex = <_SN extends string , K2 extends string , V extends string > (_serviceName :_SN , _key_2 :K2 , _value_1 : V) => {
+   export const envPlaceHolderGetRegex = <_SN extends string , K2 extends string , V extends string > (_serviceName :_SN , _key_2 :K2 , _value_1 : V) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     return `env("${_placeHolderGetRegex<_SN,K2,V>(_serviceName,_key_2,_value_1)}")`  as `env(${ReturnType<typeof _placeHolderGetRegex<_SN,K2,V>>})`
    }
 
-   export const placeHolderGetRegex = <V extends string , B extends boolean ,_T extends (B extends true ? string : RegExp) , S extends string =  _T extends string ? _T : string   > (_value_1 : V , param_regexOrStr: _T, isStr : B) => {
+   export const placeHolderGetRegex = <V extends string , B extends boolean ,_T extends (B extends true ? string : RegExp) , S extends string =  _T extends string ? _T : string   > (_value_1 : V , param_regexOrStr: _T, isStr : B) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         const arr_to_join =[_value_1,"=",""] as const 
         const tmp_regex = embedCapturingGroupStrOrRegex(arr_to_join.map((elm)=>convertStrToRegexStr(elm)).join("\\s*"),true) as unknown as t_JoinChar<typeof arr_to_join,"\\s*">
         return tmp_regex + (isStr ? convertStrToRegexStr(param_regexOrStr as string ) : (param_regexOrStr as RegExp).source) as unknown as `${typeof tmp_regex}${S}`
@@ -148,9 +157,9 @@ function jsonReplaceTojsonRegex < SN extends string , TK1 extends t_arr_key_1[nu
     let tmp_regex = ""
     let tmp_json = {} as IJson 
 
-    for(const key_1 in json ){
+    for(const key_1 in json ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         let cur_key_1 :TK1 = key_1 as unknown as TK1
-        for(const key_2 in json[key_1]){
+        for(const key_2 in json[key_1]){ /*console.log("DEBUG_ME",getCurrentLine());*/
                 let cur_key_2 : TK2 = key_2 as unknown as TK2
                 tmp_regex = jsonReplace.getRegexModel(key_1,key_2) //TODO : use regex module from youtube-
                 tmp_json = { [key_2]:{["regex"]:tmp_regex}}
@@ -170,7 +179,7 @@ function jsonReplaceTojsonRegex < SN extends string , TK1 extends t_arr_key_1[nu
     }
 
 
-const changedSchemas = <SN extends string,TKJV extends   SN|t_JoinChar_underscore<[SN,string]>   , TK1 extends t_arr_key_1[number] , TK2 extends t_arr_key_2[number], V extends t_val_leaf , isRegex extends  -1|0|1 , JR extends t_json_replaceOrStrRegex<isRegex,TK1> ,JV extends t_jsonReplaceValue<SN,TKJV,TK1> = t_jsonReplaceValue<SN,TKJV,TK1> >(schema_path : string , service_name : SN , json_value : JV , json_replace :JR ) =>  {
+const changedSchemas = <SN extends string,TKJV extends   SN|t_JoinChar_underscore<[SN,string]>   , TK1 extends t_arr_key_1[number] , TK2 extends t_arr_key_2[number], V extends t_val_leaf , isRegex extends  -1|0|1 , JR extends t_json_replaceOrStrRegex<isRegex,TK1> ,JV extends t_jsonReplaceValue<SN,TKJV,TK1> = t_jsonReplaceValue<SN,TKJV,TK1> >(schema_path : string , service_name : SN , json_value : JV , json_replace :JR ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     
     const jsonRegex = jsonReplaceTojsonRegex<SN,TK1,TK2,V,isRegex,JR>(service_name,json_replace)
     const json_res : {[k in keyof JV]: string } = {} as any 
@@ -178,11 +187,11 @@ const changedSchemas = <SN extends string,TKJV extends   SN|t_JoinChar_underscor
     let cur_regex = ""
     let cur_value =""
     let cur_key : keyof JV = "" as any 
-    for(const key_0 in json_value){
+    for(const key_0 in json_value){ /*console.log("DEBUG_ME",getCurrentLine());*/
         cur_key = key_0 as unknown as  TKJV
-        for(const key_1 in json_value[cur_key]){
-            for(const key_2 in json_value[cur_key][key_1]){
-                    for(const key in json_value[cur_key][key_1][key_2]){
+        for(const key_1 in json_value[cur_key]){ /*console.log("DEBUG_ME",getCurrentLine());*/
+            for(const key_2 in json_value[cur_key][key_1]){ /*console.log("DEBUG_ME",getCurrentLine());*/
+                    for(const key in json_value[cur_key][key_1][key_2]){ /*console.log("DEBUG_ME",getCurrentLine());*/
                         if((cur_regex = jsonRegex?.[key_1]?.[key_2]?.[join_hyphen("regex",key)])===undefined) throw new Error("json_value has not key : "+`regex-${key}`)
                         cur_value = (json_value[cur_key][key_1][key_2][key] as string).replaceAll(/['"]/g, "").replaceAll(/\\/g, "\\\\")
                         str_schema = str_schema.replace(getRegexGM(cur_regex),`$1\"${cur_value}\"`)
@@ -195,23 +204,37 @@ const changedSchemas = <SN extends string,TKJV extends   SN|t_JoinChar_underscor
 
 }
 
-const getSingleModel = (str : string , idRoute : string) => {
-    const getModelRegex = jsonReplace.getRegexModel("model",majFirstChar(idRoute))
+const getSingleModel = (str : string , idRoute ?: string ) : null |[string,number,string] =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    const reg_modelName = idRoute ? majFirstChar(idRoute) : /([A-Z]\S*)/
+    const getModelRegex = jsonReplace.getRegexModel("model",reg_modelName)
     let content_model = str.match(new RegExp(getModelRegex,"sm"))
-    if(content_model == null) throw new Error("content_model is null")
-    return content_model[0]
-
+    if(content_model == null) return null
+    return idRoute ? [content_model[0],content_model.index,idRoute] : [content_model[0],content_model.index,content_model[0+1]]
 }
+
+
+const getMultipleModel = (str : string , idRoute : string) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    let tmp = getSingleModel(str,idRoute)
+    if(tmp == null) throw new Error(`content_model ${idRoute} is null`)
+    let res = []
+    while(tmp){ /*console.log("DEBUG_ME",getCurrentLine());*/
+        res.push(tmp)
+        str = str.substring(tmp[1]+tmp[0].length)
+        tmp = getSingleModel(str)
+    }
+    return res
+}
+    
 
 export type t_jsonReplaceValue<SN extends string,TKJV extends SN|t_JoinChar_underscore<[SN,string]> =  SN|t_JoinChar_underscore<[SN,string]> ,TK1 extends t_arr_key_1[number]=t_arr_key_1[number] >  = {[k in TKJV]:t_json_replaceOrStrRegex<-1,TK1>}
 
-const getJsonReplace = async <SN extends string>(service_name : SN,isLocal : boolean,isDev:boolean)=> {
-    return  import(getMainReplacePathFile(service_name,isLocal,isDev)).then((obj )=>{
+const getJsonReplace = async <SN extends string>(service_name : SN,isLocal : boolean,isDev:boolean)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+    return  import(getMainReplacePathFile(service_name,isLocal,isDev)).then((obj )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return obj.default  as t_jsonReplaceValue<SN,any,any> 
     })
 }
 
-const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb:t_DatabaseMeta_type) => {
+const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb:t_DatabaseMeta_type) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     //TODO refactor
     const optSpace = `${spaceStrRegexWithoutLineBreak}*` as const 
     const reqSpace = `${spaceStrRegexWithoutLineBreak}+` as const 
@@ -223,35 +246,35 @@ const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb
     const fct_map_join = (arr_arr_str:string[][],char_join : string  ,fct_map ?: (arg:string)=>string ) => arr_arr_str.map(_fct_map(char_join,fct_map))
     const fct_map_join_join = (arr_arr_str:string[][],char_join : string ,fct_map ?: (arg:string)=>string ,fct_embed : (_str:string)=>string = (_str:string)=>embedNonCapturingGroupStrOrRegex(_str,true) ) => fct_map_join(arr_arr_str,char_join,fct_map).map(fct_embed).join("|")
 
-    const getRegexAnnotations = (annotations:readonly string[], optIndices : number[]= [])=>{
-        const grouped_annotations = annotations.map((_annotation,idx)=>{
+    const getRegexAnnotations = (annotations:readonly string[], optIndices : number[]= [])=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        const grouped_annotations = annotations.map((_annotation,idx)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
             const annotation =convertStrToRegexStr(_annotation) 
             return optIndices.includes(idx) ? embedOptCapturingGroupStrOrRegex(annotation,true) :embedCapturingGroupStrOrRegex(annotation,true) })
-        return fct_map_join_join(permutator(grouped_annotations),reqSpaceoptWordSpace,(str)=>str)
+        return fct_map_join_join(getPermutation(grouped_annotations),reqSpaceoptWordSpace,(str)=>str)
     }
 
-    type t_trad_annotations < TArrMongo extends readonly string [] , TArrSqlite extends readonly string []> = 
-    TArrMongo extends readonly [infer M,... infer MR] ? TArrSqlite extends readonly [infer S,... infer SR] ? 
+    type t_trad_annotations < TArrMongoDB extends readonly string [] , TArrSqlite extends readonly string []> = 
+    TArrMongoDB extends readonly [infer M,... infer MR] ? TArrSqlite extends readonly [infer S,... infer SR] ? 
     M extends t_indexable_key ? MR extends readonly string []  ? SR extends readonly string []  ? 
     {[k in M]:S}& t_trad_annotations<MR,SR> : never : never : never : never : TArrSqlite extends readonly [infer _,... infer _R] ? never : {}
 
-    type t_idField_annotation_trad< TArrMongo extends readonly string [] , TArrSqlite extends readonly string [] , TIdx extends number = number  > = {idx:TIdx ,mongodb_to_sqlite:t_trad_annotations<TArrMongo,TArrSqlite> }
+    type t_idField_annotation_trad< TArrMongoDB extends readonly string [] , TArrSqlite extends readonly string [] , TIdx extends number = number  > = {idx:TIdx ,mongodb_to_sqlite:t_trad_annotations<TArrMongoDB,TArrSqlite> }
 
     const getReplacedContent = <TMongo extends readonly string []  , TSqlite extends readonly string [] , TIdx extends number = number  >
-                (matched : RegExpMatchArray , _str:string , _idField_annotations_trad:t_idField_annotation_trad<TMongo,TSqlite, TIdx> )=>{
+                (matched : RegExpMatchArray , _str:string , _idField_annotations_trad:t_idField_annotation_trad<TMongo,TSqlite, TIdx> )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     const len = Object.keys(_idField_annotations_trad.mongodb_to_sqlite).length
                     for( let k = 0 ; k < rFact(len) ; k++){
                         let idx = 0
                         let arr_match = []
-                        for( ; idx < len ; idx++){
+                        for( ; idx < len ; idx++){ /*console.log("DEBUG_ME",getCurrentLine());*/
                             const cur_match = matched[idx+_idField_annotations_trad.idx+k*len]
-                            if(cur_match) {
+                            if(cur_match) { /*console.log("DEBUG_ME",getCurrentLine());*/
                                 arr_match.push(cur_match)
                             }else {
                                 break
                             }
                         }
-                        if(idx == len) {
+                        if(idx == len) { /*console.log("DEBUG_ME",getCurrentLine());*/
                             return arr_match.reduce((acc,cur)=>acc.replace(cur,_idField_annotations_trad.mongodb_to_sqlite[cur]),_str)
                         }
                     }
@@ -260,13 +283,13 @@ const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb
 
     if(fromDb == toDb) return content
     else {
-        if(fromDb !== "MongoDB") throw new Error("fromDb is not Mongo => not implemented")
-        switch(toDb){
+        if(fromDb !== "MongoDB") throw new Error(`fromDb is not ${"MongoDB"} => not implemented`)
+        switch(toDb){ 
             case "SQLite":  
                 //TODO-IMP refactor
                 const idField_name = {idx: 1 ,mongodb :"id",sqlite:"id"}
                 const idField_type = {idx: 2 ,mongodb :"String",sqlite :"Int"}
-                type t_idField_annotation< TArrMongo extends readonly string [] , TArrSqlite extends readonly string [], TIdx extends number = number >  = {idx: TIdx ,mongodb : TArrMongo ,sqlite : TArrSqlite }
+                type t_idField_annotation< TArrMongoDB extends readonly string [] , TArrSqlite extends readonly string [], TIdx extends number = number >  = {idx: TIdx ,mongodb : TArrMongoDB ,sqlite : TArrSqlite }
                 const mongodbAnnotations =["@id","@db.ObjectId","@default(auto())"] as const 
                 type t_mongodbAnnotations = typeof mongodbAnnotations
                 const sqliteAnnotations =["@id","","@default(autoincrement())"] as const
@@ -300,7 +323,7 @@ const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb
 
  const writeMergedSchema = async <SN extends string,TKJV extends SN|t_JoinChar_underscore<[SN,string]>  , TK1 extends t_arr_key_1[number]=t_arr_key_1[number] , TK2 extends t_arr_key_2[number]=t_arr_key_2[number], V extends t_val_leaf= t_val_leaf, isRegex extends  -1|0|1 = 0, JR extends t_json_replaceOrStrRegex<isRegex,TK1> = t_json_replaceOrStrRegex<isRegex,TK1>
  ,JV extends t_jsonReplaceValue<SN,TKJV,TK1>  = t_jsonReplaceValue<SN,TKJV,TK1> >
-(service_name : SN,isLocal:boolean,isDev:boolean, idRoutes : readonly string[],renames_prismaFile ?: TKJV[], _json_value ?: IJson, json_replace :JR = {...base_json_replace} as unknown as JR  ) : Promise<{needCreation:{ [k in keyof JV]: string; }, all :{ [k in keyof JV]: string; }}>=> {
+(service_name : SN,isLocal:boolean,isDev:boolean, idRoutes : readonly string[],renames_prismaFile ?: TKJV[], _json_value ?: IJson, json_replace :JR = {...base_json_replace} as unknown as JR  ) : Promise<{needCreation:{ [k in keyof JV]: string; }, all :{ [k in keyof JV]: string; }}>=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
     const df_isLocal = false 
     const true_isDev = true
     let main_path = getMainPath_prismaFile(service_name,df_isLocal,true_isDev)
@@ -318,7 +341,7 @@ const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb
     const datasource_regex = jsonReplace.getRegexModel("datasource","db")
     let result = {all:deepCloneJson(merged_path)}
     for(const basename of Object.keys(main_replaced_json)){
-        for (const idRoute of idRoutes){ 
+        for (const idRoute of idRoutes){ /*console.log("DEBUG_ME",getCurrentLine());*/ 
             cur_path = getFilePath_prismaFile(basename,idRoute,df_isLocal,true_isDev) 
             //providerDbToType
             let content = ""
@@ -326,8 +349,7 @@ const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb
             else {
                 content = mreadFile(getFilePath_prismaFile(service_name,idRoute,df_isLocal,true_isDev))
                 let provider = (content.match(new RegExp(datasource_regex,"sm"))?.[1])?.match(new RegExp(provider_regex,"sm"))?.[2]
-                content = getSingleModel(content, idRoute)
-                
+                content = getMultipleModel(content, idRoute).reduce((acc,_elm)=>`${acc}\n${_elm[0]}`,"")
                 provider = providerDbToType(provider)
                 if(!isDatabaseMeta_type(provider)) throw new Error(`provider ${provider} is not a valid provider`)
 
@@ -336,7 +358,7 @@ const changeModelContent = (content : string , fromDb:t_DatabaseMeta_type , toDb
 
                 content = changeModelContent(content,provider,atm_provider)
             }
-            str_tmp = getSingleModel(content, idRoute)
+            str_tmp = getMultipleModel(content, idRoute).reduce((acc,_elm)=>`${acc}\n${_elm[0]}`,"")
             // str_tmp = replacePipeline_model(str_tmp)
             str_tail += "\n"+str_tmp
         }

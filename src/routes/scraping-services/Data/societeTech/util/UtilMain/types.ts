@@ -1,0 +1,1 @@
+export const societeTech_imgImage_selectors =[`img[class*="image"]`]

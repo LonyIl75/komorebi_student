@@ -1,7 +1,7 @@
 import { DebuggingOptions, debug_join, debug_start_with_curLine, debug_with_curLine, debug_with_curLine_isresult } from '@shared/m_debug.js';
 import debug, { Debugger } from 'debug';
 import getCurrentLine from 'get-current-line';
-import { getNameModule,getNameDebugAllNameModule, str_idRouteAndRemoteAddresss, concatNameModuleAndDebug, take_screenshot } from '@shared/str_debug.js';
+import { getNameModule, concatNameModuleAndDebug, take_screenshot } from '@shared/str_debug.js';
 
 
 const name_module :string =  getNameModule("scraping_selector_pageParsing","treeParsing")
@@ -10,7 +10,7 @@ const debug_pageParsing_treeParsing : Debugger = debug(name_module)
 
 
 import {INodeComponent, NodeComponent, NodeComponentValue, err_function_retPromfEmptyNodeComponent, t_nodeComponent_values} from "./Tree/NodeComponent.js"
-import {IJson,cst_entry, pop_map, t_Entry} from "@shared/m_object.js";
+import {IJson,cst_entry, entryGetValue, getFristEntryFromJson, pop_map, t_Entry} from "@shared/m_object.js";
 import { XOR, arrToUnion, reshapeObject} from "@shared/type.js"
 import { TypeChilds, err_function_retPromNullTypeChild, t_emptyTypeChilds} from "./TypeChilds/TypeChilds.js"
 import { rootClassName, t_arr_component, t_getChildTypeFromArrComponent, t_getClassNameTypeFromArrComponent, t_rootClassName} from "./types.js"
@@ -32,7 +32,10 @@ import { MapRegexToIdPath } from '@shared/m_regexMapping.js';
 import { t_strRegex } from '@shared/_regexp.js';
 import { noneChildType } from './TypeChilds/types.js';
 import { ChildAttributeTypeValue } from './Schema/_Component/ChildAttributeType/ChildAttributeTypeValue.js';
-import { str_value, str_value_init } from './Schema/_Component/ValTextContent/types.js';
+import { str_joinChar_group, str_value, str_value_init, str_value_validation_strRegex } from './Schema/_Component/ValTextContent/types.js';
+import { getRegexGS, isEmptyStrRegex } from '@shared/m_regex.js';
+import { getMatchAndPosFromRegexMatchingInterval } from '@shared/m_regex_matchObject.js';
+import { enum_prisma_op } from '@/database/scraping-services/utils/prisma.js';
 
 
 const parent_component_color = "red"
@@ -51,17 +54,19 @@ export type t_ret_getAttributesValues_elem_awaited = t_validValueGetAttributesVa
 export type t_ret_getAttributesValues_elem  =  Promise<t_ret_getAttributesValues_elem_awaited>
 export type t_ret_AttributeValue = Promise<(t_ret_getAttributesValues_elem_awaited[])|t_invalidValueGetAttributesValues>
 
-export const getAttributesValues  = async (page_or_element : t_pageOrElementHN , jsonComponent: t_union_IComponent<any,any> ):t_ret_AttributeValue  => {
+export const getAttributesValues  = async (page_or_element : t_pageOrElementHN , jsonComponent: t_union_IComponent<any,any> ):t_ret_AttributeValue  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
   return Component.isEmptyChilds_attributes(jsonComponent) ? Promise.resolve(getInvalidValueGetAttributesValues())
-    : Promise.all(Component.getChilds_attributes(jsonComponent).map(  async(json_attr :  IJson  ):t_ret_getAttributesValues_elem =>  {
+    : Promise.all(Component.getChilds_attributes(jsonComponent).map(  async(json_attr :  IJson  ):t_ret_getAttributesValues_elem =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
           //await (element as any).evaluate((elem:any)=>elem.innerHTML))
           
               let attr = ChildAttributeType.fromJson(json_attr as any )
               let elem =  attr?.[str_selector] ? await page_or_element.$(attr[str_selector]) : page_or_element
-           
+              if(!elem) {
+                console.log("ATTR",JSON.stringify(json_attr),"EVAL",await (page_or_element as any).evaluate((elem:any)=>elem.outerHTML),"EEE",attr?.[str_selector])
+              }
 
 
-              const getCurValueOfNode =async (attributeValue :ChildAttributeType, _node:any)=>{
+              const getCurValueOfNode =async (attributeValue :ChildAttributeType, _node:any)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                 type t_obj = t_Object_withAttributeName<false,true,false> 
                 const fs : t_obj  = 
                 {
@@ -71,25 +76,38 @@ export const getAttributesValues  = async (page_or_element : t_pageOrElementHN ,
                     [attribute_name_all]: df_fct_attribute_name(attributeValue)
                   }
                 }
-                const val = await ChildAttributeTypeValue.execFunctionAttributeName<t_function_attribute_name_super, t_obj> (attributeValue,fs, _node,attributeValue?.args_setting) 
-                return {[str_value]:val}
+                let value = await ChildAttributeTypeValue.execFunctionAttributeName<t_function_attribute_name_super, t_obj> (attributeValue,fs, _node,attributeValue?.args_setting) 
+                
+                //TODO : to extract + refactor (see NodeComponent function)
+                
+                let res = {[str_value]:value}
+                if( !_isNullOrUndefined(attributeValue?.[str_value_validation_strRegex]) && !isEmptyStrRegex(attributeValue[str_value_validation_strRegex])){
+                  let [name,text] = getFristEntryFromJson(value) // assume that only one attribute per execFunctionAttributeName
+                  const value_init = attributeValue[str_value_init]
+                  const validation_regex = getRegexGS(attributeValue[str_value_validation_strRegex])
+                  const arr_matching_regex = getMatchAndPosFromRegexMatchingInterval(text,validation_regex,[1]).reduce((_acc,_el)=>_el?._match ? [..._acc,_el._match] : _acc ,[])
+                  const arr_res = value_init ? ([value_init,...arr_matching_regex]) : arr_matching_regex
+                  text =  (arr_res).join(attributeValue[str_joinChar_group] ?? Component.df[str_joinChar_group] )
+                  res = text ? {[str_value]:{[name]:text}} : null 
+                }
+                return res
               }
 
               
-              const getNewEntry = async (_attr_1 :ChildAttributeType, _node:any)=>{
+              const getNewEntry = async (_attr_1 :ChildAttributeType, _node:any)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
 
                 const key = _attr_1[str_type]
                 const _attr_2 = await getCurValueOfNode(_attr_1,_node)
-
+                if(_attr_2 === null) return getInvalidValueGetAttributesValues_elem()
                 let new_value :ChildAttributeTypeValue =  ChildAttributeTypeValue.cst_fromValueAndChildAttributeType(_attr_2[str_value],_attr_1) 
                 
                 return cst_entry(new_value[str_config_value][key]  ,new_value) as t_ret_getAttributesValues_elem_awaited //TODO 
 
               }
 
-              return getNewEntry(attr ,elem).then((r)=>{
+              return getNewEntry(attr ,elem).then((r)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                 return r 
-              }).catch((err)=>{
+              }).catch((err)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                 console.log("error",err)
                 throw new Error("error")
               })
@@ -101,7 +119,7 @@ export const getAttributesValues  = async (page_or_element : t_pageOrElementHN ,
 }
 
 
-const getCpyNumber = (num:number) : number => {
+const getCpyNumber = (num:number) : number =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
   const k = num
   return k
   }
@@ -172,10 +190,9 @@ export async function _buildParsingTree<
       type t_res = t_res_1| t_res_2
 
 
-      const leaf_getNodeComponentValue = (page_or_element: t_pageOrElementHN , v :IComponent<unionclassname,UnionChilds> , agreg_selector:selectors[] ,selectors ?:selectors , is_test : boolean =false ,fct_catch : (err)=> t_rien = (err)=> rien ): Promise<_t_nodeComponentValueWithRien>=> {
+      const leaf_getNodeComponentValue = (page_or_element: t_pageOrElementHN , v :IComponent<unionclassname,UnionChilds> , agreg_selector:selectors[] ,selectors ?:selectors , is_test : boolean =false ,fct_catch : (err)=> t_rien = (err)=> rien ): Promise<_t_nodeComponentValueWithRien>=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         if(page_or_element instanceof   Page) throw new Error("page_or_element instanceof   Page")
         //colorIfBool(page_or_element,child_component_color,is_test)
-        console.log("v",v)
         return NodeComponentValue.cst_fromElement(page_or_element ,v,[...agreg_selector],selectors ).catch(fct_catch)
       }
       
@@ -187,9 +204,13 @@ export async function _buildParsingTree<
     
       const _v : IComponent<unionclassname,UnionChilds>  = (ScrapingComponent.getFwJsonComponent().json[p_prop_base] as any)//TODO we remove getComponent cause not class but json 
 
-      if(!_v) return Promise.reject(NodeComponent._getEmptyInit())
-
-      let mres : _t_nodeComponent = NodeComponent._getEmptyInit()
+      console.log('_v',_v)
+      if(!_v) return Promise.reject(NodeComponent.getEmptyInit())
+      let mres : _t_nodeComponent = NodeComponent.getEmptyInit()
+    if(p_prop_base == "StartupOccitanieProfilHeader"){
+      console.log("StartupOccitanieProfilHeader" , await (p_page_or_element as any).evaluate((elem:any)=>elem.outerHTML))
+      
+    }
 
       let _isALeaf : boolean = Component.isEmptyChilds_components(_v)
 
@@ -198,74 +219,78 @@ export async function _buildParsingTree<
         
 
           let childs_selectors:t_childsSelectors = Component.getChilds_selectors<unionclassname,UnionChilds>(_v)
-          console.log('_v',_v)
           
+
           //let res_arr_attributes : [string,string][] =  await getAttributesValues(p_page_or_element,_v) //TODO : TO PUT FIRST TO FILTER IF VALUE SATISFY FILTER CONDITION stop recursion 
 
           const map_attribute : Map<t_validValueGetAttributesValues_elem[0] , t_validValueGetAttributesValues_elem[1]> =  new Map(
             await getAttributesValues(p_page_or_element,_v).then(
-              (arr:Awaited<t_ret_AttributeValue>)=>{
+              (arr:Awaited<t_ret_AttributeValue>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                 return arr.filter((elem:t_ret_getAttributesValues_elem_awaited)=>elem.length) as t_validValueGetAttributesValues_elem[] 
               }
           ))
 
-          /*
-          const id_attribtues : ChildAttributeType =  pop_map<t_union_attribute_name_val_strict,ChildAttributeType>(map_attribute,"id")  
-          if(id_attribtues!==undefined){
-            p_agreg_category.push(["id",id_attribtues[str_value]])// A FAIRE : atm not used 
-          }
-          */
+          
+          //const id_attribtues : ChildAttributeType =  pop_map<t_union_attribute_name_val_strict,ChildAttributeType>(map_attribute,"id")  
+          //if(id_attribtues!==undefined){ /*console.log("DEBUG_ME",getCurrentLine());*/
+          //  p_agreg_category.push(["id",id_attribtues[str_value]])// A FAIRE : atm not used 
+          //}
+          
           
           type t_arr_values_attributesMap = Array<t_Entry<t_union_attribute_name_val_strict, ChildAttributeType>>
           /*const arr_attributes :t_arr_values_attributesMap =  [...map_attribute.entries()]*/
-
-              const cur_node_value :reshapeObject<_t_nodeComponentValue>= (p_page_or_element instanceof   Page ? {} : {description:[...p_agreg_selector],objectId:p_page_or_element.remoteObject().objectId})
-              //On essaye de trouver chaque childs_components avec son tableau de selecteur 
+          let cur_node_value :reshapeObject<_t_nodeComponentValue>= null 
+              try {
+                cur_node_value = (p_page_or_element instanceof   Page ? {} : {description:[...p_agreg_selector],objectId:p_page_or_element.remoteObject().objectId})
+                //On essaye de trouver chaque childs_components avec son tableau de selecteur 
+              } catch (error) { /*console.log("DEBUG_ME",getCurrentLine());*/
+                console.log("error_cur_node_value",error)
+              }
 
 
                       if(!Component.isEmptyChilds_selectors(_v)){
-                          for (let _idx = 0; _idx < childs_selectors.length; _idx++){
+                          for (let _idx = 0; _idx < childs_selectors.length; _idx++){ /*console.log("DEBUG_ME",getCurrentLine());*/
                           //tente de trouver le fils 
                           
                           let _selectors = childs_selectors[_idx]
                           if(_v.isScoped)_selectors=_selectors.map((child_selector)=>embedding_selector_scope(child_selector)) 
 
-                                const p_nodeOrValues : Promise<t_res_1> = (async (idx:number,selectors:selectors,prop_base : unionclassname ,  component :IComponent<unionclassname,UnionChilds>,  agreg_path : t_agreg_path<unionclassname> , agreg_selector  : selectors[] ,  path_regex_idx :number , agreg_category :   ([t_union_attributeName_,string])[] ,isALeaf:boolean ,is_test :boolean )=>{
-                                  return trySelectors_any_all(p_page_or_element, selectors).then( (arr_of_elements : Awaited<ReturnType<typeof trySelectors_any_all>> ) : Promise<t_res_1> => {
+                                const p_nodeOrValues : Promise<t_res_1> = (async (idx:number,selectors:selectors,prop_base : unionclassname ,  component :IComponent<unionclassname,UnionChilds>,  agreg_path : t_agreg_path<unionclassname> , agreg_selector  : selectors[] ,  path_regex_idx :number , agreg_category :   ([t_union_attributeName_,string])[] ,isALeaf:boolean ,is_test :boolean )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+                                  return trySelectors_any_all(p_page_or_element, selectors).then((arr_of_elements : Awaited<ReturnType<typeof trySelectors_any_all>> ) : Promise<t_res_1> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                                   
                                     let i_child : readonly t_resSelector[] 
                                     //@ts-ignore
                                     i_child= arr_of_elements.flat()
+                                    console.log("i_child",JSON.stringify(i_child))
 
-                                    if(i_child.length>0){
+                                    if(i_child.length>0){ /*console.log("DEBUG_ME",getCurrentLine());*/
                                                     type t_unionclassnameOfChild = ReturnType<typeof TypeChilds.childTypeTocompClassname<UnionChilds>>
-                                                    let unionclassnameOfChild :t_unionclassnameOfChild = !isALeaf  ? TypeChilds.childTypeTocompClassname(Component.getChilds_components_idx(component,idx)) : noneChildType as any //TODO : clean ?;
-                                                    
+                                                    let unionclassnameOfChild :t_unionclassnameOfChild = !isALeaf  ? TypeChilds.childTypeTocompClassname(Component.getChilds_components_idx(component,idx)) : noneChildType as any //TODO : clean 
                                                     let childs_nodesOrValues : Promise<t_childs_nodesOrValuesWithRien>[] = !isALeaf ? 
 
-                                                            i_child.map( (element): Promise<_t_nodeComponent>  => {
+                                                            i_child.map( (element): Promise<_t_nodeComponent>  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                                                                 //colorIfBool(element,parent_component_color,is_test,["p"])//redo with diff selector div for example
                                                                 //[... operator] to provide a copy for each promise child 
 
                                                                 let _res = MapRegexToIdPath.arrPathToPathId<unionRegex, unionPathId,ArrUnionClassName,unionclassname> (mapFilter,agreg_path,prop_base,path_regex_idx)
                                                                 
-                                                                if(_isNullOrUndefined(_res)) return rien   
-                                                                else return _buildParsingTree<unionPathId,ArrUnionClassName ,unionclassname,ArrArr,t_unionclassnameOfChild >(element, ScrapingComponent,mapFilter,_mTree,unionclassnameOfChild,agreg_path , [...agreg_selector,selectors], _res.regex_idx , [...agreg_category],is_test).then( (node_json:IJson) :_t_nodeComponent => {
+                                                                if(_isNullOrUndefined(_res)) return Promise.resolve(rien)   
+                                                                else return _buildParsingTree<unionPathId,ArrUnionClassName ,unionclassname,ArrArr,t_unionclassnameOfChild >(element, ScrapingComponent,mapFilter,_mTree,unionclassnameOfChild,agreg_path , [...agreg_selector,selectors], _res.regex_idx , [...agreg_category],is_test).then( (node_json:IJson) :_t_nodeComponent =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                                                                       return NodeComponent.fromJson(node_json) 
                                                                 })
                                                             
                                                             }) 
 
-                                                            : i_child.map( async (element) => {
+                                                            : i_child.map( async (element) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                                                               return  leaf_getNodeComponentValue(element,component,agreg_selector,selectors,is_test)
                                                             }) 
 
-                                                    let nodesIdsOrNodeValues : Promise<Array<number>|_t_nodeComponentValue[]>= Promise.all(childs_nodesOrValues.map(promise => promise.catch(error =>{return rien ;  /*NodeComponent._getEmptyInit() console.log("errorCHILDS",error);return error*/}))).then( //type : null
-                                                        (_arr_res:t_childs_nodesOrValuesWithRien[]   )=> {
+                                                    let nodesIdsOrNodeValues : Promise<Array<number>|_t_nodeComponentValue[]>= Promise.all(childs_nodesOrValues.map(promise => promise.catch(error =>{ /*console.log("DEBUG_ME",getCurrentLine());*/return rien ;  /*NodeComponent.getEmptyInit() console.log("errorCHILDS",error);return error*/}))).then( //type : null
+                                                        (_arr_res:t_childs_nodesOrValuesWithRien[]   )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                                                                 
                                                           let arr_res :t_childs_nodesOrValues[]  = (_arr_res as any[] ).filter((_res:any )=> !isRien(_res) ) as Exclude<t_childs_nodesOrValuesWithRien,t_rien>[] as any 
                                                                 
-                                                          if(!isALeaf){
+                                                          if(!isALeaf){ /*console.log("DEBUG_ME",getCurrentLine());*/
                                                             return ((arr_res as _t_nodeComponent[] ).map((nodeComponent:_t_nodeComponent) => nodeComponent.id != NodeComponent.getEmptyId() ? nodeComponent.id : NodeComponent.getEmptyId() ) as Array<number>)
                                                           } 
                                                           else { 
@@ -274,16 +299,16 @@ export async function _buildParsingTree<
                                                                 
                                                         })
 
-                                                return (async (_unionclassnameOfChild , _nodesIdsOrNodeValues ) => {
+                                                return (async (_unionclassnameOfChild , _nodesIdsOrNodeValues ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                                                     return !isALeaf ? new TypeChilds<arrToUnion<ArrUnionChilds>>(_unionclassnameOfChild, await _nodesIdsOrNodeValues as Array<number>) : await _nodesIdsOrNodeValues as _t_nodeComponentValue[] 
                                                   })(unionclassnameOfChild ,nodesIdsOrNodeValues)
     
                                     }
-                                    return  Promise.resolve( TypeChilds._getEmptyInit()  ) 
-                                    
-                                  }).catch(
-                                    (err)=>err_function_retPromNullTypeChild( `Error p_nodeOrValue ${JSON.stringify( Component.getChilds_components(component))} index_type : ${idx} on ${prop_base}` )(err)
-                                  )
+                                    return  Promise.resolve( TypeChilds.getEmptyInit()  ) 
+
+                                  }).catch(async (err)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+                                    return err_function_retPromNullTypeChild( `Error p_nodeOrValue ${JSON.stringify( Component.getChilds_components(component))} index_type : ${idx} on ${prop_base}` )(err)
+                                })
 
                                 })(getCpyNumber(_idx), [..._selectors],p_prop_base, {..._v} ,_agreg_path  ,[...p_agreg_selector],getCpyNumber(p_path_regex_idx),  [... p_agreg_category] ,_isALeaf ,is_test )
                             
@@ -296,8 +321,8 @@ export async function _buildParsingTree<
                       }
             
 
-      return ( (_cur_node_value :reshapeObject<_t_nodeComponentValue> , _map_attributes : Map<t_validValueGetAttributesValues_elem[0] , t_validValueGetAttributesValues_elem[1]>   ,prop_base :unionclassname , v :IComponent<unionclassname,UnionChilds>  ,agreg_path : t_agreg_path<unionclassname> ,agreg_category :   ([t_union_attributeName_,string])[],isALeaf:boolean   ) => Promise.all(f_arr_res.map(promise => promise.catch(error =>{console.log("errorFUNCTALL",error);return error}))).then( 
-        async(_arr_res: t_res  [] )=> {
+      return ( (_cur_node_value :reshapeObject<_t_nodeComponentValue> , _map_attributes : Map<t_validValueGetAttributesValues_elem[0] , t_validValueGetAttributesValues_elem[1]>   ,prop_base :unionclassname , v :IComponent<unionclassname,UnionChilds>  ,agreg_path : t_agreg_path<unionclassname> ,agreg_category :   ([t_union_attributeName_,string])[],isALeaf:boolean   ) => Promise.all(f_arr_res.map(promise => promise.catch(error =>{ /*console.log("DEBUG_ME",getCurrentLine());*/console.log("errorFUNCTALL",error);return error}))).then( 
+        async(_arr_res: t_res  [] )=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
 
             type t_elmArr_res = Exclude<t_res,t_rien>
             let arr_res : t_elmArr_res []= _arr_res.filter((_res:t_res)=> !isRien(_res))

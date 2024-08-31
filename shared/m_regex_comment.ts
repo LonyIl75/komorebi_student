@@ -1,3 +1,4 @@
+import getCurrentLine from "get-current-line"
 import { getRegexGM, end_line_js} from "./m_regex.js";
 import { getUnionNonMatchingGroups, embedNonCapturingGroupStrOrRegex } from "./m_regex_prefixAndSuffix.js";
 
@@ -54,31 +55,31 @@ export function getNameOfExportedSet(_str:string) :string[] |undefined {
 
 }
 
-export function isAVariableRegex(_str:string){    
+export function isAVariableRegex(_str:string){ /*console.log("DEBUG_ME",getCurrentLine());*/    
     return getRegexGM(getUnionNonMatchingGroups(variable_name_str_regex,variable_export_name_str_regex)).test(_str)
 }
 
-export function getVariableNameRegex(_str:string){
+export function getVariableNameRegex(_str:string){ /*console.log("DEBUG_ME",getCurrentLine());*/
 let res = getRegexGM(getUnionNonMatchingGroups(variable_name_str_regex,variable_export_name_str_regex)).exec(_str)
 return res? res[1] : undefined;
 }
 
 
-export function isAFunctionRegex(_str:string){
+export function isAFunctionRegex(_str:string){ /*console.log("DEBUG_ME",getCurrentLine());*/
   return getRegexGM(getUnionNonMatchingGroups(function_name_str_regex,arrowFunction_name_str_regex)).test(_str)
 }
 
-export function getFunctionNameRegex(_str:string){
+export function getFunctionNameRegex(_str:string){ /*console.log("DEBUG_ME",getCurrentLine());*/
   let res=getRegexGM(getUnionNonMatchingGroups(function_name_str_regex,arrowFunction_name_str_regex)).exec(_str)
   return res? res[1] : undefined;
 }
 
-export function getExportedFunctionNameRegex(_str:string){
+export function getExportedFunctionNameRegex(_str:string){ /*console.log("DEBUG_ME",getCurrentLine());*/
   let res=getRegexGM(`${embedNonCapturingGroupStrOrRegex(function_export_name_str_regex,true)}|${embedNonCapturingGroupStrOrRegex(arrowFunction_export_name_str_regex,true)}`).exec(_str)
   return res? res[1] : undefined;
 }
 
-export function getExportedClassNameRegex(_str:string){
+export function getExportedClassNameRegex(_str:string){ /*console.log("DEBUG_ME",getCurrentLine());*/
     let res=getRegexGM(`${classname_exports_str_regex}`).exec(_str)
     return res? res[1] : undefined;
 }
@@ -88,7 +89,7 @@ export function getCommentRegex() {
     return `(?:${deb_commentary}[^\n\r]*)\\s*`;
 }
 
-export function removeCommentRegex(_str:string,to_ignore_comment ?: string ){
+export function removeCommentRegex(_str:string,to_ignore_comment ?: string ){ /*console.log("DEBUG_ME",getCurrentLine());*/
     let res =_str
     if(to_ignore_comment==undefined)res= _str.replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm, '$1');
     else res= _str.replace(getRegexGM(`\\/\\*[\\s\\S]*?\\*\\/|([^\\\\:]|^)\\/\\/(?![^\\S\\n]*${to_ignore_comment}).*$`), '$1');

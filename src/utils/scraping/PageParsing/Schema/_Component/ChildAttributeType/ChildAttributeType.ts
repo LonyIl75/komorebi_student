@@ -1,10 +1,11 @@
-import { haveSerializerAndEmptyInit, EmptyInit, haveSerializer, deepCloneJson } from "@shared/m_json.js";
+import getCurrentLine from "get-current-line"
+import { haveSerializerAndEmptyInit, EmptyInit, AHaveSerializer, deepCloneJson } from "@shared/m_json.js";
 import { IJson, createJsonFromEntries, entryGetKey, t_createJsonFromEntries } from "@shared/m_object.js";
 import {  NOT,PopUnion, getIntersectJsons, jsonObjectToArrKey, jsonObjectToArrValue } from "@shared/type.js";
 import {df, arr_function_attribute_function, arr_key_attribute_name,df_str_attribute_name, isAttributeName_, isAttributeNoneFunctionName, isAttributeNoneName_, isNoneAttributeNameVal_, str_attribute_name, str_attribute_name_function, str_selector,t_Object_withAttributeName,t_arr_attribute_name,t_attributeFunctionName, t_attribute_name, t_attribute_name_, t_attribute_name_notNoneName, t_isAttributeName_, t_isAttributeNoneName_, t_union_attribute_name__val, t_union_attribute_name_function_val, t_union_attribute_name_val, t_union_key_attribute_name, validateAttributeNamValue, str_args_setting, t_args_setting, arr_function_attribute_name } from "./types.js";
 import { str_type } from "../../Component/types.js";
 import { IValTextContent, ValTextContent, t_cst_args } from "../ValTextContent/ValTextContent.js";
-import { str_value_init, t_value_init, str_value_validation_strRegex, t_value_validation_strRegex } from "../ValTextContent/types.js";
+import { str_value_init, t_value_init, str_value_validation_strRegex, t_value_validation_strRegex, str_joinChar_group } from "../ValTextContent/types.js";
 
 export type t_union_childType_attribute_name_value = IChildAttributeType[t_union_key_attribute_name]
 
@@ -66,12 +67,13 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
     type ?: t_union_key_attribute_name
     [str_value_init] :   t_value_init
     [str_value_validation_strRegex] : t_value_validation_strRegex
+    [str_joinChar_group] ?: string
 
     static df  = df//TDOO are you sure that value = not set value is a good idea ?
 
     
     constructor(key_name : t_union_key_attribute_name  = df_str_attribute_name,name :t_union_attribute_name_val = ChildAttributeType.df[df_str_attribute_name]  ,selector : string  = ChildAttributeType.df[str_selector]
-        ,valContentArgs : t_cst_args = [...ValTextContent.dfArgsCst], args_setting : IJson = {} as any){
+        ,valContentArgs : t_cst_args = [...ValTextContent.dfArgsCst], args_setting : IJson = {} as any, joinChar_group : string = df[str_joinChar_group]){
         super( {toJson:ChildAttributeType.toJson , fromJson:ChildAttributeType.fromJson});
         this.type = key_name
         //@ts-ignore
@@ -79,33 +81,34 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
         this.selector = selector;
         ValTextContent.setArgsForCst(this,...valContentArgs)
         this.args_setting = args_setting
+        this.joinChar_group = joinChar_group
         
     }
 
     static toJson = (attrType:ChildAttributeType)  => 
     {
         let attribute_value_json = ChildAttributeType.getAttributeValue(attrType as any)
-        return {...attribute_value_json, ...ValTextContent.toJson(attrType), [str_selector]:attrType[str_selector],[str_type]:attrType[str_type],args_setting:deepCloneJson(attrType.args_setting)} as const 
+        return {...attribute_value_json, ...ValTextContent.toJson(attrType), [str_selector]:attrType[str_selector],[str_type]:attrType[str_type],args_setting:deepCloneJson(attrType.args_setting),[str_joinChar_group]:attrType[str_joinChar_group]} as const 
     }
 
     //A FAIRE not sure that constrained function is valid to initialized fromJson
-    static fromJson = (json: IJson & t_attribute_name) : ChildAttributeType => {
+    static fromJson = (json: IJson & t_attribute_name) : ChildAttributeType =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         const entry  = ChildAttributeType.getAttributeValueEntry(json ) 
-        return new ChildAttributeType(entry[0],entry[1],json?.selector,ValTextContent.getArgsForCst(json),deepCloneJson(json?.args_setting))
+        return new ChildAttributeType(entry[0],entry[1],json?.selector,ValTextContent.getArgsForCst(json),deepCloneJson(json?.args_setting),json?.joinChar_group)
     }
 
     static emptyObject : EmptyInit<ChildAttributeType>  = new EmptyInit<ChildAttributeType>(ChildAttributeType) ;
 
-    static _getEmptyInit: () => ChildAttributeType = () => {
+    static getEmptyInit: () => ChildAttributeType = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return ChildAttributeType.emptyObject.emptyInit() ;
     }
 
-    getEmptyInit: () => ChildAttributeType = () => {
-        return ChildAttributeType._getEmptyInit() ;
+    getEmptyInit: () => ChildAttributeType = () =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        return ChildAttributeType.getEmptyInit() ;
     }
 
-    static isTypeof: (obj: haveSerializer<ChildAttributeType>) => boolean = (obj:haveSerializer<ChildAttributeType>)=>{
-        return haveSerializerAndEmptyInit.st_isTypeof(ChildAttributeType._getEmptyInit(),obj)
+    static isTypeof: (obj: AHaveSerializer<ChildAttributeType>) => boolean = (obj:AHaveSerializer<ChildAttributeType>)=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
+        return haveSerializerAndEmptyInit._isTypeof(ChildAttributeType.getEmptyInit(),obj)
     }
 
     isTypeof = ChildAttributeType.isTypeof
@@ -128,11 +131,11 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
         return (json === ChildAttributeType.getInvalidAttributeValue() )as t_isInvalidValueAttribute<T>
     }
 
-    static isAttributeFunctionName = <T extends t_attribute_name >(json:T)  =>{
+    static isAttributeFunctionName = <T extends t_attribute_name >(json:T)  =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return (!isAttributeName_(json)) as NOT<t_isAttributeName_<T>>
     }
 
-    static  getAttributeValueEntry = <T extends t_attribute_name > (_json : T) :t_getAttributeValueEntry<T>=> {
+    static  getAttributeValueEntry = <T extends t_attribute_name > (_json : T) :t_getAttributeValueEntry<T>=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         let res  :any = ChildAttributeType.getInvalidAttributeValueEntry()
         if(!isNoneAttributeNameVal_(_json[df_str_attribute_name])){
             const json = _json as t_attribute_name<true>
@@ -140,7 +143,7 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
             let [key,val]  = [undefined ,undefined ]
 
             let i = 0 
-            while(i < arr_key_attribute_name.length ){
+            while(i < arr_key_attribute_name.length ){ /*console.log("DEBUG_ME",getCurrentLine());*/
                 key = arr_key_attribute_name[i]  
                 val = json[key]
                 if(json.hasOwnProperty(key)) {
@@ -155,7 +158,7 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
         //t_isNoneAttributeName<T[t_df_str_attributeName]> extends true ? t_invalidAttributeValueEntry : T extends t_attribute_name<true> ? t_getValidAttributeValueEntry<T> :never 
     }
 
-    static getAttributeValue =  <T extends  t_attribute_name > (_json : T) :t_getAttributeValue<T> => {
+    static getAttributeValue =  <T extends  t_attribute_name > (_json : T) :t_getAttributeValue<T> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return ChildAttributeType.getAttributeValueFromEntry(ChildAttributeType.getAttributeValueEntry(_json))
     }
 
@@ -169,7 +172,7 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
             }
     }
 
-    static getAttributeValueFromEntry = <T extends  t_attribute_name > (attributeEntry : t_getAttributeValueEntry<T> ):t_getAttributeValue<T> => {
+    static getAttributeValueFromEntry = <T extends  t_attribute_name > (attributeEntry : t_getAttributeValueEntry<T> ):t_getAttributeValue<T> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         let res 
         if(ChildAttributeType.isInvalidAttributeValueEntry(attributeEntry)){
             res=  createJsonFromEntries(attributeEntry  )
@@ -179,23 +182,23 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
     }
 
     //TODO if more then two => switch and enum instead of all the thing in types.ts
-    static isAttributeNoneName ( json:t_attribute_name ){
+    static isAttributeNoneName ( json:t_attribute_name ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         let res = ChildAttributeType.getAttributeValue(json)
         if(ChildAttributeType.isInvalidAttributeValue(res))return false 
         else return !isAttributeNoneName_(res as t_attribute_name_)
     }
 
-    static isAttributeNoneFunctionName(json:t_attribute_name){
+    static isAttributeNoneFunctionName(json:t_attribute_name){ /*console.log("DEBUG_ME",getCurrentLine());*/
         let res = ChildAttributeType.getAttributeValue(json)
         if(ChildAttributeType.isInvalidAttributeValue(res))return false 
         else return !isAttributeNoneFunctionName(res as t_attributeFunctionName)
     }
 
-    setType = (type : t_union_key_attribute_name) => {
+    setType = (type : t_union_key_attribute_name) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         this.type = type
     }
 
-    static _getKeyAndVal = <T extends t_attribute_name , t_f_isStrict extends boolean = false , t_isStrict extends boolean = false  >(attribute_name : T ,f_isStrict: t_f_isStrict = false as any,isStrict :t_isStrict = false as any) => {
+    static _getKeyAndVal = <T extends t_attribute_name , t_f_isStrict extends boolean = false , t_isStrict extends boolean = false  >(attribute_name : T ,f_isStrict: t_f_isStrict = false as any,isStrict :t_isStrict = false as any) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         const attributeValue_entry  = ChildAttributeType.getAttributeValueEntry(attribute_name)//TODO why IChildAttributeType dont work 
         const _attribute_val_2 = ChildAttributeType.getAttributeValueFromEntry(attributeValue_entry)
 
@@ -211,28 +214,28 @@ export default class ChildAttributeType extends haveSerializerAndEmptyInit<Child
         return [key,val] as const
     }
 
-    static _getType = <t_f_isStrict extends boolean = false , t_isStrict extends boolean = false  >(attribute_name : t_attribute_name , f_isStrict: t_f_isStrict = false as any,isStrict :t_isStrict = false as any) => {
+    static _getType = <t_f_isStrict extends boolean = false , t_isStrict extends boolean = false  >(attribute_name : t_attribute_name , f_isStrict: t_f_isStrict = false as any,isStrict :t_isStrict = false as any) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         return ChildAttributeType._getKeyAndVal(attribute_name,f_isStrict,isStrict)[0]
     }
 
-    getType = <t_f_isStrict extends boolean = false , t_isStrict extends boolean = false  >( f_isStrict: t_f_isStrict = false as any,isStrict :t_isStrict = false as any) => {
+    getType = <t_f_isStrict extends boolean = false , t_isStrict extends boolean = false  >( f_isStrict: t_f_isStrict = false as any,isStrict :t_isStrict = false as any) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         if(this[str_type] === undefined) this.setType(ChildAttributeType._getType(this as any ,f_isStrict,isStrict))
         return this[str_type]
     }
 
-    setName = < t_isStrict extends boolean = false> (name : t_union_attribute_name_val<t_isStrict>, isStrict : t_isStrict = false as any) => {
+    setName = < t_isStrict extends boolean = false> (name : t_union_attribute_name_val<t_isStrict>, isStrict : t_isStrict = false as any) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         const type = this.getType()
         if(!validateAttributeNamValue<t_isStrict>(type,name,isStrict)) throw new Error()
         //@ts-ignore
         this[type] = name
     }
 
-    static cst_cpy = (childAttribute : ChildAttributeType) => {
+    static cst_cpy = (childAttribute : ChildAttributeType) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
         const type = childAttribute.getType()
-       return new ChildAttributeType(type,childAttribute[type],childAttribute.selector,ValTextContent.getArgsForCst(childAttribute),deepCloneJson(childAttribute.args_setting))
+       return new ChildAttributeType(type,childAttribute[type],childAttribute.selector,ValTextContent.getArgsForCst(childAttribute),deepCloneJson(childAttribute.args_setting),childAttribute.joinChar_group)
     }
 
-    getKeyAndVal( ){
+    getKeyAndVal( ){ /*console.log("DEBUG_ME",getCurrentLine());*/
         const type = this.getType()
         return [type,this[type]] as const
     }

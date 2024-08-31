@@ -1,7 +1,7 @@
 import { DebuggingOptions, debug_join, debug_start_with_curLine, debug_with_curLine, debug_with_curLine_isresult } from '@shared/m_debug.js';
 import debug, { Debugger } from 'debug';
 import getCurrentLine from 'get-current-line';
-import { getNameModule,getNameDebugAllNameModule, str_idRouteAndRemoteAddresss, concatNameModuleAndDebug } from '@shared/str_debug.js';
+import { getNameModule, concatNameModuleAndDebug } from '@shared/str_debug.js';
 
 
 const name_module :string =  getNameModule("scraping_selector_pageParsing","subsetPage")
@@ -16,7 +16,7 @@ import { ExpFunct_components } from './types.js';
 import { getPathPageParsing } from '@/config/pathFolder/srcPath.js';
 
 
-export async function _getAllParents( element : Element , doc_element : Element, index_empty ?:number[]  ){
+export async function _getAllParents( element : Element , doc_element : Element, index_empty ?:number[]  ){ /*console.log("DEBUG_ME",getCurrentLine());*/
     let unique_element_id :string =  await node_to_selector(element )
     let unique_document_id :string = await  node_to_selector(doc_element)
     return getAllParents( [unique_document_id] , [unique_element_id], index_empty )
@@ -27,7 +27,7 @@ export function getAllParents( doc_selector:string[] ,elem_selectors:string[]  ,
 
 
         let doc =  document.querySelector(doc_selector[0]);
-        for(let i = 1 ;  ! doc && i < doc_selector.length ;i++){
+        for(let i = 1 ;  ! doc && i < doc_selector.length ;i++){ /*console.log("DEBUG_ME",getCurrentLine());*/
             doc = document.querySelector(doc_selector[i]) as any ;
         } 
 
@@ -35,12 +35,12 @@ export function getAllParents( doc_selector:string[] ,elem_selectors:string[]  ,
         let arr_elements = []
         let res = [] as any
         let res_2 = [] as any
-            for(let i = 0 ; i < elem_selectors.length ;i++){
+            for(let i = 0 ; i < elem_selectors.length ;i++){ /*console.log("DEBUG_ME",getCurrentLine());*/
                 res =  document.querySelectorAll(elem_selectors[i])
                 
             if(index_empty.length && index_empty.indexOf(i)!=-1){
                 res_2 = []
-                res.forEach(el=>{
+                res.forEach(el=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
                     if(!(el?.innerHTML.replace(/\s+/g," ").trim().length))res_2.push(el)
                 })
             }else{
@@ -58,7 +58,7 @@ export function getAllParents( doc_selector:string[] ,elem_selectors:string[]  ,
         let root = null ; 
         for(const elements of arr_elements)
         { 
-            for (const element  of elements) {
+            for (const element  of elements) { /*console.log("DEBUG_ME",getCurrentLine());*/
             let cur_element: any = element; // Définissez l'élément actuel sur l'élément à récupérer
             let cur_container  = null;
                    
@@ -68,7 +68,7 @@ export function getAllParents( doc_selector:string[] ,elem_selectors:string[]  ,
             
 
             // Parcourez tous les parents de l'élément jusqu'à atteindre la racine de la page
-            while (cur_element!== null && b && cur_element !== document.documentElement) {
+            while (cur_element!== null && b && cur_element !== document.documentElement) { /*console.log("DEBUG_ME",getCurrentLine());*/
                 let unique_cur_element_id  = arrID_to_selector([cur_element?.tagName ,cur_element?.className , cur_element?.id].map((e:string)=>e.replace(/\s+/g," ").trim()))//.join("_")
                 //@ts-ignore
                 if( (tmp =  m_map.get(unique_cur_element_id) )) {
@@ -79,7 +79,7 @@ export function getAllParents( doc_selector:string[] ,elem_selectors:string[]  ,
 
                     clone= cur_element.cloneNode(false);
                     //@ts-ignore
-                    m_map.set(unique_cur_element_id,clone); //A FAIRE : replace by map  cf. test_map_serelization.js : DONE ? evalute (( arrArr_map ) =>{...},Array.from(map_nameFunctionsAndFunction.keys())
+                    m_map.set(unique_cur_element_id,clone); //A FAIRE : replace by map  cf. test_map_serelization.js : DONE ? evalute (( arrArr_map ) =>{ /*console.log("DEBUG_ME",getCurrentLine());*/...},Array.from(map_nameFunctionsAndFunction.keys())
                     const test_elem = document.createElement("p")   
                     test_elem.textContent = "test"
                     clone.appendChild(test_elem)
