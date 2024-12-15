@@ -2,6 +2,7 @@ import { debug,debug_join,debug_with_curLine,debug_start_with_curLine,debug_end_
 import getCurrentLine from 'get-current-line'
 import{Debugger} from 'debug';
 import { concatNameModuleAndDebug } from "./str_debug.js";
+import _ from "lodash";
 
 const name_module :string = "m_object"
 
@@ -53,6 +54,18 @@ export type t_isNotEmptyJson <T extends IJson<K ,V>,K extends t_indexable_key = 
 export const isNotEmptyJson = <T extends IJson<K ,V>,K extends t_indexable_key= t_indexable_key, V = any>(json : any ) : json is json_AtLeastOne<K,T> =>{ /*console.log("DEBUG_ME",getCurrentLine());*/
    return !isEmptyJson(json) 
 }
+
+//TODO : place it elsewhere
+function copyVariable(variable) {
+    if (_isArray(variable)) {
+        return [...variable];
+    } else if (isObject(variable)) {
+        return _.cloneDeep(variable);
+    } else {
+        return variable;
+    }
+}
+
 export type t_createJsonAsForEach <K extends t_indexable_key = string, V = any> = IJson<K,V>
 export const createJsonAsForEach =<K extends t_indexable_key = string, V = any> (arr_element : { [k in K] : any }[]) :t_createJsonAsForEach<K,V>=>{ /*console.log("DEBUG_ME",getCurrentLine());*/
   let obj = {} as IJson<K,V>
@@ -184,7 +197,7 @@ export function getPropAndInitIfNotExist<O extends IJson, P extends t_indexable_
     let valProp = s_getProp(obj, prop, invalidGet)
 
     if (valProp === invalidGet) { /*console.log("DEBUG_ME",getCurrentLine());*/
-        setProp(obj, prop, {...initValue} as any)
+        setProp(obj, prop, copyVariable(initValue) as any)
         valProp = s_getProp(obj, prop, invalidGet)
     }
     return valProp as t_getPropAndInitIfNotExist<O,P,InitValue,V>[0]
