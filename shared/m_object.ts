@@ -200,7 +200,7 @@ isEqual<Res,InvalidValue> extends true ? InvalidValue : t_getObjectFromPropsArra
 function _getObjectFromPropsArrayAndInitIfNotExist<O extends IJson, ArrP extends readonly t_indexable_key[] ,InitValue ={},InvalidValue = undefined >(obj:O,  propsArray : ArrP, invalidValue : InvalidValue = undefined, initValue :InitValue = {} as InitValue):t_getObjectFromPropsArrayAndInitIfNotExist<O,ArrP,InitValue,InvalidValue> {
     type t_obj = O|InitValue|InvalidValue
     let res = obj as any
-    if(!isNotEmptyArray(propsArray) || res == invalidValue) res = obj
+    if(!isNotEmptyArray(propsArray) || res === invalidValue) res = obj
     else {
         const nextValue = getPropAndInitIfNotExist (res, propsArray[0], initValue)
         res =  getObjectFromPropsArrayAndInitIfNotExist(nextValue, propsArray.slice(1), invalidValue, initValue)
@@ -217,7 +217,7 @@ type t_setExtraValueFromPropsArray_fct <O extends IJson, P extends t_indexable_k
 export type t_setExtraValueFromPropsArray <O extends IJson, ArrP extends readonly t_indexable_key[] ,_V,InitValue ={},InvalidValue = undefined > = 
 t_getObjectFromPropsArrayAndInitIfNotExist<O,ArrP,InitValue,InvalidValue > extends InvalidValue ? InvalidValue : t_setExtraValueFromPropsArray_fct< t_getObjectFromPropsArrayAndInitIfNotExist<O,ArrP,InitValue,InvalidValue>,ArrP[number] , _V >
 export  function setExtraValueFromPropsArray<O extends IJson, ArrP extends readonly t_indexable_key[] , _V,InitValue ={} ,InvalidValue = undefined >(obj:O,  propsArray : ArrP, value : _V, invalidReturn : InvalidValue = undefined, initValue :InitValue = {} as InitValue, fctSet : t_setExtraValueFromPropsArray_fct< t_getObjectFromPropsArrayAndInitIfNotExist<O,readonly (ArrP[number])[],InitValue,InvalidValue>,ArrP[number] , _V > = setPropAddIfExist) { /*console.log("DEBUG_ME",getCurrentLine());*/
-    let getted_obj = getObjectFromPropsArrayAndInitIfNotExist(obj, propsArray, invalidReturn)
+    let getted_obj = getObjectFromPropsArrayAndInitIfNotExist(obj, propsArray, invalidReturn,initValue)
     if (getted_obj === invalidReturn) return invalidReturn
     fctSet(getted_obj, propsArray[propsArray.length - 1], value)//t_getLastElementArr<ArrP>
     return getted_obj as t_setExtraValueFromPropsArray<O,filterNotNullOrUndefinedArr<ArrP>,_V,InitValue,InvalidValue>
